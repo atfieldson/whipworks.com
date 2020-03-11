@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
+    title: `WhipWorks`,
+    description: `Custom made whips`,
     author: `@gatsbyjs`,
   },
   plugins: [
@@ -27,8 +27,34 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
+    {
+      resolve: `gatsby-plugin-google-fonts`,
+      options: {
+        fonts: [
+          `josefinsans`,
+          `source sans pro\:300,400,600`, // you can also specify font weights and styles
+        ],
+        display: 'swap',
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-chakra-ui',
+      options: {
+        isResettingCSS: true, // optional, default to true
+        isUsingColorMode: true, // optional, default to true
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-web-font-loader',
+      options: {
+        custom: {
+          families: ['Domaine Display'],
+          urls: ['/fonts/fonts.css'],
+        },
+      },
+    },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
   ],
-}
+};
