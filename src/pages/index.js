@@ -1,8 +1,8 @@
 import React from 'react';
 // import { Link } from 'gatsby';
-import { Text, useColorMode, Heading } from '@chakra-ui/core';
+import { Text, Heading } from '@chakra-ui/core';
 
-import Layout from '../components/layout';
+import Layout from '../components/templates/Layout';
 import SEO from '../components/seo';
 
 const IndexPage = () => (
