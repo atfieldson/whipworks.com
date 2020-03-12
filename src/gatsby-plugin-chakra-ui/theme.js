@@ -7,7 +7,8 @@ export default {
     heading: "'Domaine Display', Helvetica, sans-serif",
   },
 
-  maxContentWidth: '1020px',
+  // actually 1020px, but Content has 40px padding
+  maxContentWidth: '1080px',
   colors: {
     ...theme.colors,
     gray: {

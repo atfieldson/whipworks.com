@@ -21,7 +21,16 @@ const Header = () => {
 
   return (
     <>
-      <Flex justify="space-between" align="center" py={5} px={5}>
+      <Flex
+        justify="space-between"
+        align="center"
+        py={5}
+        px={5}
+        position="fixed"
+        top="0"
+        left="0"
+        right="0"
+      >
         <IconButton
           icon={FiMenu}
           variant="ghost"
