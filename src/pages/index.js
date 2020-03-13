@@ -7,6 +7,7 @@ import SEO from '../components/seo';
 import Hero from '../components/atoms/FullWidthImage';
 import Content from '../components/templates/Content';
 import SpecialtyWhipContainer from '../components/molecules/SpecialtyWhipContainer';
+import InstagramFeed from '../components/organisms/InstagramFeed';
 
 const IndexPage = () => (
   <Layout>
@@ -31,6 +32,9 @@ const IndexPage = () => (
         <Text>Description goes here</Text>
       </Box>
       <SpecialtyWhipContainer />
+    </Content>
+    <InstagramFeed mt="12" />
+    <Content>
       <Box my="12">
         <Heading>What goes in to a WhipWorks bullwhip?</Heading>
         <Text>Description here.</Text>
