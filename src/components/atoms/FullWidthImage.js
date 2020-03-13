@@ -6,6 +6,8 @@ import Content from '../templates/Content';
 
 const Image = styled(Box)`
   background-color: red;
+  max-height: 900px;
+  min-height: 300px;
   /* margin-top: -90px; */
   /* position: absolute;
   top: 0;

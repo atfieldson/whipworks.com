@@ -1,10 +1,12 @@
 import React from 'react';
 // import { Link } from 'gatsby';
-import { Text, Heading, Flex } from '@chakra-ui/core';
+import { Text, Heading, Flex, Box } from '@chakra-ui/core';
 
 import Layout from '../components/templates/Layout';
 import SEO from '../components/seo';
 import Hero from '../components/atoms/FullWidthImage';
+import Content from '../components/templates/Content';
+import SpecialtyWhipContainer from '../components/molecules/SpecialtyWhipContainer';
 
 const IndexPage = () => (
   <Layout>
@@ -23,6 +25,13 @@ const IndexPage = () => (
         </Text>
       </Flex>
     </Hero>
+    <Content>
+      <Box my="12">
+        <Heading>Specialty Whips</Heading>
+        <Text>Description goes here</Text>
+      </Box>
+      <SpecialtyWhipContainer />
+    </Content>
   </Layout>
 );
 

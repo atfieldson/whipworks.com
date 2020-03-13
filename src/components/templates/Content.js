@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/core';
 
 const Content = styled(Box)`
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 60px;
   max-width: ${props => props.theme.maxContentWidth};
 `;
 

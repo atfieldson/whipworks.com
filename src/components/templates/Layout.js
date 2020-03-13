@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
       <Header />
       <main>{children}</main>
       <Content>
-        <footer style={{ marginTop: '20px' }}>
+        <footer style={{ margin: '4rem 0 2rem 0' }}>
           © {new Date().getFullYear()}, WhipWorks
         </footer>
       </Content>
