@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Flex, Stack } from '@chakra-ui/core';
 import styled from '@emotion/styled';
 
