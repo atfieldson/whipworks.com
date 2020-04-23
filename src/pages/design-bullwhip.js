@@ -21,11 +21,12 @@ import WhipHandles from '../components/molecules/WhipHandles';
 import WhipConchos from '../components/molecules/WhipConchos';
 import WhipLengths from '../components/molecules/WhipLengths';
 import WhipHandleLengths from '../components/molecules/WhipHandleLengths';
+import WhipPreview from '../components/organisms/WhipPreview';
 
 const DesignBullwhip = () => {
   const [index, setIndex] = useState(0);
-  const [primary, setPrimary] = useState(undefined);
-  const [secondary, setSecondary] = useState(undefined);
+  const [primary, setPrimary] = useState('International Orange');
+  const [secondary, setSecondary] = useState('Emerald Green');
   const [handle, setHandle] = useState(undefined);
   const [waxed, setWaxed] = useState(true);
   const [whipLength, setWhipLength] = useState(undefined);
@@ -63,7 +64,12 @@ const DesignBullwhip = () => {
           </Stack>
         </Flex>
         <Flex flex="6" height="50px" direction="column" mx="4">
-          <Accordion width="100%" index={index} onChange={onAccordionChange}>
+          <Accordion
+            width="100%"
+            index={index}
+            onChange={onAccordionChange}
+            allowToggle
+          >
             <AccordionItem>
               <AccordionHeader>
                 <Text fontWeight="bold">Primary Color</Text>
@@ -170,9 +176,15 @@ const DesignBullwhip = () => {
             Add Bullwhip to Cart
           </Button>
         </Flex>
-        <Flex flex="3" bg="tomato" height="50px">
+        {/* <Flex flex="3" bg="tomato" height="50px">
           <Text>Preview here</Text>
-        </Flex>
+        </Flex> */}
+        <WhipPreview
+          waxed={waxed}
+          primary={primary}
+          secondary={secondary}
+          pattern={handle}
+        />
       </Flex>
     </Layout>
   );
