@@ -25,8 +25,8 @@ import WhipPreview from '../components/organisms/WhipPreview';
 
 const DesignBullwhip = () => {
   const [index, setIndex] = useState(0);
-  const [primary, setPrimary] = useState('International Orange');
-  const [secondary, setSecondary] = useState('Emerald Green');
+  const [primary, setPrimary] = useState(undefined);
+  const [secondary, setSecondary] = useState('');
   const [handle, setHandle] = useState(undefined);
   const [waxed, setWaxed] = useState(true);
   const [whipLength, setWhipLength] = useState(undefined);
