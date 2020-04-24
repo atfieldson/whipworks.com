@@ -54,7 +54,7 @@ export const spools = [
   {
     img:
       'http://whipworks.s3.amazonaws.com/paracordImages/spools/foliageGreen.jpg',
-    name: 'Foilage Green',
+    name: 'Foliage Green',
   },
   {
     img:

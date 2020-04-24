@@ -20,7 +20,7 @@ export const handles = [
     img: 'http://whipworks.s3.amazonaws.com/handleDesigns/emerald.jpg',
   },
   {
-    name: 'New',
+    name: 'Neo Celtic',
     img: 'http://whipworks.s3.amazonaws.com/handleDesigns/new.jpg',
   },
   {
