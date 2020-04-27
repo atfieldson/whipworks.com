@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, Heading, Flex, Box, Image, Stack } from '@chakra-ui/core';
 
 import Layout from '../components/templates/Layout';
-import SEO from '../components/seo';
+import SEO from '../components/atoms/Seo';
 import Hero from '../components/atoms/FullWidthImage';
 import Content from '../components/templates/Content';
 import SpecialtyWhipContainer from '../components/molecules/SpecialtyWhipContainer';

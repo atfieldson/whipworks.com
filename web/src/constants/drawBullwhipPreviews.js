@@ -34,7 +34,6 @@ export const drawBullwhipPreviews = pattern => {
 
   const patterns = {
     Box: () => {
-      console.log('drawing Box');
       let pattern1 = [0, 1, 4, 5, 8, 9, 12, 13, 16];
       let pattern2 = [0, 3, 4, 7, 8, 11, 12, 15, 16];
       let rowPattern1 = [-12, -8, -4, 0, 4, 8, 12, 16, 20, 24, 28, 32, 36];

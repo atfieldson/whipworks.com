@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../../components/templates/Layout';
-import SEO from '../../components/seo';
+import SEO from '../../components/atoms/Seo';
 import { Text, Flex, Box, Heading, Button } from '@chakra-ui/core';
 import HeaderOffset from '../../components/templates/HeaderOffset';
 import Content from '../../components/templates/Content';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SEO from '../components/seo';
+import SEO from '../components/atoms/Seo';
 import Layout from '../components/templates/Layout';
 import HeaderOffset from '../components/templates/HeaderOffset';
 import {
@@ -14,6 +14,7 @@ import {
   RadioGroup,
   Radio,
   Button,
+  Box,
 } from '@chakra-ui/core';
 import WhipColors from '../components/molecules/WhipColors';
 import WhipInfo from '../components/atoms/WhipInfo';
@@ -176,9 +177,6 @@ const DesignBullwhip = () => {
             Add Bullwhip to Cart
           </Button>
         </Flex>
-        {/* <Flex flex="3" bg="tomato" height="50px">
-          <Text>Preview here</Text>
-        </Flex> */}
         <WhipPreview
           waxed={waxed}
           primary={primary}

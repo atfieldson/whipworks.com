@@ -14,6 +14,7 @@ import {
   DrawerContent,
 } from '@chakra-ui/core';
 import { FiMenu } from 'react-icons/fi';
+import { Link } from 'gatsby';
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,7 +38,9 @@ const Header = () => {
           ref={btnRef}
           onClick={onOpen}
         />
-        <Button borderWidth="1px">DESIGN A BULLWHIP</Button>
+        <Button borderWidth="1px" as={Link} to="/design-bullwhip">
+          DESIGN A BULLWHIP
+        </Button>
         <Drawer
           isOpen={isOpen}
           placement="left"
