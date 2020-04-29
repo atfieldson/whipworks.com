@@ -15,6 +15,9 @@ import {
   Radio,
   Button,
 } from '@chakra-ui/core';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import WhipColors from '../components/molecules/WhipColors';
 import WhipInfo from '../components/atoms/WhipInfo';
 import WhipHandles from '../components/molecules/WhipHandles';
@@ -23,8 +26,10 @@ import WhipLengths from '../components/molecules/WhipLengths';
 import WhipHandleLengths from '../components/molecules/WhipHandleLengths';
 import WhipPreview from '../components/organisms/WhipPreview';
 import PriceBreakdown from '../components/molecules/PriceBreakdown';
+import { getCustomSku } from '../../utils';
+import { addToCart } from '../state/cart/actions';
 
-const DesignBullwhip = () => {
+const DesignBullwhip = ({ addToCart }) => {
   const [index, setIndex] = useState(0);
   const [primary, setPrimary] = useState(undefined);
   const [secondary, setSecondary] = useState('');
@@ -45,7 +50,16 @@ const DesignBullwhip = () => {
     }
   }, [primary, secondary, handle, waxed, whipLength, handleLength, concho]);
 
-  const addToCart = () => {};
+  const handleAddToCart = () => {
+    try {
+      const sku = getCustomSku(whipLength, handleLength, concho, waxed);
+      console.log(sku);
+      const description = `Custom bullwhip with primary color ${primary}, secondary color ${secondary}, and handle pattern ${handle}`;
+      addToCart(sku, description);
+    } catch (e) {
+      console.warn(e);
+    }
+  };
 
   const readyForOrder =
     primary && secondary && whipLength && handleLength && concho;
@@ -181,6 +195,7 @@ const DesignBullwhip = () => {
             p="3"
             my="6"
             isDisabled={!readyForOrder}
+            onClick={handleAddToCart}
           >
             Add Bullwhip to Cart
           </Button>
@@ -196,4 +211,7 @@ const DesignBullwhip = () => {
   );
 };
 
-export default DesignBullwhip;
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ addToCart }, dispatch);
+
+export default connect(null, mapDispatchToProps)(DesignBullwhip);

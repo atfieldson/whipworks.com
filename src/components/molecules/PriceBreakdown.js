@@ -30,7 +30,7 @@ const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed }) => {
       const obj = whipLengths.filter(w => w.name === whipLength)[0];
       setLengthPrice(isWaxed ? obj.waxedPrice : obj.price);
     }
-  }, [whipLength]);
+  }, [whipLength, isWaxed]);
 
   const total = conchoPrice + handlePrice + lengthPrice;
   return (
@@ -38,7 +38,7 @@ const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed }) => {
       <Text fontSize="sm" mb="1">
         Price Breakdown
       </Text>
-      <SimpleGrid columns={2}>
+      <SimpleGrid columns={2} fontSize="md">
         <Text>Concho:</Text>
         <Text>${conchoPrice}</Text>
         <Text>Handle Length:</Text>
