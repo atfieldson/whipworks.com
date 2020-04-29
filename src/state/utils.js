@@ -12,5 +12,5 @@ export const reducerFactory = (initialState, handlers) => (
 
 export const addToArray = stateKey => (state, action) => ({
   ...state,
-  [stateKey]: [...stateKey, action.payload],
+  [stateKey]: [...state[stateKey], action.payload],
 });

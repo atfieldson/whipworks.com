@@ -12,9 +12,11 @@ import {
   DrawerHeader,
   DrawerBody,
   DrawerContent,
+  Stack,
 } from '@chakra-ui/core';
 import { FiMenu } from 'react-icons/fi';
 import { Link } from 'gatsby';
+import Cart from './Cart';
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,9 +40,12 @@ const Header = () => {
           ref={btnRef}
           onClick={onOpen}
         />
-        <Button borderWidth="1px" as={Link} to="/design-bullwhip">
-          DESIGN A BULLWHIP
-        </Button>
+        <Stack isInline spacing="3" shouldWrapChildren>
+          <Cart />
+          <Button borderWidth="1px" as={Link} to="/design-bullwhip">
+            DESIGN A BULLWHIP
+          </Button>
+        </Stack>
         <Drawer
           isOpen={isOpen}
           placement="left"
