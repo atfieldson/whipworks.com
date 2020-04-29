@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { RadioGroup, Radio } from '@chakra-ui/core';
 
-const whipLengths = [
+export const whipLengths = [
   {
     name: '4 Feet',
     price: 204,

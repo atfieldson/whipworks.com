@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { RadioGroup, Radio } from '@chakra-ui/core';
 
-const handleLengths = [
+export const handleLengths = [
   {
     name: '8 inches',
     price: 0,

@@ -14,7 +14,6 @@ import {
   RadioGroup,
   Radio,
   Button,
-  Box,
 } from '@chakra-ui/core';
 import WhipColors from '../components/molecules/WhipColors';
 import WhipInfo from '../components/atoms/WhipInfo';
@@ -23,6 +22,7 @@ import WhipConchos from '../components/molecules/WhipConchos';
 import WhipLengths from '../components/molecules/WhipLengths';
 import WhipHandleLengths from '../components/molecules/WhipHandleLengths';
 import WhipPreview from '../components/organisms/WhipPreview';
+import PriceBreakdown from '../components/molecules/PriceBreakdown';
 
 const DesignBullwhip = () => {
   const [index, setIndex] = useState(0);
@@ -45,6 +45,8 @@ const DesignBullwhip = () => {
     }
   }, [primary, secondary, handle, waxed, whipLength, handleLength, concho]);
 
+  const addToCart = () => {};
+
   const readyForOrder =
     primary && secondary && whipLength && handleLength && concho;
   return (
@@ -62,6 +64,12 @@ const DesignBullwhip = () => {
             <WhipInfo label="Whip Length" info={whipLength} />
             <WhipInfo label="Handle Length" info={handleLength} />
             <WhipInfo label="Concho" info={concho} />
+            <PriceBreakdown
+              handleLength={handleLength}
+              whipLength={whipLength}
+              concho={concho}
+              isWaxed={waxed}
+            />
           </Stack>
         </Flex>
         <Flex flex="6" height="50px" direction="column" mx="4">
