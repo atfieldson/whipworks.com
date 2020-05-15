@@ -4,4 +4,35 @@
  * See: https://www.gatsbyjs.org/docs/ssr-apis/
  */
 
-export { default as wrapRootElement } from './src/state/ReduxWrapper';
+// You can delete this file if you're not using it
+// import React from 'react';
+const React = require('react');
+
+exports.onRenderBody = ({ setPostBodyComponents }, options = {}) => {
+  options = Object.assign(
+    {
+      apiKey: 'M2VlNzczMzItZjE2Mi00Y2IzLWJhMDctNzI1ZjlkYTY1YmM3NjM3MjQ4MDQyMTc1MjE1ODcw',
+      autopop: false,
+      js: 'https://cdn.snipcart.com/themes/v3.0.13/default/snipcart.js',
+      styles: 'https://cdn.snipcart.com/themes/v3.0.13/default/snipcart.css',
+    },
+    options
+  );
+
+  const components = [
+    <div
+      key="snipcart-main"
+      id="snipcart"
+      hidden
+      data-api-key={options.apiKey}
+      data-config-add-product-behavior="none"
+    ></div>,
+    <script key="snipcartJs" src={options.js}></script>,
+  ];
+  if (options.styles) {
+    components.push(
+      <link key="snipcartStyle" href={options.styles} type="text/css" rel="stylesheet" />
+    );
+  }
+  return setPostBodyComponents(components);
+};
