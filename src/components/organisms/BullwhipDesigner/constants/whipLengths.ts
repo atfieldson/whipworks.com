@@ -28,3 +28,6 @@ export const whipLengths = [
     price: 574,
   },
 ];
+
+export const whipLengthOptions =
+  '4 Feet[+0]|5 Feet[+30]|6 Feet[+60]|7 Feet[+95]|8 Feet[+130]|10 Feet[+260]|12 Feet[+370]';

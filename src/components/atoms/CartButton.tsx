@@ -23,6 +23,8 @@ const CartButton = () => (
       variant="ghost"
       aria-label="Your Cart"
       className="snipcart-checkout"
+      _hover={{ bg: 'rgba(255,255,255,0.16)' }}
+      _active={{ bg: 'rgba(255,255,255,0.16)' }}
     />
     {/* <StatusIcon>
       <Text className="snipcart-items-count" fontWeight="bold" fontSize="sm"></Text>

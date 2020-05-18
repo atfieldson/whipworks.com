@@ -83,6 +83,8 @@ const Header = ({ bg }: { bg?: string }) => {
             aria-label="Menu"
             variant="outline"
             borderColor="rgba(255,255,255,0.16)"
+            _hover={{ bg: 'rgba(255,255,255,0.16)' }}
+            _active={{ bg: 'rgba(255,255,255,0.16)' }}
           />
           <CartButton />
         </Stack>
@@ -93,6 +95,8 @@ const Header = ({ bg }: { bg?: string }) => {
           to="/design-bullwhip"
           bg="rgba(255,255,255,0.08)"
           borderColor="rgba(255,255,255,0.16)"
+          _hover={{ bg: 'rgba(255,255,255,0.16)' }}
+          _active={{ bg: 'rgba(255,255,255,0.16)' }}
         >
           DESIGN A BULLWHIP
         </Button>

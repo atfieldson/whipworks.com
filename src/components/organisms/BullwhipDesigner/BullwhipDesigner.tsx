@@ -5,21 +5,39 @@ import AccordionSection from '../../atoms/AccordionSection';
 import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
 import ConchoPicker from './ConchoPicker';
-import { handleLengths } from './constants/handleLengths';
-import { whipLengths } from './constants/whipLengths';
+import { handleLengths, handleLengthOptions } from './constants/handleLengths';
+import { whipLengths, whipLengthOptions } from './constants/whipLengths';
 import Button from '../../atoms/Button';
 import PriceBreakdown from './PriceBreakdown';
 import { spools } from './constants/spoolColors';
 import { handles } from './constants/handleDesigns';
-import { conchos } from './constants/conchos';
 import WhipPreview from './WhipPreview';
 import AddPoppersModal from '../../molecules/AddPoppersModal';
+import { conchoOptions } from './constants/conchos';
 
 const colorOptions = spools.map((s) => s.name).join('|');
 const handleDesignOptions = handles.map((h) => h.name).join('|');
-const handleLengthOptions = handleLengths.map((h) => `${h.name}[+${h.price}]`).join('|');
-const conchoOptions = conchos.map((c) => `${c.name}[+${c.price}]`).join('|');
-const lengthOptions = whipLengths.map((l) => `${l.name}[+${l.price - 204}]`).join('|');
+
+const resolveWeight = (length?: string) => {
+  switch (length) {
+    case '4 Feet':
+      return 1000;
+    case '5 Feet':
+      return 2000;
+    case '6 Feet':
+      return 2000;
+    case '7 Feet':
+      return 3000;
+    case '8 Feet':
+      return 3000;
+    case '10 Feet':
+      return 4000;
+    case '12 Feet':
+      return 5000;
+    default:
+      return 3000;
+  }
+};
 
 const BullwhipDesigner = ({ location }: { location: any }) => {
   const [index, setIndex] = useState<number | number[] | undefined>(0);
@@ -37,8 +55,18 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   };
 
   useEffect(() => {
+    if (index === undefined) {
+      return;
+    }
+
     // for 1st render
     if (index !== 0 || primary !== undefined) {
+      // if the user has selected enough things to generate preview,
+      // let them fiddle instead of automatically advancing
+      if (index < 2 && primary && secondary && handleDesign) {
+        return;
+      }
+
       setTimeout(() => {
         setIndex((index: any) => index + 1);
       }, 500);
@@ -134,7 +162,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           data-item-custom2-options={handleDesignOptions}
           data-item-custom2-value={handleDesign}
           data-item-custom3-name="Length"
-          data-item-custom3-options={lengthOptions}
+          data-item-custom3-options={whipLengthOptions}
           data-item-custom3-value={whipLength}
           data-item-custom4-name="Handle Length"
           data-item-custom4-options={handleLengthOptions}
@@ -145,7 +173,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           data-item-custom6-name="Waxing"
           data-item-custom6-options="Yes[+25]|No"
           data-item-custom6-value={waxed ? 'Yes' : 'No'}
-          data-item-weigth={1000}
+          data-item-weight={resolveWeight(whipLength)}
         >
           Add to Cart
         </Button>

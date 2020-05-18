@@ -100,3 +100,6 @@ export const conchos = [
     price: 120,
   },
 ];
+
+export const conchoOptions =
+  'Celtic Brass[+0]|Celtic Copper[+0]|Celtic Silver[+0]|Bright[+5]|Cross[+5]|Swirl[+5]|Wave Brass[+5]|Wave Silver[+5]|Bear[+10]|Dragon[+10]|Buck[+10]|Elk[+10]|Fish[+10]|Flaming Skull[+10]|Pirate Skull[+10]|Ram[+10]|Yin and Yang[+10]|Wolf Pommel[+120]|Cobra Pommel[+120]|Dragon Pommel[+120]';

@@ -97,7 +97,13 @@ const ProductPage = ({ data, location }: Props) => {
               <Text fontWeight="bold" mb="1">
                 {v.name}
               </Text>
-              <Select defaultValue={v.defaultValue} onChange={(e) => handleVariantChange(e, v)}>
+              <Select
+                defaultValue={v.defaultValue}
+                onChange={(e) => handleVariantChange(e, v)}
+                borderColor="rgba(255,255,255,0.08)"
+                _hover={{ bg: 'rgba(255,255,255,0.16)' }}
+                _active={{ bg: 'rgba(255,255,255,0.16)' }}
+              >
                 {v.options.map((vo: Option) => (
                   <option value={vo.name} key={vo.name}>
                     {vo.name}

@@ -23,11 +23,11 @@ type Variant = {
 
 const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
   const whip = data.markdownRemark.frontmatter;
-  const { previous, next } = pageContext;
+  const { previous, next, snipcartOptions } = pageContext;
 
   const [style, setStyle] = useState('');
   const [price, setPrice] = useState(whip.price);
-  const [options, setOptions] = useState({});
+  const [options, setOptions] = useState(snipcartOptions);
   const [images, setImages] = useState(whip.images);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -44,27 +44,6 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
       setImages(defaultImages);
     }
   }, [styles]);
-
-  useEffect(() => {
-    if (!whip.variants) {
-      return;
-    }
-
-    const props: any = {};
-    for (let i = 0; i < whip.variants?.length; i += 1) {
-      const variant = whip.variants[i];
-      props[`data-item-custom${i}-name`] = variant.name;
-      const stuff = variant.options
-        .map((o: Option) => `${o.name}${o.priceDiff ? `[${o.priceDiff}]` : ''}`)
-        .join('|');
-      props[`data-item-custom${i}-options`] = stuff;
-      if (variant.defaultValue) {
-        props[`data-item-custom${i}-value`] = variant.defaultValue;
-      }
-    }
-
-    setOptions(props);
-  }, [whip.variants]);
 
   const handleVariantChange = (e: ChangeEvent<HTMLSelectElement>, variant: Variant) => {
     /** assign snipcart values */
@@ -128,7 +107,13 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
                 <Text fontWeight="bold" mb="1">
                   {v.name}
                 </Text>
-                <Select defaultValue={v.defaultValue} onChange={(e) => handleVariantChange(e, v)}>
+                <Select
+                  defaultValue={v.defaultValue}
+                  onChange={(e) => handleVariantChange(e, v)}
+                  borderColor="rgba(255,255,255,0.16)"
+                  _hover={{ bg: 'rgba(255,255,255,0.16)' }}
+                  _active={{ bg: 'rgba(255,255,255,0.16)' }}
+                >
                   {v.options.map((vo: Option) => (
                     <option value={vo.name} key={vo.name}>
                       {vo.name}
@@ -189,6 +174,7 @@ interface Props {
   pageContext: {
     previous?: any;
     next?: any;
+    snipcartOptions: object;
   };
   data: {
     markdownRemark: {

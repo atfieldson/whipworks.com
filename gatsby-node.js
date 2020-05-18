@@ -1,6 +1,26 @@
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
 
+const resolveSnipcartFields = (variants) => {
+  const fields = {};
+  if (!variants) {
+    return fields;
+  }
+
+  for (let i = 0; i < variants.length; i += 1) {
+    const variant = variants[i];
+    fields[`data-item-custom${i}-name`] = variant.name;
+    const stuff = variant.options
+      .map((o) => `${o.name}${o.priceDiff ? `[${o.priceDiff}]` : ''}`)
+      .join('|');
+    fields[`data-item-custom${i}-options`] = stuff;
+    if (variant.defaultValue) {
+      fields[`data-item-custom${i}-value`] = variant.defaultValue;
+    }
+  }
+  return fields;
+};
+
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions;
 
@@ -21,6 +41,13 @@ exports.createPages = async ({ graphql, actions }) => {
                 images
                 headerImage
                 description
+                variants {
+                  name
+                  options {
+                    name
+                    priceDiff
+                  }
+                }
               }
             }
           }
@@ -45,6 +72,8 @@ exports.createPages = async ({ graphql, actions }) => {
     const previous = index === products.length - 1 ? products[0].node : products[index + 1].node;
     const next = index === 0 ? products[products.length - 1].node : products[index - 1].node;
 
+    const snipcartOptions = resolveSnipcartFields(product.node.frontmatter.variants);
+
     createPage({
       path: product.node.fields.slug,
       component: productPage,
@@ -52,6 +81,7 @@ exports.createPages = async ({ graphql, actions }) => {
         slug: product.node.fields.slug,
         previous,
         next,
+        snipcartOptions,
       },
     });
   });
@@ -60,6 +90,8 @@ exports.createPages = async ({ graphql, actions }) => {
     const previous = index === whips.length - 1 ? whips[0].node : whips[index + 1].node;
     const next = index === 0 ? whips[whips.length - 1].node : whips[index - 1].node;
 
+    const snipcartOptions = resolveSnipcartFields(post.node.frontmatter.variants);
+
     createPage({
       path: post.node.fields.slug,
       component: whipPage,
@@ -67,6 +99,7 @@ exports.createPages = async ({ graphql, actions }) => {
         slug: post.node.fields.slug,
         previous,
         next,
+        snipcartOptions,
       },
     });
   });
