@@ -27,7 +27,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
 
   const [style, setStyle] = useState('');
   const [price, setPrice] = useState(whip.price);
-  const [options, setOptions] = useState(snipcartOptions);
+  const [options, setOptions] = useState({});
   const [images, setImages] = useState(whip.images);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -110,6 +110,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
                 <Select
                   defaultValue={v.defaultValue}
                   onChange={(e) => handleVariantChange(e, v)}
+                  bg="rgba(255,255,255,0.08)"
                   borderColor="rgba(255,255,255,0.16)"
                   _hover={{ bg: 'rgba(255,255,255,0.16)' }}
                   _active={{ bg: 'rgba(255,255,255,0.16)' }}
@@ -133,6 +134,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
               data-item-url={location.pathname}
               data-item-description={whip.description}
               data-item-image={whip.images && whip.images[0]}
+              {...snipcartOptions}
               {...options}
             >
               Add to Cart

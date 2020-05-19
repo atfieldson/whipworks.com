@@ -15,7 +15,7 @@ variants:
       - name: '5 ft'
         priceDiff: '-35'
       - name: '6 ft'
-        priceDiff: '0'
+        priceDiff: '+0'
       - name: '7 ft'
         priceDiff: '+70'
       - name: '8 ft'

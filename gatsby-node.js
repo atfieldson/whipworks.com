@@ -9,14 +9,13 @@ const resolveSnipcartFields = (variants) => {
 
   for (let i = 0; i < variants.length; i += 1) {
     const variant = variants[i];
-    fields[`data-item-custom${i}-name`] = variant.name;
-    const stuff = variant.options
+    let index = i + 1;
+    fields[`data-item-custom${index}-name`] = variant.name;
+    const options = variant.options
       .map((o) => `${o.name}${o.priceDiff ? `[${o.priceDiff}]` : ''}`)
       .join('|');
-    fields[`data-item-custom${i}-options`] = stuff;
-    if (variant.defaultValue) {
-      fields[`data-item-custom${i}-value`] = variant.defaultValue;
-    }
+    fields[`data-item-custom${index}-options`] = options;
+    fields[`data-item-custom${index}-value`] = variant.defaultValue;
   }
   return fields;
 };
