@@ -7,7 +7,7 @@ hasStyles: true
 headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/TheIndyBullwhipHeader.png'
 images:
   - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle1a.jpg'
-weight: 500
+weight: 880
 variants:
   - name: Whip Length
     defaultValue: '6 ft'

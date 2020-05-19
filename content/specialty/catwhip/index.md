@@ -10,7 +10,7 @@ images:
   - 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/catwhipb.jpg'
   - 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/catwhipc.jpg'
   - 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/catwhipd.jpg'
-weight: 500
+weight: 880
 variants:
   - name: Whip Length
     defaultValue: '6 ft'

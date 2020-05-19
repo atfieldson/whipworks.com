@@ -5,7 +5,7 @@ description: A whip description will go here
 price: 339
 hasStyles: false
 headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/TheZWhipHeader.png'
-weight: 500
+weight: 880
 images:
   - 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/zWhipa.jpg'
   - 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/zWhipb.jpg'

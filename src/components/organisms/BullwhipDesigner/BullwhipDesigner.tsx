@@ -21,21 +21,21 @@ const handleDesignOptions = handles.map((h) => h.name).join('|');
 const resolveWeight = (length?: string) => {
   switch (length) {
     case '4 Feet':
-      return 1000;
+      return 750;
     case '5 Feet':
-      return 2000;
+      return 850;
     case '6 Feet':
-      return 2000;
+      return 880;
     case '7 Feet':
-      return 3000;
+      return 910;
     case '8 Feet':
-      return 3000;
+      return 965;
     case '10 Feet':
-      return 4000;
+      return 1030;
     case '12 Feet':
-      return 5000;
+      return 1360;
     default:
-      return 3000;
+      return 900;
   }
 };
 
@@ -174,6 +174,9 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           data-item-custom6-options="Yes[+25]|No"
           data-item-custom6-value={waxed ? 'Yes' : 'No'}
           data-item-weight={resolveWeight(whipLength)}
+          data-item-width={46}
+          data-item-height={8}
+          data-item-length={30}
         >
           Add to Cart
         </Button>

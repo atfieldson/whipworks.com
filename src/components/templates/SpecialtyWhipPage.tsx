@@ -21,12 +21,34 @@ type Variant = {
   defaultValue: string;
 };
 
+const resolveWeights = (length?: string) => {
+  switch (length) {
+    case '4 Feet' || '4 ft':
+      return 750;
+    case '5 Feet' || '5 ft':
+      return 850;
+    case '6 Feet' || '6 ft':
+      return 880;
+    case '7 Feet' || '7 ft':
+      return 910;
+    case '8 Feet' || '8 ft':
+      return 965;
+    case '10 Feet' || '10 ft':
+      return 1030;
+    case '12 Feet' || '12 ft':
+      return 1360;
+    default:
+      return 900;
+  }
+};
+
 const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
   const whip = data.markdownRemark.frontmatter;
   const { previous, next, snipcartOptions } = pageContext;
 
   const [style, setStyle] = useState('');
   const [price, setPrice] = useState(whip.price);
+  const [weight, setWeight] = useState(whip.weight);
   const [options, setOptions] = useState({});
   const [images, setImages] = useState(whip.images);
   const [modalOpen, setModalOpen] = useState(false);
@@ -48,6 +70,9 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
   const handleVariantChange = (e: ChangeEvent<HTMLSelectElement>, variant: Variant) => {
     /** assign snipcart values */
     const index = whip.variants?.findIndex((v) => v.name === variant.name);
+    if (variant.name === 'Whip Length') {
+      setWeight(resolveWeights(e.target.value));
+    }
     setOptions({
       ...options,
       [`data-item-custom${index}-value`]: e.target.value,
@@ -130,10 +155,13 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
               data-item-name={whip.title}
               data-item-price={whip.price}
               data-item-id={whip.id}
-              data-item-weight={whip.weight}
+              data-item-weight={weight}
               data-item-url={location.pathname}
               data-item-description={whip.description}
               data-item-image={whip.images && whip.images[0]}
+              data-item-width={46}
+              data-item-height={8}
+              data-item-length={30}
               {...snipcartOptions}
               {...options}
             >
