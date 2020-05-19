@@ -26,13 +26,12 @@ const Index = () => {
   const [showHeader, setShowHeader] = useState(false);
 
   useDocumentScrollThrottled((callbackData: ScrollData) => {
-    const { previousScrollTop, currentScrollTop } = callbackData;
-    const isScrolledDown = previousScrollTop < currentScrollTop;
+    const { currentScrollTop } = callbackData;
     const isMinimumScrolled = currentScrollTop > MINIMUM_SCROLL;
 
     setTimeout(() => {
-      setShowHeader(isScrolledDown && isMinimumScrolled);
-    }, 400);
+      setShowHeader(isMinimumScrolled);
+    }, 200);
   });
 
   return (
