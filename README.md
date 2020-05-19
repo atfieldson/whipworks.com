@@ -62,3 +62,9 @@ A quick look at the top-level files and directories you'll see in a Gatsby proje
 1. If you haven't done so already, you'll also need to install the [aws-cli tools](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html). Make sure that your credentials are the default as the s3-deployment plugin only reads the default values (i.e. no named profile).
 
 2. run `yarn run build`, followed by `yarn run deploy`. That's it!
+
+## Tasks for Adam
+
+1. Select hero image (green background) for `index` page.
+2. Populate Instagram feed with images (6 of them)
+3. Flesh out "What goes into a bullwhip" section on `index`.
