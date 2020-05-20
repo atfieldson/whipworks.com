@@ -17,7 +17,11 @@ const HeroImage = styled(Box)`
   margin-right: -50vw;
   height: 80vh;
   min-height: 500px;
-  background-color: green;
+  background-image: url("https://whipworks.s3.us-east-2.amazonaws.com/bannerImages/FB+Banner.jpg");
+  background-size: auto 80vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #1a140f;
 `;
 
 const MINIMUM_SCROLL = 350;
