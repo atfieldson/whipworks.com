@@ -20,6 +20,7 @@ const Overlay = styled(Box)`
   background-color: rgba(0, 0, 0, 0.25);
 `;
 
+
 const InstagramFeed = ({ ...props }: BoxProps) => (
   <Container bg="green.300" {...props}>
     <SimpleGrid columns={{ base: 2, sm: 3 }}>
