@@ -28,7 +28,7 @@ const SpecialtyWhipList = () => {
   const data = useStaticQuery(pageQuery);
 
   return (
-    <Stack spacing={12} shouldWrapChildren>
+    <Stack spacing={20} shouldWrapChildren>
       {data.allMarkdownRemark.edges.map((specialtyWhip: any, index: number) => {
         const whip = specialtyWhip.node.frontmatter;
         return (
