@@ -40,13 +40,13 @@ export const conchos = [
     price: 5,
   },
   {
-    img: 'https://d3ruufruf2uqog.cloudfront.net/conchos/bearSilver.jpg',
-    name: 'Bear',
+    img: 'https://d3ruufruf2uqog.cloudfront.net/conchos/dragonSilver.jpg',
+    name: 'Dragon',
     price: 10,
   },
   {
-    img: 'https://d3ruufruf2uqog.cloudfront.net/conchos/dragonSilver.jpg',
-    name: 'Dragon',
+    img: 'https://d3ruufruf2uqog.cloudfront.net/conchos/bearSilver.jpg',
+    name: 'Bear',
     price: 10,
   },
   {
@@ -72,16 +72,6 @@ export const conchos = [
   {
     img: 'https://d3ruufruf2uqog.cloudfront.net/conchos/pirateSkullSilver.jpg',
     name: 'Pirate Skull',
-    price: 10,
-  },
-  {
-    img: 'https://d3ruufruf2uqog.cloudfront.net/conchos/ramSilver.jpg',
-    name: 'Ram',
-    price: 10,
-  },
-  {
-    img: 'https://d3ruufruf2uqog.cloudfront.net/conchos/yinAndYangSilver.jpg',
-    name: 'Yin and Yang',
     price: 10,
   },
   {
