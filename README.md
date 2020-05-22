@@ -61,6 +61,14 @@ A quick look at the top-level files and directories you'll see in a Gatsby proje
 
 1. If you haven't done so already, you'll also need to install the [aws-cli tools](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html). Make sure that your credentials are the default as the s3-deployment plugin only reads the default values (i.e. no named profile).
 
+Terminal Commands
+dir              = ls on Terminal
+cd               just like in Mac
+yarn             (no arguments) installs dependencies
+yarn build       builds the site
+mkdir .cache     for if .cache doesn't exist and I don't have permission to create it
+
+
 2. run `yarn run build`, followed by `yarn run deploy`. That's it!
 
 ## Tasks for Adam
