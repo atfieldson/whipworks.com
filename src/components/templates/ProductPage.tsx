@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { graphql } from 'gatsby';
 import { Flex, Text, Heading, Box, Select } from '@chakra-ui/core';
 
@@ -23,6 +23,9 @@ interface Props {
   location: {
     pathname: string;
   };
+  pageContext: {
+    snipcartOptions: object;
+  };
   data: {
     markdownRemark: {
       html?: any;
@@ -39,38 +42,19 @@ interface Props {
   };
 }
 
-const ProductPage = ({ data, location }: Props) => {
+const ProductPage = ({ data, location, pageContext }: Props) => {
   const product = data.markdownRemark.frontmatter;
+  const { snipcartOptions } = pageContext;
+
   const [price, setPrice] = useState(product.price);
   const [options, setOptions] = useState({});
 
-  useEffect(() => {
-    if (!product.variants) {
-      return;
-    }
-
-    const props: any = {};
-    for (let i = 0; i < product.variants?.length; i += 1) {
-      const variant = product.variants[i];
-      props[`data-item-custom${i}-name`] = variant.name;
-      const stuff = variant.options
-        .map((o: Option) => `${o.name}${o.priceDiff ? `[${o.priceDiff}]` : ''}`)
-        .join('|');
-      props[`data-item-custom${i}-options`] = stuff;
-      if (variant.defaultValue) {
-        props[`data-item-custom${i}-value`] = variant.defaultValue;
-      }
-    }
-
-    setOptions(props);
-  }, [product.variants]);
-
   const handleVariantChange = (e: ChangeEvent<HTMLSelectElement>, variant: Variant) => {
     /** assign snipcart values */
-    const index = product.variants?.findIndex((v) => v.name === variant.name);
+    const index = product.variants?.findIndex((v) => v.name === variant.name) || 0;
     setOptions({
       ...options,
-      [`data-item-custom${index}-value`]: e.target.value,
+      [`data-item-custom${index + 1}-value`]: e.target.value,
     });
 
     /** update the price if needed */
@@ -100,7 +84,8 @@ const ProductPage = ({ data, location }: Props) => {
               <Select
                 defaultValue={v.defaultValue}
                 onChange={(e) => handleVariantChange(e, v)}
-                borderColor="rgba(255,255,255,0.08)"
+                bg="rgba(255,255,255,0.08)"
+                borderColor="rgba(255,255,255,0.16)"
                 _hover={{ bg: 'rgba(255,255,255,0.16)' }}
                 _active={{ bg: 'rgba(255,255,255,0.16)' }}
               >
@@ -123,6 +108,7 @@ const ProductPage = ({ data, location }: Props) => {
             data-item-description={product.description}
             data-item-image={product.images && product.images[0]}
             data-item-weight={product.weight}
+            {...snipcartOptions}
             {...options}
           >
             Add to Cart
