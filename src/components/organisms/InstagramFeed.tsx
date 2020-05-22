@@ -29,12 +29,12 @@ const InstaImage = styled(Image)`
 const InstagramFeed = ({ ...props }: BoxProps) => (
   <Container bg="green.300" {...props}>
     <SimpleGrid columns={{ base: 2, sm: 3 }}>
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/371A5147%202.jpg" />
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/732A3771%20final%202.jpg" />
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/732A9210.jpg" />
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/732A9746.jpg" />
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/Batch%20(4%20of%2013).JPG" />
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/batch02-11-2020-6.jpg" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/batch1.jpg" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/hanging3.jpg" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/batch2.jpg" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/holding1.jpg" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/batch3.jpg" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/hanging1.jpg" />
     </SimpleGrid>
     <Overlay />
     <Flex position="absolute" bottom="5" left="0" right="0" justifyContent="center">
@@ -44,6 +44,7 @@ const InstagramFeed = ({ ...props }: BoxProps) => (
         borderColor="rgba(255,255,255,0.16)"
         as={Link}
         href="https://www.instagram.com/whipworks/"
+        isExternal={true}
       >
         Follow me on Instagram
       </Button>

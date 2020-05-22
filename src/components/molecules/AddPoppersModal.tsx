@@ -25,10 +25,10 @@ const AddPoppersModal = ({ isOpen, onClose, location }: Props) => {
       <AlertDialogOverlay />
       <AlertDialogContent bg="#2D231A">
         <AlertDialogHeader>Add Poppers?</AlertDialogHeader>
-        <AlertDialogBody>Add 10 extra kevlar poppers to your order! Free shipping!</AlertDialogBody>
+        <AlertDialogBody>Would you like to add 10 extra kevlar poppers to your order? Free shipping!</AlertDialogBody>
         <AlertDialogFooter>
           <Button ref={cancelRef} onClick={onClose} className="snipcart-checkout">
-            No thanks
+            Continue to Checkout
           </Button>
           <Button
             onClick={onClose}
