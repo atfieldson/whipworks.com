@@ -24,7 +24,7 @@ const SpecialtyWhipCard = ({
 }: Props) => {
   const isSmall = size && size === 'sm';
   return (
-    <Flex direction={isReversed ? 'row-reverse' : 'row'}>
+    <Flex direction={isReversed ? 'row-reverse' : 'row'} flex="1">
       <Image
         src={image}
         objectFit="cover"
