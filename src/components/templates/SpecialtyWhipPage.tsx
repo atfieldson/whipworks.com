@@ -69,13 +69,13 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
 
   const handleVariantChange = (e: ChangeEvent<HTMLSelectElement>, variant: Variant) => {
     /** assign snipcart values */
-    const index = whip.variants?.findIndex((v) => v.name === variant.name);
+    const index = whip.variants?.findIndex((v) => v.name === variant.name) || 0;
     if (variant.name === 'Whip Length') {
       setWeight(resolveWeights(e.target.value));
     }
     setOptions({
       ...options,
-      [`data-item-custom${index}-value`]: e.target.value,
+      [`data-item-custom${index + 1}-value`]: e.target.value,
     });
 
     /** update the price if needed */
@@ -88,10 +88,10 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
 
   const handleStyleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setStyle(e.target.value);
-    const index = whip.variants?.findIndex((v) => v.name === 'Style');
+    const index = whip.variants?.findIndex((v) => v.name === 'Style') || 0;
     setOptions({
       ...options,
-      [`data-item-custom${index}-value`]: e.target.value,
+      [`data-item-custom${index + 1}-value`]: e.target.value,
     });
     const defaultImages = styles.options.find((s: Variant) => s.name === e.target.value).images;
     setImages(defaultImages);
