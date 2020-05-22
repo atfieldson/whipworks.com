@@ -25,7 +25,9 @@ const AddPoppersModal = ({ isOpen, onClose, location }: Props) => {
       <AlertDialogOverlay />
       <AlertDialogContent bg="#2D231A">
         <AlertDialogHeader>Add Poppers?</AlertDialogHeader>
-        <AlertDialogBody>Would you like to add 10 extra kevlar poppers to your order? Free shipping!</AlertDialogBody>
+        <AlertDialogBody>
+          Would you like to add 10 extra kevlar poppers to your order? Free shipping!
+        </AlertDialogBody>
         <AlertDialogFooter>
           <Button ref={cancelRef} onClick={onClose} className="snipcart-checkout">
             Continue to Checkout
@@ -37,7 +39,7 @@ const AddPoppersModal = ({ isOpen, onClose, location }: Props) => {
             data-item-price="20"
             data-item-name="10 Extra Poppers"
             data-item-description="10 extra kevlar poppers"
-            data-item-url={location.pathname}
+            data-item-url="/accessories/extra-poppers"
             data-item-image="https://d3ruufruf2uqog.cloudfront.net/accessories/extraPoppers.jpg"
             data-item-custom1-name="Color"
             data-item-custom1-options="Blue|Orange|Yellow"
