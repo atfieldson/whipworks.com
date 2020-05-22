@@ -63,7 +63,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
     if (index !== 0 || primary !== undefined) {
       // if the user has selected enough things to generate preview,
       // let them fiddle instead of automatically advancing
-      if (index < 2 && primary && secondary && handleDesign) {
+      if (index <= 2 && primary && secondary && handleDesign) {
         return;
       }
 
