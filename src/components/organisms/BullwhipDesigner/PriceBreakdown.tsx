@@ -67,16 +67,8 @@ const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed, collar }: P
         <Text>${lengthPrice}</Text>
         <Text fontSize="sm">Extras</Text>
         <Text> </Text>
-        {
-        collarPrice === 0 &&
-        <Text> None </Text>
-        }
-        {
-        collarPrice === 0 &&
-        <Text></Text>
-        }
-        <Text>{collarPrice !== 0 ? "Collar:" : ""}</Text>
-        <Text>{collarPrice !== 0 ? `$${collarPrice}` : ""}</Text>
+        <Text>Collar:</Text>
+        <Text>${collarPrice}</Text>
         <Text mt="3" fontWeight="bold">
           Total:
         </Text>

@@ -14,7 +14,7 @@ import { handles } from './constants/handleDesigns';
 import WhipPreview from './WhipPreview';
 import AddPoppersModal from '../../molecules/AddPoppersModal';
 import { conchoOptions } from './constants/conchos';
-import { collars, collarOptions } from './constants/collars';
+import { collarOptions } from './constants/collars';
 import CollarPicker from './CollarPicker';
 
 const colorOptions = spools.map((s) => s.name).join('|');
@@ -50,7 +50,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const [whipLength, setWhipLength] = useState<string | undefined>(undefined);
   const [handleLength, setHandleLength] = useState<string | undefined>(undefined);
   const [concho, setConcho] = useState<string | undefined>(undefined);
-  const [collar, setCollar] = useState('None');
+  const [collar, setCollar] = useState<string | undefined>(undefined);
   const [modalOpen, setModalOpen] = useState(false);
 
   const onAccordionChange = (index: any) => {
