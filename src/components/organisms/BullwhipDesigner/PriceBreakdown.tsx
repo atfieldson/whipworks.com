@@ -45,7 +45,7 @@ const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed, collar }: P
 
   useEffect(() => {
     if (collar) {
-      const obj = collars.filter((w) => w.name === collar)[0];
+      const obj = collars.filter((c) => c.name === collar)[0];
       setCollarPrice(obj.price);
     }
   }, [collar]);
