@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Heading, Text, Stack, Flex, Image } from '@chakra-ui/core';
+import { Box, Heading, Text, Stack, Flex, Image, Button } from '@chakra-ui/core';
 
 import Layout from '../components/templates/Layout';
 import SEO from '../components/templates/SEO';
@@ -8,6 +8,7 @@ import InstagramFeed from '../components/organisms/InstagramFeed';
 import styled from '@emotion/styled';
 import useDocumentScrollThrottled, { ScrollData } from '../../useDocumentScroll';
 import FullWidthImage from '../components/atoms/FullWidthImage';
+import { Link } from 'gatsby';
 
 const HeroImage = styled(FullWidthImage)`
   height: 80vh;
@@ -148,6 +149,19 @@ const Index = () => {
             </Text>
           </Box>
         </Flex>
+        <Button
+          borderWidth="1px"
+          width="200px"
+          alignSelf="center"
+          as={Link}
+          to="/design-bullwhip"
+          bg="rgba(255,255,255,0.08)"
+          borderColor="rgba(255,255,255,0.16)"
+          _hover={{ bg: 'rgba(255,255,255,0.16)' }}
+          _active={{ bg: 'rgba(255,255,255,0.16)' }}
+        >
+          DESIGN A BULLWHIP
+      </Button>
       </Stack>
     </Layout>
   );

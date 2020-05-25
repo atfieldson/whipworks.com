@@ -104,7 +104,11 @@ const Header = ({ bg }: { bg?: string }) => {
           <DrawerOverlay />
           <DrawerContent backgroundColor="#271E16">
             <DrawerCloseButton />
-            <DrawerHeader>Menu</DrawerHeader>
+            <DrawerHeader>
+              <Heading size="md">
+              Menu
+              </Heading>
+            </DrawerHeader>
             <DrawerBody>
               <Stack spacing="4">
                 <CLink as={Link} to="/design-bullwhip">

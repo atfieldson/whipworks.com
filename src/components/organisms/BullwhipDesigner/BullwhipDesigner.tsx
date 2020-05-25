@@ -50,7 +50,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const [whipLength, setWhipLength] = useState<string | undefined>(undefined);
   const [handleLength, setHandleLength] = useState<string | undefined>(undefined);
   const [concho, setConcho] = useState<string | undefined>(undefined);
-  const [collar, setCollar] = useState<string | undefined>(undefined);
+  const [collar, setCollar] = useState('None');
   const [modalOpen, setModalOpen] = useState(false);
 
   const onAccordionChange = (index: any) => {

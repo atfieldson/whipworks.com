@@ -22,7 +22,6 @@ type Variant = {
 };
 
 const resolveWeights = (length?: string) => {
-  console.log(length);
   switch (length) {
     case '4 ft' || '4 Feet':
       return 750;
