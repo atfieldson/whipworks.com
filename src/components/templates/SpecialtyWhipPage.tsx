@@ -22,20 +22,21 @@ type Variant = {
 };
 
 const resolveWeights = (length?: string) => {
+  console.log(length);
   switch (length) {
-    case '4 Feet' || '4 ft':
+    case '4 ft' || '4 Feet':
       return 750;
-    case '5 Feet' || '5 ft':
+    case '5 ft' || '5 Feet':
       return 850;
-    case '6 Feet' || '6 ft':
+    case '6 ft' || '6 Feet':
       return 880;
-    case '7 Feet' || '7 ft':
+    case '7 ft' || '7 Feet':
       return 910;
-    case '8 Feet' || '8 ft':
+    case '8 ft'  || '8 Feet':
       return 965;
-    case '10 Feet' || '10 ft':
+    case '10 ft' || '10 Feet':
       return 1030;
-    case '12 Feet' || '12 ft':
+    case '12 ft' || '12 Feet':
       return 1360;
     default:
       return 900;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Text, Accordion, Stack, RadioGroup, Radio } from '@chakra-ui/core';
+import { Flex, Text, Accordion, Stack, RadioGroup, Radio, Heading } from '@chakra-ui/core';
 import CustomizationLabel from '../../atoms/CustomizationLabel';
 import AccordionSection from '../../atoms/AccordionSection';
 import WhipColors from './WhipColors';
@@ -14,6 +14,8 @@ import { handles } from './constants/handleDesigns';
 import WhipPreview from './WhipPreview';
 import AddPoppersModal from '../../molecules/AddPoppersModal';
 import { conchoOptions } from './constants/conchos';
+import { collarOptions } from './constants/collars';
+import CollarPicker from './CollarPicker';
 
 const colorOptions = spools.map((s) => s.name).join('|');
 const handleDesignOptions = handles.map((h) => h.name).join('|');
@@ -48,6 +50,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const [whipLength, setWhipLength] = useState<string | undefined>(undefined);
   const [handleLength, setHandleLength] = useState<string | undefined>(undefined);
   const [concho, setConcho] = useState<string | undefined>(undefined);
+  const [collar, setCollar] = useState<string | undefined>(undefined);
   const [modalOpen, setModalOpen] = useState(false);
 
   const onAccordionChange = (index: any) => {
@@ -71,7 +74,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         setIndex((index: any) => index + 1);
       }, 500);
     }
-  }, [primary, secondary, handleDesign, waxed, whipLength, handleLength, concho]);
+  }, [primary, secondary, handleDesign, waxed, whipLength, handleLength, concho, collar]);
 
   const handleAdd = () => {
     setModalOpen(true);
@@ -90,11 +93,13 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           <CustomizationLabel label="Whip Length" value={whipLength} />
           <CustomizationLabel label="Handle Length" value={handleLength} />
           <CustomizationLabel label="Concho" value={concho} />
+          <CustomizationLabel label="Collar" value={collar} />
           <PriceBreakdown
             handleLength={handleLength}
             whipLength={whipLength}
             concho={concho}
             isWaxed={waxed}
+            collar={collar}
           />
         </Stack>
       </Flex>
@@ -141,6 +146,13 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
             </Text>
             <ConchoPicker activeConcho={concho} onClick={(concho) => setConcho(concho)} />
           </AccordionSection>
+          <AccordionSection label="Extras">
+            <Heading size="md" mt="2">Add a Collar</Heading>
+            <Text my="2" fontSize="md">
+              A collar is attached to the transition with an additional transition knot added, this addition looks great on 12 or 14 inch handles!
+            </Text>
+            <CollarPicker activeCollar={collar} onClick={(collar) => setCollar(collar)} />
+          </AccordionSection>
         </Accordion>
         <Button
           isDisabled={!readyForOrder}
@@ -173,6 +185,9 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           data-item-custom6-name="Waxing"
           data-item-custom6-options="Yes[+25]|No"
           data-item-custom6-value={waxed ? 'Yes' : 'No'}
+          data-item-custom7-name="Collar"
+          data-item-custom7-options={collarOptions}
+          data-item-custom7-value={collar}
           data-item-weight={resolveWeight(whipLength)}
           data-item-width={46}
           data-item-height={8}

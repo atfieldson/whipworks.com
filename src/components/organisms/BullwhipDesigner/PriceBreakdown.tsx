@@ -6,18 +6,21 @@ import { conchos } from './constants/conchos';
 import { handleLengths } from './constants/handleLengths';
 import { whipLengths } from './constants/whipLengths';
 import { Concho } from './ConchoPicker';
+import {collars} from './constants/collars';
 
 type Props = {
   handleLength?: string;
   whipLength?: string;
   concho?: string;
   isWaxed?: boolean;
+  collar?: string;
 };
 
-const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed }: Props) => {
+const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed, collar }: Props) => {
   const [conchoPrice, setConchoPrice] = useState<number | undefined>(undefined);
   const [handlePrice, setHandlePrice] = useState<number | undefined>(undefined);
   const [lengthPrice, setLengthPrice] = useState<number | undefined>(undefined);
+  const [collarPrice, setCollarPrice] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (concho) {
@@ -40,7 +43,14 @@ const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed }: Props) =>
     }
   }, [whipLength]);
 
-  const total = (conchoPrice || 0) + (handlePrice || 0) + (lengthPrice || 0) + (isWaxed ? 25 : 0);
+  useEffect(() => {
+    if (collar) {
+      const obj = collars.filter((c) => c.name === collar)[0];
+      setCollarPrice(obj.price);
+    }
+  }, [collar]);
+
+  const total = (conchoPrice || 0) + (handlePrice || 0) + (lengthPrice || 0) + (isWaxed ? 25 : 0) + (collarPrice || 0);
   return (
     <Box mt={4}>
       <Text fontSize="sm" mb="1">
@@ -55,6 +65,10 @@ const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed }: Props) =>
         <Text>${isWaxed ? 25 : 0}</Text>
         <Text>Length:</Text>
         <Text>${lengthPrice}</Text>
+        <Text fontSize="sm">Extras</Text>
+        <Text> </Text>
+        <Text>Collar:</Text>
+        <Text>${collarPrice}</Text>
         <Text mt="3" fontWeight="bold">
           Total:
         </Text>
@@ -71,6 +85,7 @@ PriceBreakdown.propTypes = {
   whipLength: PropTypes.string,
   concho: PropTypes.string,
   isWaxed: PropTypes.bool,
+  collar: PropTypes.string,
 };
 
 export default PriceBreakdown;
