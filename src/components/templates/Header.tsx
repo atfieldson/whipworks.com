@@ -93,7 +93,7 @@ const Header = ({ bg }: { bg?: string }) => {
           borderWidth="1px"
           as={Link}
           to="/design-bullwhip"
-          bg="rgba(255,255,255,0.08)"
+          bg="rgba(255,255,255,0.2)"
           borderColor="rgba(255,255,255,0.16)"
           _hover={{ bg: 'rgba(255,255,255,0.16)' }}
           _active={{ bg: 'rgba(255,255,255,0.16)' }}
