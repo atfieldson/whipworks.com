@@ -4,16 +4,12 @@ import { Box, Heading, Text, Stack, Flex, Image, Button } from '@chakra-ui/core'
 import Layout from '../components/templates/Layout';
 import SEO from '../components/templates/SEO';
 import SpecialtyWhipList from '../components/organisms/SpecialtyWhipList';
+import HeroCarousel from '../components/organisms/HeroCarousel';
 import InstagramFeed from '../components/organisms/InstagramFeed';
-import styled from '@emotion/styled';
 import useDocumentScrollThrottled, { ScrollData } from '../../useDocumentScroll';
 import FullWidthImage from '../components/atoms/FullWidthImage';
 import { Link } from 'gatsby';
-
-const HeroImage = styled(FullWidthImage)`
-  height: 80vh;
-  min-height: 500px;
-`;
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const MINIMUM_SCROLL = 350;
 
@@ -32,11 +28,7 @@ const Index = () => {
   return (
     <Layout headerBackground={showHeader ? undefined : 'transparent'}>
       <SEO title="Home" />
-      <HeroImage
-        mb="32"
-        mt="-100px"
-        img="https://d3ruufruf2uqog.cloudfront.net/bannerImages/FB+Banner.jpg"
-      />
+      <HeroCarousel />
       <SpecialtyWhipList />
       <Box mt="32">
         <FullWidthImage
@@ -155,7 +147,7 @@ const Index = () => {
           alignSelf="center"
           as={Link}
           to="/design-bullwhip"
-          bg="rgba(255,255,255,0.08)"
+          bg="rgba(255,255,255,0.2)"
           borderColor="rgba(255,255,255,0.16)"
           _hover={{ bg: 'rgba(255,255,255,0.16)' }}
           _active={{ bg: 'rgba(255,255,255,0.16)' }}
