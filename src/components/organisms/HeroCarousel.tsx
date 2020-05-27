@@ -12,7 +12,7 @@ right: 50%;
 margin-left: -50vw;
 margin-right: -50vw;
 margin-top: -100px;
-margin-bottom: 32px;
+margin-bottom: 64px;
 /* height: 80vh;
 min-height: 500px; */
 `;
