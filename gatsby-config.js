@@ -27,13 +27,14 @@ module.exports = {
     `gatsby-transformer-remark`,
     `gatsby-plugin-sharp`,
     {
-      resolve: `gatsby-plugin-google-fonts`,
+      resolve: `gatsby-plugin-prefetch-google-fonts`,
       options: {
         fonts: [
-          `josefinsans`,
-          `source sans pro:300,400,600`, // you can also specify font weights and styles
+          {
+            family: `Josefin Sans`,
+            variants: [`300`, `400`, `600`],
+          },
         ],
-        display: 'swap',
       },
     },
     {
@@ -61,15 +62,6 @@ module.exports = {
         bucketName: 'whipworks.com',
         protocol: 'https',
         hostname: 'www.whipworks.com',
-      },
-    },
-    {
-      resolve: 'gatsby-plugin-web-font-loader',
-      options: {
-        custom: {
-          families: ['Domaine Display'],
-          urls: ['/fonts/fonts.css'],
-        },
       },
     },
   ],
