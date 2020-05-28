@@ -27,17 +27,6 @@ module.exports = {
     `gatsby-transformer-remark`,
     `gatsby-plugin-sharp`,
     {
-      resolve: `gatsby-plugin-prefetch-google-fonts`,
-      options: {
-        fonts: [
-          {
-            family: `Josefin Sans`,
-            variants: [`300`, `400`, `600`],
-          },
-        ],
-      },
-    },
-    {
       resolve: 'gatsby-plugin-chakra-ui',
       options: {
         isResettingCSS: true, // optional, default to true
