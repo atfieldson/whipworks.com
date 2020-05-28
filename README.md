@@ -67,6 +67,8 @@ cd               just like in Mac
 yarn             (no arguments) installs dependencies
 yarn build       builds the site
 mkdir .cache     for if .cache doesn't exist and I don't have permission to create it
+To invalidate current cache, do this as little as possible:
+aws cloudfront create-invalidation --distribution-id E3JS36YMAEJ3WR --paths "/*"
 
 
 2. run `yarn run build`, followed by `yarn run deploy`. That's it!

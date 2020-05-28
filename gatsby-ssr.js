@@ -11,7 +11,7 @@ const React = require('react');
 exports.onRenderBody = ({ setPostBodyComponents }, options = {}) => {
   options = Object.assign(
     {
-      apiKey: 'M2VlNzczMzItZjE2Mi00Y2IzLWJhMDctNzI1ZjlkYTY1YmM3NjM3MjQ4MDQyMTc1MjE1ODcw',
+      apiKey: 'NmQxZjU4MTctZmMzZS00MmY0LWJiNWMtMWZjNjA0ZDhlYjE5NjM3MjQ4MDQyMTc1MjE1ODcw',
       autopop: false,
       js: 'https://cdn.snipcart.com/themes/v3.0.13/default/snipcart.js',
       styles: 'https://cdn.snipcart.com/themes/v3.0.13/default/snipcart.css',
