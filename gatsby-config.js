@@ -26,6 +26,27 @@ module.exports = {
     `gatsby-transformer-sharp`,
     `gatsby-transformer-remark`,
     `gatsby-plugin-sharp`,
+    // {
+    //   resolve: `gatsby-plugin-google-fonts`,
+    //   options: {
+    //     fonts: [
+    //       `josefinsans`,
+    //       `source sans pro:300,400,600`, // you can also specify font weights and styles
+    //     ],
+    //     display: 'swap',
+    //   },
+    // },
+    // {
+    //   resolve: `gatsby-plugin-prefetch-google-fonts`,
+    //   options: {
+    //     fonts: [
+    //       {
+    //         family: `Josefin Sans`,
+    //         variants: [`300`, `400`, `600`],
+    //       },
+    //     ],
+    //   },
+    // },
     {
       resolve: 'gatsby-plugin-chakra-ui',
       options: {
@@ -51,6 +72,15 @@ module.exports = {
         bucketName: 'whipworks.com',
         protocol: 'https',
         hostname: 'www.whipworks.com',
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-web-font-loader',
+      options: {
+        custom: {
+          families: ['Domaine Display'],
+          urls: ['/fonts/fonts.css'],
+        },
       },
     },
   ],
