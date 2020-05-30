@@ -3,6 +3,7 @@ import { Box, Button, Heading, Text } from '@chakra-ui/core';
 import styled from '@emotion/styled';
 import { Link } from 'gatsby';
 import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const HeroCarouselContainer = styled(Carousel)`
   width: 100vw;
@@ -13,6 +14,9 @@ const HeroCarouselContainer = styled(Carousel)`
   margin-right: -50vw;
   margin-top: -100px;
   margin-bottom: 64px;
+  .control-arrow {
+    width: 4vw;
+  },
   /* height: 80vh;
 min-height: 500px; */
 `;
