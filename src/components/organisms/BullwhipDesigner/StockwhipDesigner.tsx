@@ -17,8 +17,11 @@ import AddPoppersModal from '../../molecules/AddPoppersModal';
 import { conchoOptions } from './constants/conchos';
 import FinishPicker from './FinishPicker';
 
+// Remove handle designs I don't want for Stockwhips, this needs to be done in tandem with props to HandleDesignPicker
+const updatedHandles = handles.filter(handle => handle.name !== 'Accent' && handle.name !== 'Web of Wyrd')
+
 const colorOptions = spools.map((s) => s.name).join('|');
-const handleDesignOptions = handles.map((h) => h.name).join('|');
+const handleDesignOptions = updatedHandles.map((h) => h.name ).join('|');
 
 const resolveWeight = (thongLength?: string) => {
   switch (thongLength) {
@@ -103,6 +106,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
           </AccordionSection>
           <AccordionSection label="Handle Design">
             <HandleDesignPicker
+              whipType='stockwhip'
               activeHandle={handleDesign}
               onClick={(handleDesign) => setHandle(handleDesign)}
             />
