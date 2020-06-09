@@ -107,7 +107,7 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
           pos="absolute"
         >
           <Text opacity={1} textAlign="center">
-            Select colors and handle pattern to see your bullwhip!
+            Select colors and handle pattern to see your handle design!
           </Text>
         </Flex>
       )}
