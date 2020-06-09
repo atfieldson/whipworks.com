@@ -19,6 +19,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Text
 } from '@chakra-ui/core';
 import { FiMenu } from 'react-icons/fi';
 import { Link, graphql, useStaticQuery, navigate } from 'gatsby';
@@ -98,6 +99,7 @@ const Header = ({ bg }: { bg?: string }) => {
             Design a Whip
           </MenuButton>
           <MenuList>
+            <Text textAlign="center">Bullwhip or Stockwhip?</Text>
             <MenuItem as={Link} to="/design-bullwhip" fontWeight="bold">
               <Image
                 size="2rem"
@@ -120,28 +122,6 @@ const Header = ({ bg }: { bg?: string }) => {
             </MenuItem>
           </MenuList>
         </Menu>
-        {/* <Button
-          borderWidth="1px"
-          as={Link}
-          to="/design-stockwhip"
-          bg="rgba(255,255,255,0.2)"
-          borderColor="rgba(255,255,255,0.16)"
-          _hover={{ bg: 'rgba(255,255,255,0.16)' }}
-          _active={{ bg: 'rgba(255,255,255,0.16)' }}
-        >
-          DESIGN A STOCKWHIP
-        </Button>
-        <Button
-          borderWidth="1px"
-          as={Link}
-          to="/design-bullwhip"
-          bg="rgba(255,255,255,0.2)"
-          borderColor="rgba(255,255,255,0.16)"
-          _hover={{ bg: 'rgba(255,255,255,0.16)' }}
-          _active={{ bg: 'rgba(255,255,255,0.16)' }}
-        >
-          DESIGN A BULLWHIP
-        </Button> */}
         <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
           <DrawerOverlay />
           <DrawerContent backgroundColor="#271E16">
