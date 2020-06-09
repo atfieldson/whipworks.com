@@ -15,6 +15,11 @@ import {
   Link as CLink,
   Box,
   Image,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Text
 } from '@chakra-ui/core';
 import { FiMenu } from 'react-icons/fi';
 import { Link, graphql, useStaticQuery, navigate } from 'gatsby';
@@ -89,17 +94,34 @@ const Header = ({ bg }: { bg?: string }) => {
           <CartButton />
         </Stack>
         <Logo src={require('../../images/marketplace_inverted.png')} onClick={handleLogoClick} />
-        <Button
-          borderWidth="1px"
-          as={Link}
-          to="/design-bullwhip"
-          bg="rgba(255,255,255,0.2)"
-          borderColor="rgba(255,255,255,0.16)"
-          _hover={{ bg: 'rgba(255,255,255,0.16)' }}
-          _active={{ bg: 'rgba(255,255,255,0.16)' }}
-        >
-          DESIGN A BULLWHIP
-        </Button>
+        <Menu>
+          <MenuButton as={Button} rightIcon="chevron-down">
+            Design a Whip
+          </MenuButton>
+          <MenuList>
+            <Text textAlign="center">Bullwhip or Stockwhip?</Text>
+            <MenuItem as={Link} to="/design-bullwhip" fontWeight="bold">
+              <Image
+                size="2rem"
+                rounded="full"
+                src="https://d3ruufruf2uqog.cloudfront.net/thumbnails/bullwhipThumbnail.png"
+                alt="Design a Bullwhip"
+                mr="12px"
+              />
+              <span>Design a Bullwhip</span>
+            </MenuItem>
+            <MenuItem as={Link} to="/design-stockwhip" fontWeight="bold">
+            <Image
+                size="2rem"
+                rounded="full"
+                src="https://d3ruufruf2uqog.cloudfront.net/thumbnails/stockwhipThumbnail.png"
+                alt="Design a Stockwhip"
+                mr="12px"
+              />
+              <span>Design a Stockwhip</span>
+            </MenuItem>
+          </MenuList>
+        </Menu>
         <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
           <DrawerOverlay />
           <DrawerContent backgroundColor="#271E16">
@@ -113,6 +135,9 @@ const Header = ({ bg }: { bg?: string }) => {
               <Stack spacing="4">
                 <CLink as={Link} to="/design-bullwhip">
                   Design a Bullwhip
+                </CLink>
+                <CLink as={Link} to="/design-stockwhip">
+                  Design a Stockwhip
                 </CLink>
                 <CLink as={Link} to="/accessories">
                   Accessories

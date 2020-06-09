@@ -36,13 +36,13 @@ variants:
       - name: 'The Kingdom Finder'
         images:
           - 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/indy/The+Kingdom+Finder.jpg'
-          - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle3b.jpg'
-          - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle3c.jpg'
-          - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle3d.jpg'
-      - name: 'The Classic'
-        images:
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/indy/The+Classic.jpg'
           - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle2b.jpg'
           - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle2c.jpg'
           - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle2d.jpg'
+      - name: 'The Classic'
+        images:
+          - 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/indy/The+Classic.jpg'
+          - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle3b.jpg'
+          - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle3c.jpg'
+          - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle3d.jpg'
 ---

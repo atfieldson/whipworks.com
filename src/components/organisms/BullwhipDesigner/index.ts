@@ -1,2 +1,4 @@
 import BullwhipDesigner from './BullwhipDesigner';
-export default BullwhipDesigner;
+import StockwhipDesigner from './StockwhipDesigner';
+
+export { BullwhipDesigner, StockwhipDesigner };

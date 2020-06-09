@@ -5,52 +5,45 @@ import AccordionSection from '../../atoms/AccordionSection';
 import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
 import ConchoPicker from './ConchoPicker';
-import { handleLengths, handleLengthOptions } from './constants/handleLengths';
-import { whipLengths, whipLengthOptions } from './constants/whipLengths';
+import { stockwhipHandleLengths, stockwhipHandleLengthOptions } from './constants/stockwhipHandleLengths';
+import { thongLengths, thongLengthOptions } from './constants/thongLengths';
+import { stockwhipFinishesOptions } from './constants/stockwhipFinishes';
 import Button from '../../atoms/Button';
-import PriceBreakdown from './PriceBreakdown';
+import PriceBreakdownStockwhip from './PriceBreakdownStockwhip';
 import { spools } from './constants/spoolColors';
 import { handles } from './constants/handleDesigns';
 import WhipPreview from './WhipPreview';
 import AddPoppersModal from '../../molecules/AddPoppersModal';
 import { conchoOptions } from './constants/conchos';
-import { collarOptions } from './constants/collars';
-import CollarPicker from './CollarPicker';
+import FinishPicker from './FinishPicker';
+
+// Remove handle designs I don't want for Stockwhips, this needs to be done in tandem with props to HandleDesignPicker
+const updatedHandles = handles.filter(handle => handle.name !== 'Accent' && handle.name !== 'Web of Wyrd')
 
 const colorOptions = spools.map((s) => s.name).join('|');
-const handleDesignOptions = handles.map((h) => h.name).join('|');
+const handleDesignOptions = updatedHandles.map((h) => h.name ).join('|');
 
-const resolveWeight = (length?: string) => {
-  switch (length) {
+const resolveWeight = (thongLength?: string) => {
+  switch (thongLength) {
     case '4 Feet':
       return 750;
-    case '5 Feet':
+    case '4 Feet 6 Inches':
       return 850;
-    case '6 Feet':
+    case '5 Feet':
       return 880;
-    case '7 Feet':
-      return 910;
-    case '8 Feet':
-      return 965;
-    case '10 Feet':
-      return 1030;
-    case '12 Feet':
-      return 1360;
-    default:
-      return 900;
   }
 };
 
-const BullwhipDesigner = ({ location }: { location: any }) => {
+const StockwhipDesigner = ({ location }: { location: any }) => {
   const [index, setIndex] = useState<number | number[] | undefined>(0);
   const [primary, setPrimary] = useState<string | undefined>(undefined);
   const [secondary, setSecondary] = useState<string | undefined>(undefined);
   const [handleDesign, setHandle] = useState<string | undefined>(undefined);
   const [waxed, setWaxed] = useState(true);
-  const [whipLength, setWhipLength] = useState<string | undefined>(undefined);
-  const [handleLength, setHandleLength] = useState<string | undefined>(undefined);
+  const [thongLength, setThongLength] = useState<string | undefined>(undefined);
+  const [stockwhipHandleLength, setStockwhipHandleLength] = useState<string | undefined>(undefined);
+  const [handleFinish, setHandleFinish] = useState<string | undefined>(undefined);
   const [concho, setConcho] = useState<string | undefined>(undefined);
-  const [collar, setCollar] = useState('None');
   const [modalOpen, setModalOpen] = useState(false);
 
   const onAccordionChange = (index: any) => {
@@ -74,37 +67,36 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         setIndex((index: any) => index + 1);
       }, 500);
     }
-  }, [primary, secondary, handleDesign, waxed, whipLength, handleLength, concho, collar]);
+  }, [primary, secondary, handleDesign, waxed, thongLength, stockwhipHandleLength, handleFinish, concho]);
 
   const handleAdd = () => {
     setModalOpen(true);
   };
 
-  const readyForOrder = primary && secondary && whipLength && handleLength && concho;
+  const readyForOrder = primary && secondary && thongLength && stockwhipHandleLength && concho && handleFinish;
   return (
     <Flex flexDirection={{ base: 'column-reverse', md: 'row' }}>
       <Flex flex="2" order={1} flexDirection="column">
-        <Text>YOUR BULLWHIP</Text>
+        <Text>YOUR STOCKWHIP</Text>
         <Stack spacing="3" mt="4" shouldWrapChildren>
           <CustomizationLabel label="Primary Color" value={primary} />
           <CustomizationLabel label="Secondary Color" value={secondary} />
           <CustomizationLabel label="Handle Design" value={handleDesign} />
           <CustomizationLabel label="Waxed?" value={waxed ? 'Yes' : 'No'} />
-          <CustomizationLabel label="Whip Length" value={whipLength} />
-          <CustomizationLabel label="Handle Length" value={handleLength} />
+          <CustomizationLabel label="Thong Length" value={thongLength} />
+          <CustomizationLabel label="Handle Length" value={stockwhipHandleLength} />
+          <CustomizationLabel label="Handle Finish" value={handleFinish} />
           <CustomizationLabel label="Concho" value={concho} />
-          <CustomizationLabel label="Collar" value={collar} />
-          <PriceBreakdown
-            handleLength={handleLength}
-            whipLength={whipLength}
+          <PriceBreakdownStockwhip
+            stockwhipHandleLength={stockwhipHandleLength}
+            thongLength={thongLength}
             concho={concho}
             isWaxed={waxed}
-            collar={collar}
           />
         </Stack>
       </Flex>
       <Flex flex="6" order={{ base: 3, md: 2 }} mx={{ base: '0', md: '6' }} flexDirection="column">
-        <Heading mb="8px" textAlign="center">Design your Bullwhip</Heading>
+        <Heading mb="8px" textAlign="center">Design your Stockwhip</Heading>
         <Accordion width="100%" index={index} onChange={onAccordionChange} allowToggle>
           <AccordionSection label="Primary Color">
             <WhipColors onClick={(color) => setPrimary(color)} activeColor={primary} />
@@ -114,6 +106,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           </AccordionSection>
           <AccordionSection label="Handle Design">
             <HandleDesignPicker
+              whipType='stockwhip'
               activeHandle={handleDesign}
               onClick={(handleDesign) => setHandle(handleDesign)}
             />
@@ -127,19 +120,22 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
               <Radio value="false">Unwaxed</Radio>
             </RadioGroup>
           </AccordionSection>
-          <AccordionSection label="Whip Length">
-            <RadioGroup value={whipLength} onChange={(e) => setWhipLength(e.target.value)}>
-              {whipLengths.map((l) => (
+          <AccordionSection label="Thong Length">
+            <RadioGroup value={thongLength} onChange={(e) => setThongLength(e.target.value)}>
+              {thongLengths.map((l) => (
                 <Radio value={l.name} key={l.name}>{`${l.name} ($${l.price})`}</Radio>
               ))}
             </RadioGroup>
           </AccordionSection>
           <AccordionSection label="Handle Length">
-            <RadioGroup value={handleLength} onChange={(e) => setHandleLength(e.target.value)}>
-              {handleLengths.map((l) => (
+            <RadioGroup value={stockwhipHandleLength} onChange={(e) => setStockwhipHandleLength(e.target.value)}>
+              {stockwhipHandleLengths.map((l) => (
                 <Radio key={l.name} value={l.name}>{`${l.name} ($${l.price})`}</Radio>
               ))}
             </RadioGroup>
+          </AccordionSection>
+          <AccordionSection label="Handle Finish">
+            <FinishPicker activeFinish={handleFinish} onClick={(handleFinish) => setHandleFinish(handleFinish)} />
           </AccordionSection>
           <AccordionSection label="Concho">
             <Text my="2" fontSize="md">
@@ -147,24 +143,17 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
             </Text>
             <ConchoPicker activeConcho={concho} onClick={(concho) => setConcho(concho)} />
           </AccordionSection>
-          <AccordionSection label="Extras">
-            <Heading size="md" mt="2">Add a Collar</Heading>
-            <Text my="2" fontSize="md">
-              A collar is attached to the transition with an additional transition knot added, this addition looks great on 12 or 14 inch handles!
-            </Text>
-            <CollarPicker activeCollar={collar} onClick={(collar) => setCollar(collar)} />
-          </AccordionSection>
         </Accordion>
         <Button
           isDisabled={!readyForOrder}
           my="6"
           onClick={handleAdd}
           className="snipcart-add-item"
-          data-item-id="custom-bullwhip"
-          data-item-name="Custom Bullwhip"
+          data-item-id="custom-stockwhip"
+          data-item-name="Custom Stockwhip"
           data-item-price="204"
-          data-item-url="/design-bullwhip"
-          data-item-description="A custom-designed handmade bullwhip"
+          data-item-url="/design-stockwhip"
+          data-item-description="A custom-designed handmade stockwhip"
           data-item-custom0-name="Primary Color"
           data-item-custom0-options={colorOptions}
           data-item-custom0-value={primary}
@@ -174,22 +163,22 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           data-item-custom2-name="Handle Design"
           data-item-custom2-options={handleDesignOptions}
           data-item-custom2-value={handleDesign}
-          data-item-custom3-name="Length"
-          data-item-custom3-options={whipLengthOptions}
-          data-item-custom3-value={whipLength}
+          data-item-custom3-name="Thong Length"
+          data-item-custom3-options={thongLengthOptions}
+          data-item-custom3-value={thongLength}
           data-item-custom4-name="Handle Length"
-          data-item-custom4-options={handleLengthOptions}
-          data-item-custom4-value={handleLength}
-          data-item-custom5-name="Concho"
-          data-item-custom5-options={conchoOptions}
-          data-item-custom5-value={concho}
-          data-item-custom6-name="Waxing"
-          data-item-custom6-options="Yes[+25]|No"
-          data-item-custom6-value={waxed ? 'Yes' : 'No'}
-          data-item-custom7-name="Collar"
-          data-item-custom7-options={collarOptions}
-          data-item-custom7-value={collar}
-          data-item-weight={resolveWeight(whipLength)}
+          data-item-custom4-options={stockwhipHandleLengthOptions}
+          data-item-custom4-value={stockwhipHandleLength}
+          data-item-custom5-name="Handle Finish"
+          data-item-custom5-options={stockwhipFinishesOptions}
+          data-item-custom5-value={handleFinish}
+          data-item-custom6-name="Concho"
+          data-item-custom6-options={conchoOptions}
+          data-item-custom6-value={concho}
+          data-item-custom7-name="Waxing"
+          data-item-custom7-options="Yes[+25]|No"
+          data-item-custom7-value={waxed ? 'Yes' : 'No'}
+          data-item-weight={resolveWeight(thongLength)}
           data-item-width={46}
           data-item-height={8}
           data-item-length={30}
@@ -209,4 +198,4 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   );
 };
 
-export default BullwhipDesigner;
+export default StockwhipDesigner;
