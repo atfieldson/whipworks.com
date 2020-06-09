@@ -93,6 +93,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
         </Stack>
       </Flex>
       <Flex flex="6" order={{ base: 3, md: 2 }} mx={{ base: '0', md: '6' }} flexDirection="column">
+        <Heading mb="8px" textAlign="center">Design your Stockwhip</Heading>
         <Accordion width="100%" index={index} onChange={onAccordionChange} allowToggle>
           <AccordionSection label="Primary Color">
             <WhipColors onClick={(color) => setPrimary(color)} activeColor={primary} />
