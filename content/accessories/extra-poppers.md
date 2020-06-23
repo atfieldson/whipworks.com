@@ -1,7 +1,7 @@
 ---
 title: 10 Extra Poppers
 id: extra-poppers
-price: 20
+price: 25
 weight: 0
 description: '10 extra kevlar poppers'
 images:
