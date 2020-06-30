@@ -189,7 +189,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           data-item-custom7-name="Collar"
           data-item-custom7-options={collarOptions}
           data-item-custom7-value={collar}
-          data-item-weight={resolveWeight(whipLength)}
+          data-item-weight={900}
           data-item-width={46}
           data-item-height={8}
           data-item-length={30}

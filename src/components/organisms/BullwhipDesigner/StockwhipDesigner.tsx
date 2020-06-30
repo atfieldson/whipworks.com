@@ -178,7 +178,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
           data-item-custom7-name="Waxing"
           data-item-custom7-options="Yes[+25]|No"
           data-item-custom7-value={waxed ? 'Yes' : 'No'}
-          data-item-weight={resolveWeight(thongLength)}
+          data-item-weight={900}
           data-item-width={46}
           data-item-height={8}
           data-item-length={30}
