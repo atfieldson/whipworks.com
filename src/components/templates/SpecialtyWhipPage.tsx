@@ -31,7 +31,7 @@ const resolveWeights = (length?: string) => {
       return 880;
     case '7 ft' || '7 Feet':
       return 910;
-    case '8 ft'  || '8 Feet':
+    case '8 ft' || '8 Feet':
       return 965;
     case '10 ft' || '10 Feet':
       return 1030;
@@ -50,6 +50,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
   const [price, setPrice] = useState(whip.price);
   const [weight, setWeight] = useState(whip.weight);
   const [options, setOptions] = useState({});
+  const [selectedOptions, setSelectedOptions] = useState<any>({});
   const [images, setImages] = useState(whip.images);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -67,6 +68,12 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
     }
   }, [styles]);
 
+  useEffect(() => {
+    const prices = Object.values(selectedOptions);
+    const summedPrices = prices.reduce((a, b) => Number(a) + Number(b), 0) as number;
+    setPrice(whip.price + summedPrices);
+  }, [selectedOptions]);
+
   const handleVariantChange = (e: ChangeEvent<HTMLSelectElement>, variant: Variant) => {
     /** assign snipcart values */
     const index = whip.variants?.findIndex((v) => v.name === variant.name) || 0;
@@ -82,7 +89,10 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
     const option = variant.options.find((v) => v.name == e.target.value);
     // needed in case priceDiff is 0
     if (option?.priceDiff !== undefined) {
-      setPrice(whip.price + Number(option.priceDiff));
+      setSelectedOptions((selectedOptions: any) => ({
+        ...selectedOptions,
+        [variant.name]: option.priceDiff,
+      }));
     }
   };
 
