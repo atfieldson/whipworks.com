@@ -15,7 +15,7 @@ type Spool = {
 };
 
 const WhipColors = ({ activeColor, onClick }: Props) => (
-  <SimpleGrid spacing="3" minChildWidth="100px">
+  <SimpleGrid spacing="3" minChildWidth={["50px", "100px"]}>
     {spools.map((c: Spool) => (
       <ImageButton
         key={c.name}

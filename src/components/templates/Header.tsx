@@ -77,6 +77,8 @@ const Header = ({ bg }: { bg?: string }) => {
     navigate('/');
   };
 
+  const width = window.innerWidth;
+
   return (
     <FullWidthContainer backgroundColor={bg}>
       <Wrapper>
@@ -95,22 +97,26 @@ const Header = ({ bg }: { bg?: string }) => {
         </Stack>
         <Logo src={require('../../images/marketplace_inverted.png')} onClick={handleLogoClick} />
         <Menu>
-          <MenuButton as={Button} rightIcon="chevron-down">
+          { width > 400
+          &&
+          <MenuButton as={Button} rightIcon="chevron-down" >
             Design a Whip
           </MenuButton>
+          }
           <MenuList>
-            <Text textAlign="center">Bullwhip or Stockwhip?</Text>
-            <MenuItem as={Link} to="/design-bullwhip" fontWeight="bold">
+            <Text textAlign="center" mt="6px">Bullwhip or Stockwhip?</Text>
+            <MenuItem as={Link} to="/design-bullwhip" fontWeight="bold" mt="12px">
               <Image
                 size="2rem"
                 rounded="full"
                 src="https://d3ruufruf2uqog.cloudfront.net/thumbnails/bullwhipThumbnail.png"
                 alt="Design a Bullwhip"
                 mr="12px"
+                
               />
               <span>Design a Bullwhip</span>
             </MenuItem>
-            <MenuItem as={Link} to="/design-stockwhip" fontWeight="bold">
+            <MenuItem as={Link} to="/design-stockwhip" fontWeight="bold" mt="12px">
             <Image
                 size="2rem"
                 rounded="full"
