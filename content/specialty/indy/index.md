@@ -39,6 +39,12 @@ variants:
           - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle2b.jpg'
           - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle2c.jpg'
           - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle2d.jpg'
+      - name: 'The Junior'
+        images:
+          - 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/indy/indyStyle4a.jpg'
+          - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle4b.jpg'
+          - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle4c.jpg'
+          - 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/indyStyle4d.jpg'
       - name: 'The Classic'
         images:
           - 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/indy/The+Classic.jpg'
