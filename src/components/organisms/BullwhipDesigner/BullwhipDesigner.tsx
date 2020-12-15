@@ -12,7 +12,7 @@ import PriceBreakdown from './PriceBreakdown';
 import { spools } from './constants/spoolColors';
 import { handles } from './constants/handleDesigns';
 import WhipPreview from './WhipPreview';
-import AddPoppersModal from '../../molecules/AddPoppersModal';
+import BullwhipAddedModal from '../../molecules/BullwhipAddedModal';
 import { conchoOptions } from './constants/conchos';
 import { collarOptions } from './constants/collars';
 import CollarPicker from './CollarPicker';
@@ -204,7 +204,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         secondary={secondary}
         pattern={handleDesign}
       />
-      <AddPoppersModal isOpen={modalOpen} onClose={() => setModalOpen(false)} location={location} />
+      <BullwhipAddedModal isOpen={modalOpen} onClose={() => setModalOpen(false)} location={location} />
     </Flex>
   );
 };

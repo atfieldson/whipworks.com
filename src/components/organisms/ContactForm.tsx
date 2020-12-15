@@ -56,7 +56,7 @@ const ContactForm = ({ ...props }) => {
       <Stack spacing="5" mt="4">
         <FormControl isInvalid={!!errors.email}>
           <FormLabel>Your Email Address</FormLabel>
-          <Input placeholder="you@youremail.com" name="email" ref={register({ required: true })} />
+          <Input placeholder="you@youremail.com" name="email" ref={register({ required: true })} color="#000000" fontWeight="bold"/>
           <FormErrorMessage>Please enter your email address.</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.message}>
@@ -65,6 +65,8 @@ const ContactForm = ({ ...props }) => {
             placeholder="Type your message here!"
             name="message"
             ref={register({ required: true })}
+            color="#000000" 
+            fontWeight="bold"
           />
           <FormErrorMessage>Please add a message.</FormErrorMessage>
         </FormControl>
