@@ -145,13 +145,15 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
                 <Select
                   defaultValue={v.defaultValue}
                   onChange={(e) => handleVariantChange(e, v)}
-                  bg="rgba(255,255,255,0.08)"
+                  bg="rgba(255,255,255,0.9)"
                   borderColor="rgba(255,255,255,0.16)"
-                  _hover={{ bg: 'rgba(255,255,255,0.16)' }}
-                  _active={{ bg: 'rgba(255,255,255,0.16)' }}
+                  _hover={{ bg: 'rgba(255,255,255,1)' }}
+                  _active={{ bg: 'rgba(255,255,255,1)' }}
+                  color="#000000"
+                  fontWeight="bold"
                 >
                   {v.options.map((vo: Option) => (
-                    <option value={vo.name} key={vo.name}>
+                    <option value={vo.name} key={vo.name} color="000000">
                       {vo.name}
                     </option>
                   ))}

@@ -44,6 +44,7 @@ const InstagramFeed = ({ ...props }: BoxProps) => (
         borderColor="rgba(255,255,255,0.16)"
         as={Link}
         href="https://www.instagram.com/whipworks/"
+        _hover={{ color: "#ebedf0", bg: "blue.600" }}
       >
         Follow me on Instagram
       </Button>

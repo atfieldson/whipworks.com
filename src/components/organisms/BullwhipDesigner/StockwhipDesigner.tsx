@@ -13,7 +13,7 @@ import PriceBreakdownStockwhip from './PriceBreakdownStockwhip';
 import { spools } from './constants/spoolColors';
 import { handles } from './constants/handleDesigns';
 import WhipPreview from './WhipPreview';
-import AddPoppersModal from '../../molecules/AddPoppersModal';
+import BullwhipAddedModal from '../../molecules/BullwhipAddedModal';
 import { conchoOptions } from './constants/conchos';
 import FinishPicker from './FinishPicker';
 
@@ -193,7 +193,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
         secondary={secondary}
         pattern={handleDesign}
       />
-      <AddPoppersModal isOpen={modalOpen} onClose={() => setModalOpen(false)} location={location} />
+      <BullwhipAddedModal isOpen={modalOpen} onClose={() => setModalOpen(false)} location={location} />
     </Flex>
   );
 };

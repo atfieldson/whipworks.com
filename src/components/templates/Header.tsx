@@ -95,12 +95,12 @@ const Header = ({ bg }: { bg?: string }) => {
         </Stack>
         <Logo src={require('../../images/marketplace_inverted.png')} onClick={handleLogoClick} />
         <Menu>
-          <MenuButton as={Button} rightIcon="chevron-down" >
+          <MenuButton as={Button} rightIcon="chevron-down" color="gray.900">
             Design a Whip
           </MenuButton>
           <MenuList>
-            <Text textAlign="center" mt="6px">Bullwhip or Stockwhip?</Text>
-            <MenuItem as={Link} to="/design-bullwhip" fontWeight="bold" mt="12px">
+            <Text textAlign="center" mt="6px" color="gray.900">Bullwhip or Stockwhip?</Text>
+            <MenuItem as={Link} to="/design-bullwhip" fontWeight="bold" mt="12px" color="gray.900">
               <Image
                 size="2rem"
                 rounded="full"
@@ -111,7 +111,7 @@ const Header = ({ bg }: { bg?: string }) => {
               />
               <span>Design a Bullwhip</span>
             </MenuItem>
-            <MenuItem as={Link} to="/design-stockwhip" fontWeight="bold" mt="12px">
+            <MenuItem as={Link} to="/design-stockwhip" fontWeight="bold" mt="12px" color="gray.900">
             <Image
                 size="2rem"
                 rounded="full"
