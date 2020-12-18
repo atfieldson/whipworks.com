@@ -7,7 +7,7 @@ import { Flex, Heading, RadioGroup, Text, Box, Radio, Select, Stack, Image } fro
 import ProductImages from '../molecules/ProductImages';
 import Button from '../atoms/Button';
 import SpecialtyWhipCard from '../atoms/SpecialtyWhipCard';
-import AddPoppersModal from '../molecules/AddPoppersModal';
+import BullwhipAddedModal from '../molecules/BullwhipAddedModal';
 
 type Option = {
   name: string;
@@ -205,7 +205,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           )}
         </Flex>
       </Box>
-      <AddPoppersModal isOpen={modalOpen} onClose={() => setModalOpen(false)} location={location} />
+      <BullwhipAddedModal isOpen={modalOpen} onClose={() => setModalOpen(false)} location={location} />
     </Layout>
   );
 };
