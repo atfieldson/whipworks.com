@@ -31,7 +31,7 @@
     "react-hook-form": "^5.7.2",
     "react-icons": "^3.10.0",
     "react-responsive-carousel": "^3.2.7",
-    "three": "^0.116.1"
+    "three": "^0.137.0"
   },
   "devDependencies": {
     "@types/react-helmet": "^5.0.15",
