@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Box, Text, SimpleGrid } from '@chakra-ui/core';
+import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 
 import { conchos } from './constants/conchos';
 import { stockwhipHandleLengths } from './constants/stockwhipHandleLengths';
@@ -14,7 +13,12 @@ type Props = {
   isWaxed?: boolean;
 };
 
-const PriceBreakdownStockwhip = ({ stockwhipHandleLength, thongLength, concho, isWaxed }: Props) => {
+const PriceBreakdownStockwhip = ({
+  stockwhipHandleLength,
+  thongLength,
+  concho,
+  isWaxed,
+}: Props) => {
   const [conchoPrice, setConchoPrice] = useState<number | undefined>(undefined);
   const [handlePrice, setHandlePrice] = useState<number | undefined>(undefined);
   const [thongPrice, setThongPrice] = useState<number | undefined>(undefined);
@@ -40,7 +44,6 @@ const PriceBreakdownStockwhip = ({ stockwhipHandleLength, thongLength, concho, i
     }
   }, [thongLength]);
 
-
   const total = (conchoPrice || 0) + (handlePrice || 0) + (thongPrice || 0) + (isWaxed ? 25 : 0);
   return (
     <Box mt={4}>
@@ -65,13 +68,6 @@ const PriceBreakdownStockwhip = ({ stockwhipHandleLength, thongLength, concho, i
       </SimpleGrid>
     </Box>
   );
-};
-
-PriceBreakdownStockwhip.propTypes = {
-  handleLength: PropTypes.string,
-  whipLength: PropTypes.string,
-  concho: PropTypes.string,
-  isWaxed: PropTypes.bool,
 };
 
 export default PriceBreakdownStockwhip;

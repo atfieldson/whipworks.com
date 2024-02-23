@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Text, Accordion, Stack, RadioGroup, Radio, Heading } from '@chakra-ui/core';
+import { Flex, Text, Accordion, Stack, RadioGroup, Radio, Heading, Button } from '@chakra-ui/react';
 import CustomizationLabel from '../../atoms/CustomizationLabel';
 import AccordionSection from '../../atoms/AccordionSection';
 import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
 import ConchoPicker from './ConchoPicker';
-import { stockwhipHandleLengths, stockwhipHandleLengthOptions } from './constants/stockwhipHandleLengths';
+import {
+  stockwhipHandleLengths,
+  stockwhipHandleLengthOptions,
+} from './constants/stockwhipHandleLengths';
 import { thongLengths, thongLengthOptions } from './constants/thongLengths';
 import { stockwhipFinishesOptions } from './constants/stockwhipFinishes';
-import Button from '../../atoms/Button';
 import PriceBreakdownStockwhip from './PriceBreakdownStockwhip';
 import { spools } from './constants/spoolColors';
 import { handles } from './constants/handleDesigns';
@@ -18,10 +20,12 @@ import { conchoOptions } from './constants/conchos';
 import FinishPicker from './FinishPicker';
 
 // Remove handle designs I don't want for Stockwhips, this needs to be done in tandem with props to HandleDesignPicker
-const updatedHandles = handles.filter(handle => handle.name !== 'Accent' && handle.name !== 'Web of Wyrd')
+const updatedHandles = handles.filter(
+  (handle) => handle.name !== 'Accent' && handle.name !== 'Web of Wyrd'
+);
 
 const colorOptions = spools.map((s) => s.name).join('|');
-const handleDesignOptions = updatedHandles.map((h) => h.name ).join('|');
+const handleDesignOptions = updatedHandles.map((h) => h.name).join('|');
 
 const resolveWeight = (thongLength?: string) => {
   switch (thongLength) {
@@ -35,7 +39,7 @@ const resolveWeight = (thongLength?: string) => {
 };
 
 const StockwhipDesigner = ({ location }: { location: any }) => {
-  const [index, setIndex] = useState<number | number[] | undefined>(0);
+  const [index, setIndex] = useState<number>(0);
   const [primary, setPrimary] = useState<string | undefined>(undefined);
   const [secondary, setSecondary] = useState<string | undefined>(undefined);
   const [handleDesign, setHandle] = useState<string | undefined>(undefined);
@@ -64,16 +68,26 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
       }
 
       setTimeout(() => {
-        setIndex((index: any) => index + 1);
+        setIndex((index) => index + 1);
       }, 500);
     }
-  }, [primary, secondary, handleDesign, waxed, thongLength, stockwhipHandleLength, handleFinish, concho]);
+  }, [
+    primary,
+    secondary,
+    handleDesign,
+    waxed,
+    thongLength,
+    stockwhipHandleLength,
+    handleFinish,
+    concho,
+  ]);
 
   const handleAdd = () => {
     setModalOpen(true);
   };
 
-  const readyForOrder = primary && secondary && thongLength && stockwhipHandleLength && concho && handleFinish;
+  const readyForOrder =
+    primary && secondary && thongLength && stockwhipHandleLength && concho && handleFinish;
   return (
     <Flex flexDirection={{ base: 'column-reverse', md: 'row' }}>
       <Flex flex="2" order={1} flexDirection="column">
@@ -96,7 +110,9 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
         </Stack>
       </Flex>
       <Flex flex="6" order={{ base: 3, md: 2 }} mx={{ base: '0', md: '6' }} flexDirection="column">
-        <Heading mb="8px" textAlign="center">Design your Stockwhip</Heading>
+        <Heading mb="8px" textAlign="center">
+          Design your Stockwhip
+        </Heading>
         <Accordion width="100%" index={index} onChange={onAccordionChange} allowToggle>
           <AccordionSection label="Primary Color">
             <WhipColors onClick={(color) => setPrimary(color)} activeColor={primary} />
@@ -106,42 +122,45 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
           </AccordionSection>
           <AccordionSection label="Handle Design">
             <HandleDesignPicker
-              whipType='stockwhip'
+              whipType="stockwhip"
               activeHandle={handleDesign}
               onClick={(handleDesign) => setHandle(handleDesign)}
             />
           </AccordionSection>
           <AccordionSection label="Waxing">
-            <RadioGroup
-              onChange={(e) => setWaxed(e.target.value === 'true')}
-              value={waxed.toString()}
-            >
-              <Radio value="true">Waxed</Radio>
-              <Radio value="false">Unwaxed</Radio>
+            <RadioGroup onChange={(e) => setWaxed(e === 'true')} value={waxed.toString()}>
+              <Stack>
+                <Radio value="true">Waxed</Radio>
+                <Radio value="false">Unwaxed</Radio>
+              </Stack>
             </RadioGroup>
           </AccordionSection>
           <AccordionSection label="Thong Length">
-            <RadioGroup value={thongLength} onChange={(e) => setThongLength(e.target.value)}>
-              {thongLengths.map((l) => (
-                <Radio value={l.name} key={l.name}>{`${l.name} ($${l.price})`}</Radio>
-              ))}
+            <RadioGroup value={thongLength} onChange={setThongLength}>
+              <Stack>
+                {thongLengths.map((l) => (
+                  <Radio value={l.name} key={l.name}>{`${l.name} ($${l.price})`}</Radio>
+                ))}
+              </Stack>
             </RadioGroup>
           </AccordionSection>
           <AccordionSection label="Handle Length">
-            <RadioGroup value={stockwhipHandleLength} onChange={(e) => setStockwhipHandleLength(e.target.value)}>
-              {stockwhipHandleLengths.map((l) => (
-                <Radio key={l.name} value={l.name}>{`${l.name} ($${l.price})`}</Radio>
-              ))}
+            <RadioGroup value={stockwhipHandleLength} onChange={setStockwhipHandleLength}>
+              <Stack>
+                {stockwhipHandleLengths.map((l) => (
+                  <Radio key={l.name} value={l.name}>{`${l.name} ($${l.price})`}</Radio>
+                ))}
+              </Stack>
             </RadioGroup>
           </AccordionSection>
           <AccordionSection label="Handle Finish">
-            <FinishPicker activeFinish={handleFinish} onClick={(handleFinish) => setHandleFinish(handleFinish)} />
+            <FinishPicker activeFinish={handleFinish} onClick={setHandleFinish} />
           </AccordionSection>
           <AccordionSection label="Concho">
             <Text my="2" fontSize="md">
               A Concho is applied to the heel of every handle, giving your bullwhip a distinct look!
             </Text>
-            <ConchoPicker activeConcho={concho} onClick={(concho) => setConcho(concho)} />
+            <ConchoPicker activeConcho={concho} onClick={setConcho} />
           </AccordionSection>
         </Accordion>
         <Button
@@ -193,7 +212,11 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
         secondary={secondary}
         pattern={handleDesign}
       />
-      <BullwhipAddedModal isOpen={modalOpen} onClose={() => setModalOpen(false)} location={location} />
+      <BullwhipAddedModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        location={location}
+      />
     </Flex>
   );
 };

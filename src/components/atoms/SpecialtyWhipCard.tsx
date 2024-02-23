@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box, Flex, Text, Image } from '@chakra-ui/core';
-import Button from './Button';
+import { Box, Flex, Text, Image, Button } from '@chakra-ui/react';
 import { Link } from 'gatsby';
 
 type Props = {

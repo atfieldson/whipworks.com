@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Text, Flex, Box, BoxProps } from '@chakra-ui/core';
+import { Text, Flex, Box, BoxProps } from '@chakra-ui/react';
 import * as THREE from 'three';
 
 import { resolveColorUrl, drawBullwhipPreviews } from './constants/drawBullwhipPreviews';

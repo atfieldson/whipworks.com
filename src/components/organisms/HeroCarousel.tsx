@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Button, Heading, Text } from '@chakra-ui/core';
+import { Box, Heading, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { Link } from 'gatsby';
 import { Carousel } from 'react-responsive-carousel';
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const HeroCarouselContainer = styled(Carousel)`
   width: 100vw;

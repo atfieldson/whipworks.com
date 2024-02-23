@@ -7,7 +7,7 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   Button,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 
 type Props = {
   isOpen: boolean;
@@ -18,7 +18,7 @@ type Props = {
 };
 
 const AddPoppersModal = ({ isOpen, onClose, location }: Props) => {
-  const cancelRef = useRef<HTMLElement | null>(null);
+  const cancelRef = useRef(null);
 
   return (
     <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
@@ -44,11 +44,6 @@ const AddPoppersModal = ({ isOpen, onClose, location }: Props) => {
             data-item-custom1-name="Color"
             data-item-custom1-options="Blue|Orange|Yellow"
             ml="4"
-            bg="blue.200"
-            fontWeight="bold"
-            color="#1a140f"
-            size="lg"
-            _hover={{ backgroundColor: 'blue.600' }}
           >
             Add Poppers
           </Button>

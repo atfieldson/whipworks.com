@@ -1,9 +1,8 @@
 import React, { ReactNode } from 'react';
-
 import Content from './Content';
 import styled from '@emotion/styled';
 import Header from './Header';
-import { Link as CLink } from '@chakra-ui/core';
+import { Link as CLink } from '@chakra-ui/react';
 import { Link } from 'gatsby';
 
 type Props = {

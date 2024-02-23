@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton, Text } from '@chakra-ui/core';
+import { Box, IconButton, Text } from '@chakra-ui/react';
 import { FaShoppingCart } from 'react-icons/fa';
 import styled from '@emotion/styled';
 
@@ -19,7 +19,7 @@ const StatusIcon = styled(Box)`
 const CartButton = () => (
   <Box pos="relative">
     <IconButton
-      icon={FaShoppingCart}
+      icon={<FaShoppingCart />}
       variant="ghost"
       aria-label="Your Cart"
       className="snipcart-checkout"

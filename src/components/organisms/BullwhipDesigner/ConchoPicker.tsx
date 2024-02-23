@@ -1,5 +1,5 @@
 import React from 'react';
-import { SimpleGrid } from '@chakra-ui/core';
+import { SimpleGrid } from '@chakra-ui/react';
 
 import ImageButton from '../../atoms/ImageButton';
 import { conchos } from './constants/conchos';

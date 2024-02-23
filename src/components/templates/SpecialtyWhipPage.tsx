@@ -1,11 +1,20 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { graphql } from 'gatsby';
-
 import Layout from './Layout';
 import SEO from './SEO';
-import { Flex, Heading, RadioGroup, Text, Box, Radio, Select, Stack, Image } from '@chakra-ui/core';
+import {
+  Flex,
+  Heading,
+  RadioGroup,
+  Text,
+  Box,
+  Radio,
+  Select,
+  Stack,
+  Image,
+  Button,
+} from '@chakra-ui/react';
 import ProductImages from '../molecules/ProductImages';
-import Button from '../atoms/Button';
 import SpecialtyWhipCard from '../atoms/SpecialtyWhipCard';
 import BullwhipAddedModal from '../molecules/BullwhipAddedModal';
 
@@ -62,8 +71,9 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
   useEffect(() => {
     if (styles) {
       setStyle(styles.defaultValue);
-      const defaultImages = styles.options.find((s: Variant) => s.name === styles.defaultValue)
-        .images;
+      const defaultImages = styles.options.find(
+        (s: Variant) => s.name === styles.defaultValue
+      ).images;
       setImages(defaultImages);
     }
   }, [styles]);
@@ -96,14 +106,14 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
     }
   };
 
-  const handleStyleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setStyle(e.target.value);
+  const handleStyleChange = (style: string) => {
+    setStyle(style);
     const index = whip.variants?.findIndex((v) => v.name === 'Style') || 0;
     setOptions({
       ...options,
-      [`data-item-custom${index + 1}-value`]: e.target.value,
+      [`data-item-custom${index + 1}-value`]: style,
     });
-    const defaultImages = styles.options.find((s: Variant) => s.name === e.target.value).images;
+    const defaultImages = styles.options.find((s: Variant) => s.name === style).images;
     setImages(defaultImages);
   };
 
@@ -129,11 +139,13 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
               <Box>
                 <Text fontWeight="bold">Style</Text>
                 <RadioGroup value={style} onChange={handleStyleChange}>
-                  {styles.options.map((s: Option) => (
-                    <Radio value={s.name} key={s.name}>
-                      {s.name}
-                    </Radio>
-                  ))}
+                  <Stack>
+                    {styles.options.map((s: Option) => (
+                      <Radio value={s.name} key={s.name}>
+                        {s.name}
+                      </Radio>
+                    ))}
+                  </Stack>
                 </RadioGroup>
               </Box>
             )}
@@ -205,7 +217,11 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           )}
         </Flex>
       </Box>
-      <BullwhipAddedModal isOpen={modalOpen} onClose={() => setModalOpen(false)} location={location} />
+      <BullwhipAddedModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        location={location}
+      />
     </Layout>
   );
 };
@@ -237,7 +253,7 @@ interface Props {
 }
 
 export const pageQuery = graphql`
-  query($slug: String!) {
+  query ($slug: String!) {
     markdownRemark(fields: { slug: { eq: $slug } }) {
       id
       frontmatter {

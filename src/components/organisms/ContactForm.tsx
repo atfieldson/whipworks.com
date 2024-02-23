@@ -9,12 +9,11 @@ import {
   Stack,
   FormErrorMessage,
   Text,
-} from '@chakra-ui/core';
+  Button,
+} from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { navigate } from 'gatsby';
-
-import Button from '../atoms/Button';
 
 type FormData = {
   email: string;
@@ -24,7 +23,11 @@ type FormData = {
 type AsyncStatus = 'loading' | 'error' | 'success' | undefined;
 
 const ContactForm = ({ ...props }) => {
-  const { register, errors, handleSubmit } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
   const [status, setStatus] = useState<AsyncStatus>(undefined);
 
   const onSubmit = (data: FormData) => {
@@ -56,16 +59,15 @@ const ContactForm = ({ ...props }) => {
       <Stack spacing="5" mt="4">
         <FormControl isInvalid={!!errors.email}>
           <FormLabel>Your Email Address</FormLabel>
-          <Input placeholder="you@youremail.com" name="email" ref={register({ required: true })} color="#000000" fontWeight="bold"/>
+          <Input placeholder="you@youremail.com" {...register('email', { required: true })} />
           <FormErrorMessage>Please enter your email address.</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.message}>
           <FormLabel>Message</FormLabel>
           <Textarea
             placeholder="Type your message here!"
-            name="message"
-            ref={register({ required: true })}
-            color="#000000" 
+            {...register('message', { required: true })}
+            color="#000000"
             fontWeight="bold"
           />
           <FormErrorMessage>Please add a message.</FormErrorMessage>
