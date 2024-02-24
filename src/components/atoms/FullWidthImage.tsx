@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Image, Box, BoxProps } from '@chakra-ui/core';
+import { Image, Box, BoxProps } from '@chakra-ui/react';
 
 const Container = styled(Box)`
   width: 100vw;

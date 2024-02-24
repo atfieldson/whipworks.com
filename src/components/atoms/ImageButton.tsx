@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Image, Text, ImageProps, Box } from '@chakra-ui/core';
+import { Image, Text, ImageProps, Box } from '@chakra-ui/react';
 
 const Label = styled(Text)`
   font-weight: 600;

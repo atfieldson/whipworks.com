@@ -1,75 +1,65 @@
+<p align="center">
+  <a href="https://www.gatsbyjs.com/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts">
+    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
+  </a>
+</p>
+<h1 align="center">
+  Gatsby Minimal TypeScript Starter
+</h1>
+
 ## 🚀 Quick start
 
-1.  **Install Gatsby**
-    This site is built on [gatsby.js](https://www.gatsbyjs.org/), so you haven't done so already, you'll need to install the CLI tools.
+1.  **Create a Gatsby site.**
+
+    Use the Gatsby CLI to create a new site, specifying the minimal TypeScript starter.
 
     ```shell
-    npm install -g gatsby-cli
+    # create a new Gatsby site using the minimal TypeScript starter
+    npm init gatsby -- -ts
     ```
 
-2.  **Start developing**
+2.  **Start developing.**
 
-    Navigate into the root directory (the same as this README) and start the gatsby server.
+    Navigate into your new site’s directory and start it up.
 
     ```shell
-    gatsby develop
+    cd my-gatsby-site/
+    npm run develop
     ```
 
-3.  **Open the source code and start editing!**
+3.  **Open the code and start customizing!**
 
-    Your site is now running at `http://localhost:8000`!
+    Your site is now running at http://localhost:8000!
 
-    _Note: You'll also see a second link: _`http://localhost:8000/___graphql`_. This is a tool you can use to experiment with querying your data. Learn more about using this tool in the [Gatsby tutorial](https://www.gatsbyjs.org/tutorial/part-five/#introducing-graphiql)._
+    Edit `src/pages/index.tsx` to see your site update in real-time!
 
-    Any changes made to the source code will update in real time!
+4.  **Learn more**
 
-## 🧐 What's inside?
+    - [Documentation](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
+    - [Tutorials](https://www.gatsbyjs.com/docs/tutorial/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
+    - [Guides](https://www.gatsbyjs.com/docs/how-to/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
+    - [API Reference](https://www.gatsbyjs.com/docs/api-reference/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
+    - [Plugin Library](https://www.gatsbyjs.com/plugins?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
+    - [Cheat Sheet](https://www.gatsbyjs.com/docs/cheat-sheet/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
 
-A quick look at the top-level files and directories you'll see in a Gatsby project.
+## 🚀 Quick start (Netlify)
 
-    .
-    ├── node_modules
-    ├── src
-    ├── .gitignore
-    ├── .prettierrc
-    ├── gatsby-browser.js
-    ├── gatsby-config.js
-    ├── gatsby-node.js
-    ├── gatsby-ssr.js
-    ├── LICENSE
-    ├── package-lock.json
-    ├── package.json
-    └── README.md
+Deploy this starter with one click on [Netlify](https://app.netlify.com/signup):
 
-1.  **`/node_modules`**: This directory contains all of the modules of code that your project depends on (npm packages) are automatically installed.
-
-2.  **`/src`**: The source code, cleverly enough.
-
-3.  **`.gitignore`**: This file tells git which files it should not track / not maintain a version history for.
-
-4.  **`.prettierrc`**: This is a configuration file for [Prettier](https://prettier.io/). Prettier is a tool to help keep the formatting of your code consistent.
-
-5.  **`gatsby-browser.js`**: This file is where Gatsby expects to find any usage of the [Gatsby browser APIs](https://www.gatsbyjs.org/docs/browser-apis/) (if any). These allow customization/extension of default Gatsby settings affecting the browser.
-
-6.  **`gatsby-config.js`**: This is the main configuration file for a Gatsby site. This is where you can specify information about your site (metadata) like the site title and description, which Gatsby plugins you’d like to include, etc. (Check out the [config docs](https://www.gatsbyjs.org/docs/gatsby-config/) for more detail).
-
-7.  **`gatsby-node.js`**: This file is where Gatsby expects to find any usage of the [Gatsby Node APIs](https://www.gatsbyjs.org/docs/node-apis/) (if any). These allow customization/extension of default Gatsby settings affecting pieces of the site build process.
-
-8.  **`gatsby-ssr.js`**: This file is where Gatsby expects to find any usage of the [Gatsby server-side rendering APIs](https://www.gatsbyjs.org/docs/ssr-apis/) (if any). These allow customization of default Gatsby settings affecting server-side rendering.
+[<img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" />](https://app.netlify.com/start/deploy?repository=https://github.com/gatsbyjs/gatsby-starter-minimal-ts)
 
 ## 💫 Deploy
 
 1. If you haven't done so already, you'll also need to install the [aws-cli tools](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html). Make sure that your credentials are the default as the s3-deployment plugin only reads the default values (i.e. no named profile).
 
 Terminal Commands
-dir              = ls on Terminal
-cd               just like in Mac
-yarn             (no arguments) installs dependencies
-yarn build       builds the site
-mkdir .cache     for if .cache doesn't exist and I don't have permission to create it
+dir = ls on Terminal
+cd just like in Mac
+yarn (no arguments) installs dependencies
+yarn build builds the site
+mkdir .cache for if .cache doesn't exist and I don't have permission to create it
 To invalidate current cache, do this as little as possible:
-aws cloudfront create-invalidation --distribution-id E3JS36YMAEJ3WR --paths "/*"
-
+aws cloudfront create-invalidation --distribution-id E3JS36YMAEJ3WR --paths "/\*"
 
 2. run `yarn run build`, followed by `yarn run deploy`. That's it!
 

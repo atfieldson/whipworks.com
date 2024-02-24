@@ -1,15 +1,12 @@
+import { graphql, useStaticQuery } from 'gatsby';
 import React from 'react';
-import { Helmet } from 'react-helmet';
-import { useStaticQuery, graphql } from 'gatsby';
 
-type Props = {
-  description?: string;
-  lang?: string;
-  meta: any[];
+type SEOProps = {
   title: string;
+  description?: string;
 };
 
-const SEO = ({ description, lang, meta, title }: Props) => {
+const SEO = ({ title, description }: SEOProps) => {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -17,69 +14,29 @@ const SEO = ({ description, lang, meta, title }: Props) => {
           siteMetadata {
             title
             description
-            author
           }
         }
       }
     `
   );
 
-  const metaDescription = description || site.siteMetadata.description;
+  const seo = {
+    title: title || site.title,
+    description: description || site.description,
+  };
 
   return (
-    <Helmet
-      htmlAttributes={{
-        lang,
-      }}
-      title={title}
-      titleTemplate={`%s | ${site.siteMetadata.title}`}
-      meta={[
-        {
-          name: `description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:title`,
-          content: title,
-        },
-        {
-          property: `og:description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:type`,
-          content: `website`,
-        },
-        {
-          name: `twitter:card`,
-          content: `summary`,
-        },
-        {
-          name: `twitter:creator`,
-          content: site.siteMetadata.author,
-        },
-        {
-          name: `twitter:title`,
-          content: title,
-        },
-        {
-          name: `twitter:description`,
-          content: metaDescription,
-        },
-      ].concat(meta)}
-    >
-      <link
-        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,700;1,400&display=swap"
-        rel="stylesheet"
-      ></link>
-    </Helmet>
+    <>
+      <title>{seo.title} | WhipWorks</title>
+      <meta name="description" content={seo.description} />
+      <meta name="og:title" content={seo.title} />
+      <meta name="og:description" content={seo.description} />
+      <meta name="og:type" content="website" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content={seo.title} />
+      <meta name="twitter:description" content={seo.description} />
+    </>
   );
-};
-
-SEO.defaultProps = {
-  lang: `en`,
-  meta: [],
-  description: ``,
 };
 
 export default SEO;

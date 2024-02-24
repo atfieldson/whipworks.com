@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Heading, Text, Stack, Flex, Image, Button } from '@chakra-ui/core';
+import { Box, Heading, Text, Stack, Flex, Image, Button } from '@chakra-ui/react';
 
 import Layout from '../components/templates/Layout';
 import SEO from '../components/templates/SEO';
@@ -9,7 +9,7 @@ import InstagramFeed from '../components/organisms/InstagramFeed';
 import useDocumentScrollThrottled, { ScrollData } from '../../useDocumentScroll';
 import FullWidthImage from '../components/atoms/FullWidthImage';
 import { Link } from 'gatsby';
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const MINIMUM_SCROLL = 350;
 
@@ -145,6 +145,8 @@ const Index = () => {
           borderWidth="1px"
           width="200px"
           alignSelf="center"
+          size="md"
+          color="gray.100"
           as={Link}
           to="/design-bullwhip"
           bg="rgba(255,255,255,0.2)"
@@ -153,7 +155,7 @@ const Index = () => {
           _active={{ bg: 'rgba(255,255,255,0.16)' }}
         >
           DESIGN A BULLWHIP
-      </Button>
+        </Button>
       </Stack>
     </Layout>
   );

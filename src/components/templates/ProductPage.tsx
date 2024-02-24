@@ -1,11 +1,10 @@
 import React, { useState, ChangeEvent } from 'react';
 import { graphql } from 'gatsby';
-import { Flex, Text, Heading, Box, Select } from '@chakra-ui/core';
+import { Flex, Text, Heading, Box, Select, Button } from '@chakra-ui/react';
 
 import Layout from './Layout';
 import SEO from './SEO';
 import ProductImages from '../molecules/ProductImages';
-import Button from '../atoms/Button';
 
 type Option = {
   name: string;
@@ -85,11 +84,11 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
                 defaultValue={v.defaultValue}
                 onChange={(e) => handleVariantChange(e, v)}
                 bg="rgba(255,255,255,0.9)"
-                  borderColor="rgba(255,255,255,0.16)"
-                  _hover={{ bg: 'rgba(255,255,255,1)' }}
-                  _active={{ bg: 'rgba(255,255,255,1)' }}
-                  color="#000000"
-                  fontWeight="bold"
+                borderColor="rgba(255,255,255,0.16)"
+                _hover={{ bg: 'rgba(255,255,255,1)' }}
+                _active={{ bg: 'rgba(255,255,255,1)' }}
+                color="#000000"
+                fontWeight="bold"
               >
                 {v.options.map((vo: Option) => (
                   <option value={vo.name} key={vo.name}>
@@ -122,7 +121,7 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
 };
 
 export const pageQuery = graphql`
-  query($slug: String!) {
+  query ($slug: String!) {
     markdownRemark(fields: { slug: { eq: $slug } }) {
       id
       html

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, SimpleGrid, Flex, Button, BoxProps, Image, Link } from '@chakra-ui/core';
+import { Box, SimpleGrid, Flex, Button, BoxProps, Image, Link } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 
 const Container = styled(Box)`
@@ -39,12 +39,9 @@ const InstagramFeed = ({ ...props }: BoxProps) => (
     <Overlay />
     <Flex position="absolute" bottom="5" left="0" right="0" justifyContent="center">
       <Button
-        size="lg"
-        bg="blue.800"
-        borderColor="rgba(255,255,255,0.16)"
         as={Link}
         href="https://www.instagram.com/whipworks/"
-        _hover={{ color: "#ebedf0", bg: "blue.600" }}
+        _hover={{ textDecoration: 'none' }}
       >
         Follow me on Instagram
       </Button>

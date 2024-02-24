@@ -1,5 +1,5 @@
 import React from 'react';
-import { SimpleGrid } from '@chakra-ui/core';
+import { SimpleGrid } from '@chakra-ui/react';
 
 import ImageButton from '../../atoms/ImageButton';
 import { spools } from './constants/spoolColors';
@@ -15,7 +15,7 @@ type Spool = {
 };
 
 const WhipColors = ({ activeColor, onClick }: Props) => (
-  <SimpleGrid spacing="3" minChildWidth={["50px", "100px"]}>
+  <SimpleGrid spacing="3" minChildWidth={['50px', '100px']}>
     {spools.map((c: Spool) => (
       <ImageButton
         key={c.name}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Text, Accordion, Stack, RadioGroup, Radio, Heading } from '@chakra-ui/core';
+import { Flex, Text, Accordion, Stack, RadioGroup, Radio, Heading, Button } from '@chakra-ui/react';
 import CustomizationLabel from '../../atoms/CustomizationLabel';
 import AccordionSection from '../../atoms/AccordionSection';
 import WhipColors from './WhipColors';
@@ -7,7 +7,6 @@ import HandleDesignPicker from './HandleDesignPicker';
 import ConchoPicker from './ConchoPicker';
 import { handleLengths, handleLengthOptions } from './constants/handleLengths';
 import { whipLengths, whipLengthOptions } from './constants/whipLengths';
-import Button from '../../atoms/Button';
 import PriceBreakdown from './PriceBreakdown';
 import { spools } from './constants/spoolColors';
 import { handles } from './constants/handleDesigns';
@@ -42,7 +41,7 @@ const resolveWeight = (length?: string) => {
 };
 
 const BullwhipDesigner = ({ location }: { location: any }) => {
-  const [index, setIndex] = useState<number | number[] | undefined>(0);
+  const [index, setIndex] = useState<number>(0);
   const [primary, setPrimary] = useState<string | undefined>(undefined);
   const [secondary, setSecondary] = useState<string | undefined>(undefined);
   const [handleDesign, setHandle] = useState<string | undefined>(undefined);
@@ -71,7 +70,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
       }
 
       setTimeout(() => {
-        setIndex((index: any) => index + 1);
+        setIndex((index) => index + 1);
       }, 500);
     }
   }, [primary, secondary, handleDesign, waxed, whipLength, handleLength, concho, collar]);
@@ -104,7 +103,9 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         </Stack>
       </Flex>
       <Flex flex="6" order={{ base: 3, md: 2 }} mx={{ base: '0', md: '6' }} flexDirection="column">
-        <Heading mb="8px" textAlign="center">Design your Bullwhip</Heading>
+        <Heading mb="8px" textAlign="center">
+          Design your Bullwhip
+        </Heading>
         <Accordion width="100%" index={index} onChange={onAccordionChange} allowToggle>
           <AccordionSection label="Primary Color">
             <WhipColors onClick={(color) => setPrimary(color)} activeColor={primary} />
@@ -119,40 +120,46 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
             />
           </AccordionSection>
           <AccordionSection label="Waxing">
-            <RadioGroup
-              onChange={(e) => setWaxed(e.target.value === 'true')}
-              value={waxed.toString()}
-            >
-              <Radio value="true">Waxed</Radio>
-              <Radio value="false">Unwaxed</Radio>
+            <RadioGroup onChange={(e) => setWaxed(e === 'true')} value={waxed.toString()}>
+              <Stack>
+                <Radio value="true">Waxed</Radio>
+                <Radio value="false">Unwaxed</Radio>
+              </Stack>
             </RadioGroup>
           </AccordionSection>
           <AccordionSection label="Whip Length">
-            <RadioGroup value={whipLength} onChange={(e) => setWhipLength(e.target.value)}>
-              {whipLengths.map((l) => (
-                <Radio value={l.name} key={l.name}>{`${l.name} ($${l.price})`}</Radio>
-              ))}
+            <RadioGroup value={whipLength} onChange={setWhipLength}>
+              <Stack>
+                {whipLengths.map((l) => (
+                  <Radio value={l.name} key={l.name}>{`${l.name} ($${l.price})`}</Radio>
+                ))}
+              </Stack>
             </RadioGroup>
           </AccordionSection>
           <AccordionSection label="Handle Length">
-            <RadioGroup value={handleLength} onChange={(e) => setHandleLength(e.target.value)}>
-              {handleLengths.map((l) => (
-                <Radio key={l.name} value={l.name}>{`${l.name} ($${l.price})`}</Radio>
-              ))}
+            <RadioGroup value={handleLength} onChange={setHandleLength}>
+              <Stack>
+                {handleLengths.map((l) => (
+                  <Radio key={l.name} value={l.name}>{`${l.name} ($${l.price})`}</Radio>
+                ))}
+              </Stack>
             </RadioGroup>
           </AccordionSection>
           <AccordionSection label="Concho">
             <Text my="2" fontSize="md">
               A Concho is applied to the heel of every handle, giving your bullwhip a distinct look!
             </Text>
-            <ConchoPicker activeConcho={concho} onClick={(concho) => setConcho(concho)} />
+            <ConchoPicker activeConcho={concho} onClick={setConcho} />
           </AccordionSection>
           <AccordionSection label="Extras">
-            <Heading size="md" mt="2">Add a Collar</Heading>
+            <Heading size="md" mt="2">
+              Add a Collar
+            </Heading>
             <Text my="2" fontSize="md">
-              A collar is attached to the transition with an additional transition knot added, this addition looks great on 12 or 14 inch handles!
+              A collar is attached to the transition with an additional transition knot added, this
+              addition looks great on 12 or 14 inch handles!
             </Text>
-            <CollarPicker activeCollar={collar} onClick={(collar) => setCollar(collar)} />
+            <CollarPicker activeCollar={collar} onClick={setCollar} />
           </AccordionSection>
         </Accordion>
         <Button
@@ -204,7 +211,11 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         secondary={secondary}
         pattern={handleDesign}
       />
-      <BullwhipAddedModal isOpen={modalOpen} onClose={() => setModalOpen(false)} location={location} />
+      <BullwhipAddedModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        location={location}
+      />
     </Flex>
   );
 };
