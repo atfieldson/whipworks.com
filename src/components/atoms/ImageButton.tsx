@@ -19,6 +19,16 @@ const ImageButton = ({ onClick, isSelected, label, ...props }: Props) => (
   <Box>
     <Image
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      aria-label={label || props.alt || 'Image option'}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      cursor="pointer"
       borderWidth={isSelected ? '3px' : 0}
       borderRadius="md"
       objectFit="cover"

@@ -40,6 +40,7 @@ const SpecialtyWhipCard = ({
           maxW={isSmall ? '200px' : '300px'}
           objectFit="contain"
           src={headerImage}
+          alt={`${title} logo`}
         />
         <Text mt="1">{description}</Text>
         <Button mt="6" as={Link} to={slug}>

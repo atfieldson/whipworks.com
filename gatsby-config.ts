@@ -3,6 +3,7 @@ import type { GatsbyConfig } from 'gatsby';
 const config: GatsbyConfig = {
   siteMetadata: {
     title: `WhipWorks`,
+    siteUrl: `https://www.whipworks.com`,
     description: `Custom made bullwhips`,
     author: `Adam Fieldson`,
   },

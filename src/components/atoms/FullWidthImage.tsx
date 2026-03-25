@@ -21,11 +21,12 @@ const StyledImage = styled(Image)`
 
 type Props = BoxProps & {
   img: string;
+  alt?: string;
 };
 
-const FullWidthImage = ({ img, ...props }: Props) => (
+const FullWidthImage = ({ img, alt, ...props }: Props) => (
   <Container {...props}>
-    <StyledImage src={img} />
+    <StyledImage src={img} alt={alt || ''} />
   </Container>
 );
 

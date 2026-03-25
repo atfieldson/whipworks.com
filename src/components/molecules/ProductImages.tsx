@@ -4,9 +4,10 @@ import ImageButton from '../atoms/ImageButton';
 
 type Props = {
   images?: any[];
+  alt?: string;
 };
 
-const ProductImages = ({ images }: Props) => {
+const ProductImages = ({ images, alt }: Props) => {
   const [activeImage, setActiveImage] = useState(0);
 
   return (
@@ -18,6 +19,7 @@ const ProductImages = ({ images }: Props) => {
         borderRadius="md"
         objectFit="contain"
         src={images && images[activeImage]}
+        alt={alt || 'Product image'}
       />
       <Stack direction="row" mt="5" spacing="5" flexWrap="wrap" maxW="100%">
         {images &&

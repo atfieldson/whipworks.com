@@ -92,7 +92,7 @@ const HeroCarousel = () => {
         </HeroText>
         <img
           src="https://d3ruufruf2uqog.cloudfront.net/bannerImages/heroImages/topDown.jpg"
-          alt="Japan"
+          alt="Top-down view of whipmaking tools used in the WhipWorks workshop"
         />
       </Box>
       <Box>
@@ -104,7 +104,7 @@ const HeroCarousel = () => {
         </HeroHeadingBlack>
         <img
           src="https://d3ruufruf2uqog.cloudfront.net/bannerImages/heroImages/batchesComp.jpg"
-          alt="Las Vegas"
+          alt="Batches of handcrafted WhipWorks Whips that have shipped worldwide"
         />
         <Text position="absolute" mt="20">
           Hello

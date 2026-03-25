@@ -125,10 +125,10 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
     <Layout>
       <SEO title={whip.title} />
       <Flex flexDirection={{ base: 'column', md: 'row' }}>
-        <ProductImages images={images} />
+        <ProductImages images={images} alt={whip.title} />
         <Flex flex="1" direction="column" ml={{ base: 0, md: '6' }} mt={{ base: '6', md: 0 }}>
           <Flex>
-            <Image src={whip.headerImage} maxH="50px" objectFit="contain" />
+            <Image src={whip.headerImage} maxH="50px" objectFit="contain" alt={`${whip.title} logo`} />
           </Flex>
           <Heading fontSize="3xl" letterSpacing="wider" mt="1">
             ${price}

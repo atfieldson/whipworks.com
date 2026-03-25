@@ -19,22 +19,22 @@
 
 ## HIGH - SEO and accessibility problems
 
-- [ ] **Issue 4: Open Graph meta tags use wrong attribute**
+- [x] **Issue 4: Open Graph meta tags use wrong attribute**
   - File: `src/components/templates/SEO.tsx` (lines 32-34)
   - Uses `name="og:title"` instead of `property="og:title"` (same for og:description, og:type)
   - Impact: Social media previews (Facebook, LinkedIn, etc.) won't show correct info when links are shared
 
-- [ ] **Issue 5: Missing og:image and twitter:image meta tags**
+- [x] **Issue 5: Missing og:image and twitter:image meta tags**
   - File: `src/components/templates/SEO.tsx`
   - No image meta tags for social sharing previews
   - Impact: Shared links show no preview image
 
-- [ ] **Issue 6: Incorrect alt text on Hero Carousel image**
+- [x] **Issue 6: Incorrect alt text on Hero Carousel image**
   - File: `src/components/organisms/HeroCarousel.tsx` (line 95)
   - Alt text says "Japan" but image shows whipmaking tools
   - Impact: Screen readers give wrong description; SEO mismatch
 
-- [ ] **Issue 7: Missing alt text across multiple components**
+- [x] **Issue 7: Missing alt text across multiple components**
   - `src/components/atoms/FullWidthImage.tsx` (line 28) — no alt attribute
   - `src/components/organisms/InstagramFeed.tsx` (lines 32-37) — 6 images, no alt text
   - `src/components/molecules/ProductImages.tsx` (lines 14-21) — main product image
@@ -43,7 +43,7 @@
   - `src/components/templates/SpecialtyWhipPage.tsx` (line 131) — whip header image
   - Impact: Poor accessibility for screen readers; hurts SEO
 
-- [ ] **Issue 8: ImageButton missing aria-label**
+- [x] **Issue 8: ImageButton missing aria-label**
   - File: `src/components/atoms/ImageButton.tsx` (lines 18-30)
   - Has onClick but no aria-label — affects all color pickers, concho pickers, etc.
   - Impact: Screen readers can't describe what each button does

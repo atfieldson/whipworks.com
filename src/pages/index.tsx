@@ -33,6 +33,7 @@ const Index = () => {
       <Box mt="32">
         <FullWidthImage
           img="https://d3ruufruf2uqog.cloudfront.net/bannerImages/TransitionFeature.jpg"
+          alt="Close-up of a WhipWorks Whip transition"
           mb="24"
         />
         <Heading mb="5">What goes in to a WhipWorks bullwhip?</Heading>
@@ -57,6 +58,7 @@ const Index = () => {
               width="300px"
               mr="5"
               src="https://d3ruufruf2uqog.cloudfront.net/makingOfPhotos/layersOfPlaiting.jpg"
+              alt="Layers of plaiting on a WhipWorks Bullwhip"
             />
             <Box>
               <Heading size="lg" mb="2">
@@ -76,6 +78,7 @@ const Index = () => {
               width="300px"
               mr="5"
               src="https://d3ruufruf2uqog.cloudfront.net/makingOfPhotos/loadingCore.jpg"
+              alt="Loading steel shot into a bullwhip core"
             />
             <Box>
               <Heading size="lg" mb="2">
@@ -99,6 +102,7 @@ const Index = () => {
           width="100%"
           height="auto"
           objectFit="cover"
+          alt="Diagram showing the anatomy of a bullwhip"
         />
         <Text mb="4" mt="5">
           Here is a break down of a Bullwhip. The handle is the stiff portion containing the 1/4"

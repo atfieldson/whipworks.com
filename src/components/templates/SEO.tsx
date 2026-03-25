@@ -13,6 +13,7 @@ const SEO = ({ title, description }: SEOProps) => {
         site {
           siteMetadata {
             title
+            siteUrl
             description
           }
         }
@@ -22,6 +23,7 @@ const SEO = ({ title, description }: SEOProps) => {
 
   const seo = {
     title: title || site.title,
+    siteUrl: site.siteMetadata.siteUrl,
     description: description || site.description,
   };
 
@@ -29,10 +31,12 @@ const SEO = ({ title, description }: SEOProps) => {
     <>
       <title>{seo.title} | WhipWorks</title>
       <meta name="description" content={seo.description} />
-      <meta name="og:title" content={seo.title} />
-      <meta name="og:description" content={seo.description} />
-      <meta name="og:type" content="website" />
-      <meta name="twitter:card" content="summary" />
+      <meta property="og:title" content={seo.title} />
+      <meta property="og:description" content={seo.description} />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content={`${seo.siteUrl}/favicon_large.png`} />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:image" content={`${seo.siteUrl}/favicon_large.png`} />
       <meta name="twitter:title" content={seo.title} />
       <meta name="twitter:description" content={seo.description} />
     </>
