@@ -179,7 +179,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
               data-item-name={whip.title}
               data-item-price={whip.price}
               data-item-id={whip.id}
-              // data-item-weight={weight}
+              // Weight hardcoded to 900g — dynamic weight caused shipping issues
               data-item-weight={900}
               data-item-url={location.pathname}
               data-item-description={whip.description}

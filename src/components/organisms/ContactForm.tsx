@@ -40,8 +40,7 @@ const ContactForm = ({ ...props }) => {
           navigate('/');
         }, 2000);
       })
-      .catch((e: any) => {
-        console.log(e);
+      .catch(() => {
         setStatus('error');
       });
   };
@@ -59,15 +58,15 @@ const ContactForm = ({ ...props }) => {
       <Stack spacing="5" mt="4">
         <FormControl isInvalid={!!errors.email}>
           <FormLabel>Your Email Address</FormLabel>
-          <Input placeholder="you@youremail.com" {...register('email', { required: true })} />
-          <FormErrorMessage>Please enter your email address.</FormErrorMessage>
+          <Input placeholder="you@youremail.com" {...register('email', { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })} color="white" />
+          <FormErrorMessage>Please enter a valid email address.</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.message}>
           <FormLabel>Message</FormLabel>
           <Textarea
             placeholder="Type your message here!"
             {...register('message', { required: true })}
-            color="#000000"
+            color="white"
             fontWeight="bold"
           />
           <FormErrorMessage>Please add a message.</FormErrorMessage>

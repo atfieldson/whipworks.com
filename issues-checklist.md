@@ -50,18 +50,18 @@
 
 ## MEDIUM - Inconsistencies and minor bugs
 
-- [ ] **Issue 9: Hardcoded weight on SpecialtyWhipPage**
+- [x] **Issue 9: Hardcoded weight on SpecialtyWhipPage**
   - File: `src/components/templates/SpecialtyWhipPage.tsx` (line 182)
   - `data-item-weight` is hardcoded to 900, dynamic weight is commented out
   - Impact: Shipping weight is always 900g regardless of whip length
 
-- [ ] **Issue 10: Contact form — console.log left in and weak email validation**
+- [x] **Issue 10: Contact form — console.log left in and weak email validation**
   - File: `src/components/organisms/ContactForm.tsx`
   - Line 44: `console.log(e)` in error handler (should be removed)
   - Lines 60-64: Email field only checks `required`, no format validation
   - Impact: Customers can submit invalid emails; error details leak to console
 
-- [ ] **Issue 11: Snipcart color/handle options missing [+price] format**
+- [x] **Issue 11: Snipcart color/handle options missing [+price] format**
   - Files: `BullwhipDesigner.tsx` (line 176, 182), `StockwhipDesigner.tsx` (line 177, 183)
   - `colorOptions` and `handleDesignOptions` are just pipe-delimited names without `[+0]` price markers
   - Also `AddPoppersModal.tsx` (line 45): `"Blue|Orange|Yellow"` missing format

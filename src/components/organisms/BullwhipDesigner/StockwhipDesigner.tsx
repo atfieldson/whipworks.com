@@ -24,8 +24,8 @@ const updatedHandles = handles.filter(
   (handle) => handle.name !== 'Accent' && handle.name !== 'Web of Wyrd'
 );
 
-const colorOptions = spools.map((s) => s.name).join('|');
-const handleDesignOptions = updatedHandles.map((h) => h.name).join('|');
+const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
+const handleDesignOptions = updatedHandles.map((h) => `${h.name}[+0]`).join('|');
 
 const resolveWeight = (thongLength?: string) => {
   switch (thongLength) {

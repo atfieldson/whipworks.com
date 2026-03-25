@@ -16,8 +16,8 @@ import { conchoOptions } from './constants/conchos';
 import { collarOptions } from './constants/collars';
 import CollarPicker from './CollarPicker';
 
-const colorOptions = spools.map((s) => s.name).join('|');
-const handleDesignOptions = handles.map((h) => h.name).join('|');
+const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
+const handleDesignOptions = handles.map((h) => `${h.name}[+0]`).join('|');
 
 const resolveWeight = (length?: string) => {
   switch (length) {
