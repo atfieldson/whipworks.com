@@ -1,30 +1,37 @@
 # WhipWorks.com - Project Plan
 
-## Phase 1: Foundation & Housekeeping
-- [ ] Rename `master` branch to `main`
-  - [ ] Rename local branch
-  - [ ] Update remote default branch on GitHub
-  - [ ] Update any references in code (deploy scripts, README, etc.)
-- [ ] Audit for bugs/errors
-  - [ ] Check for missing dependencies (axios is used but may not be in package.json)
-  - [ ] Check for broken imports or dead code
-  - [ ] Check Snipcart integration for cart/checkout issues
-  - [ ] Check for broken links or missing assets
-  - [ ] Check for accessibility issues
-- [ ] Create a separate checklist of discovered issues
-- [ ] Work through issues checklist one-by-one, with user review and approval for each fix
+## Phase 1: Foundation & Housekeeping ✅
+- [ ] Rename `master` branch to `main` *(skipped — impacts AWS auto-deploy, revisit later)*
+- [x] Audit for bugs/errors
+  - [x] Check for missing dependencies (axios, lodash)
+  - [x] Check for broken imports or dead code
+  - [x] Check Snipcart integration for cart/checkout issues
+  - [x] Check for broken links or missing assets
+  - [x] Check for accessibility issues
+- [x] Create a separate checklist of discovered issues (issues-checklist.md)
+- [x] Work through issues checklist one-by-one, with user review and approval for each fix
+  - [x] Issues 1-3: Critical bugs (poppers price, missing deps, stockwhip title)
+  - [x] Issues 4-8: SEO & accessibility (OG tags, alt text, aria labels)
+  - [x] Issues 9-11: Medium fixes (weight comment, contact form, Snipcart format)
+  - [x] Issues 12-13: Low priority (framer-motion kept, API key won't fix)
 
-## Phase 2: Navigation & Modernization
-- [ ] Redesign header/navigation for better mobile UX
-  - [ ] Audit current header/menu drawer behavior on mobile
-  - [ ] Design improved navigation structure
-  - [ ] Implement new header component
-- [ ] Improve menu structure to accommodate new sections (Materials, Floggers)
-  - [ ] Add "Whipmaking Materials" nav item
-  - [ ] Add "Floggers" / "Design a Flogger" nav item
-  - [ ] Reorganize menu hierarchy
-- [ ] Ensure responsive design across all breakpoints
-- [ ] Improve readability and visual hierarchy
+## Phase 2: Navigation & Modernization ✅
+- [x] Redesign header/navigation for better mobile UX
+  - [x] Audit current header/menu drawer behavior on mobile
+  - [x] Design improved navigation structure
+  - [x] Implement new header component
+- [x] Improve menu structure to accommodate new sections (Materials, Floggers)
+  - [ ] Add "Whipmaking Materials" nav item *(deferred to Phase 4)*
+  - [ ] Add "Floggers" / "Design a Flogger" nav item *(deferred to Phase 5)*
+  - [x] Reorganize menu hierarchy (Custom Whips ▼, Specialty Whips ▼, Accessories, Contact)
+- [x] Ensure responsive design across all breakpoints
+  - [x] Custom breakpoint at 825px for desktop/mobile nav switch
+  - [x] Desktop: dropdowns + flat links, Mobile: hamburger drawer
+- [x] Improve readability and visual hierarchy
+  - [x] Semi-transparent header background over hero images
+  - [x] Gradient shadow under header
+  - [x] Hero carousel no longer hidden behind header
+  - [x] Hover states on dropdown triggers and menu items
 
 ## Phase 3: Improve Design-a-Bullwhip Page
 - [ ] Add Heel Loop option (yes/no toggle)

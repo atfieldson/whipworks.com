@@ -3,6 +3,13 @@ import '@fontsource-variable/domine';
 import '@fontsource-variable/josefin-sans';
 
 const theme: ThemeOverride = {
+  breakpoints: {
+    sm: '30em',
+    md: '51.5625em', // 825px
+    lg: '62em',
+    xl: '80em',
+    '2xl': '96em',
+  },
   config: {
     initialColorMode: 'dark',
     useSystemColorMode: false,

@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import {
   Flex,
-  Button,
   IconButton,
   useDisclosure,
   Drawer,
@@ -20,6 +19,7 @@ import {
   MenuList,
   MenuItem,
   Text,
+  HStack,
 } from '@chakra-ui/react';
 import { FiMenu } from 'react-icons/fi';
 import { Link, graphql, useStaticQuery } from 'gatsby';
@@ -44,6 +44,26 @@ const FullWidthContainer = styled(Flex)`
   right: 0;
   z-index: 3;
   transition: background-color 0.5s ease;
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+    pointer-events: none;
+  }
+`;
+
+const NavLink = styled(CLink)`
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  &:hover {
+    text-decoration: none;
+    opacity: 0.8;
+  }
 `;
 
 const query = graphql`
@@ -71,7 +91,105 @@ const Header = ({ bg }: { bg?: string }) => {
   return (
     <FullWidthContainer backgroundColor={bg}>
       <Wrapper>
-        <Stack direction="row" spacing="6" shouldWrapChildren>
+        {/* Left: Logo */}
+        <Link to="/">
+          <StaticImage
+            src="../../images/marketplace_inverted.png"
+            alt="WhipWorks logo"
+            height={40}
+          />
+        </Link>
+
+        {/* Center: Desktop Navigation */}
+        <HStack spacing="6" display={{ base: 'none', md: 'flex' }}>
+          {/* Custom Whips Dropdown */}
+          <Menu>
+            <MenuButton
+              as={Box}
+              cursor="pointer"
+              role="button"
+              aria-label="Custom Whips menu"
+              _hover={{ opacity: 0.7 }}
+              transition="opacity 0.2s"
+            >
+              <HStack spacing="1">
+                <Text fontSize="1.35rem" fontWeight="600" letterSpacing="0.05em">
+                  Custom Whips
+                </Text>
+                <FaChevronDown size={10} />
+              </HStack>
+            </MenuButton>
+            <MenuList>
+              <MenuItem as={Link} to="/design-bullwhip" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                <Image
+                  height="2rem"
+                  width="2rem"
+                  rounded="full"
+                  src="https://d3ruufruf2uqog.cloudfront.net/thumbnails/bullwhipThumbnail.png"
+                  alt="Design a Bullwhip"
+                  mr="12px"
+                />
+                <span>Design a Bullwhip</span>
+              </MenuItem>
+              <MenuItem as={Link} to="/design-stockwhip" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                <Image
+                  height="2rem"
+                  width="2rem"
+                  rounded="full"
+                  src="https://d3ruufruf2uqog.cloudfront.net/thumbnails/stockwhipThumbnail.png"
+                  alt="Design a Stockwhip"
+                  mr="12px"
+                />
+                <span>Design a Stockwhip</span>
+              </MenuItem>
+            </MenuList>
+          </Menu>
+
+          {/* Specialty Whips Dropdown */}
+          <Menu>
+            <MenuButton
+              as={Box}
+              cursor="pointer"
+              role="button"
+              aria-label="Specialty Whips menu"
+              _hover={{ opacity: 0.7 }}
+              transition="opacity 0.2s"
+            >
+              <HStack spacing="1">
+                <Text fontSize="1.35rem" fontWeight="600" letterSpacing="0.05em">
+                  Specialty Whips
+                </Text>
+                <FaChevronDown size={10} />
+              </HStack>
+            </MenuButton>
+            <MenuList>
+              {data.allMarkdownRemark.edges.map((edge: any) => (
+                <MenuItem
+                  as={Link}
+                  to={edge.node.fields.slug}
+                  key={edge.node.frontmatter.title}
+                  fontWeight="bold"
+                  color="gray.900"
+                  fontSize="1rem"
+                  _hover={{ bg: '#e8e0d8' }}
+                >
+                  {edge.node.frontmatter.title}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+
+          {/* Flat Links */}
+          <NavLink as={Link} to="/accessories">
+            Accessories
+          </NavLink>
+          <NavLink as={Link} to="/contact">
+            Contact
+          </NavLink>
+        </HStack>
+
+        {/* Right: Mobile hamburger + Cart */}
+        <HStack spacing="3">
           <IconButton
             icon={<FiMenu />}
             ref={btnRef}
@@ -81,55 +199,12 @@ const Header = ({ bg }: { bg?: string }) => {
             borderColor="rgba(255,255,255,0.16)"
             _hover={{ bg: 'rgba(255,255,255,0.16)' }}
             _active={{ bg: 'rgba(255,255,255,0.16)' }}
+            display={{ base: 'flex', md: 'none' }}
           />
           <CartButton />
-        </Stack>
-        <Link to="/">
-          <StaticImage
-            src="../../images/marketplace_inverted.png"
-            alt="WhipWorks logo"
-            height={40}
-          />
-        </Link>
-        <Menu>
-          <MenuButton
-            as={Button}
-            bg="gray.500"
-            color="#1a140f"
-            size="md"
-            _hover={{ bg: 'gray.500' }}
-            rightIcon={<FaChevronDown size={10} />}
-          >
-            Design a Whip
-          </MenuButton>
-          <MenuList>
-            <Text textAlign="center" mt="6px" color="gray.900">
-              Bullwhip or Stockwhip?
-            </Text>
-            <MenuItem as={Link} to="/design-bullwhip" fontWeight="bold" mt="12px" color="gray.900">
-              <Image
-                height="2rem"
-                width="2rem"
-                rounded="full"
-                src="https://d3ruufruf2uqog.cloudfront.net/thumbnails/bullwhipThumbnail.png"
-                alt="Design a Bullwhip"
-                mr="12px"
-              />
-              <span>Design a Bullwhip</span>
-            </MenuItem>
-            <MenuItem as={Link} to="/design-stockwhip" fontWeight="bold" mt="12px" color="gray.900">
-              <Image
-                height="2rem"
-                width="2rem"
-                rounded="full"
-                src="https://d3ruufruf2uqog.cloudfront.net/thumbnails/stockwhipThumbnail.png"
-                alt="Design a Stockwhip"
-                mr="12px"
-              />
-              <span>Design a Stockwhip</span>
-            </MenuItem>
-          </MenuList>
-        </Menu>
+        </HStack>
+
+        {/* Mobile Drawer */}
         <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
           <DrawerOverlay />
           <DrawerContent backgroundColor="#271E16">
@@ -138,36 +213,45 @@ const Header = ({ bg }: { bg?: string }) => {
               <Heading size="md">Menu</Heading>
             </DrawerHeader>
             <DrawerBody>
-              <Stack spacing="4">
-                <CLink as={Link} to="/design-bullwhip">
+              <Heading fontSize="md" letterSpacing="wider" mt="2">
+                Custom Whips
+              </Heading>
+              <Stack spacing="3" mt="3" ml="4">
+                <CLink as={Link} to="/design-bullwhip" onClick={onClose}>
                   Design a Bullwhip
                 </CLink>
-                <CLink as={Link} to="/design-stockwhip">
+                <CLink as={Link} to="/design-stockwhip" onClick={onClose}>
                   Design a Stockwhip
                 </CLink>
-                <CLink as={Link} to="/accessories">
-                  Accessories
-                </CLink>
-                <CLink as={Link} to="/contact">
-                  Contact Me
-                </CLink>
               </Stack>
+
               <Heading fontSize="md" letterSpacing="wider" mt="6">
                 Specialty Whips
               </Heading>
-              <Box mt="1" display="grid" ml="6">
+              <Stack spacing="3" mt="3" ml="4">
                 {data.allMarkdownRemark.edges.map((edge: any) => (
                   <CLink
                     as={Link}
-                    width="100%"
                     to={edge.node.fields.slug}
                     key={edge.node.frontmatter.title}
-                    mt="4"
+                    onClick={onClose}
                   >
                     {edge.node.frontmatter.title}
                   </CLink>
                 ))}
-              </Box>
+              </Stack>
+
+              <Heading fontSize="md" letterSpacing="wider" mt="6">
+                More
+              </Heading>
+              <Stack spacing="3" mt="3" ml="4">
+                <CLink as={Link} to="/accessories" onClick={onClose}>
+                  Accessories
+                </CLink>
+                <CLink as={Link} to="/contact" onClick={onClose}>
+                  Contact
+                </CLink>
+              </Stack>
             </DrawerBody>
           </DrawerContent>
         </Drawer>

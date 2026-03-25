@@ -26,7 +26,7 @@ const Index = () => {
   });
 
   return (
-    <Layout headerBackground={showHeader ? undefined : 'transparent'}>
+    <Layout headerBackground={showHeader ? undefined : 'rgba(26, 20, 15, 0.6)'}>
       <SEO title="Home" />
       <HeroCarousel />
       <SpecialtyWhipList />

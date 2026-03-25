@@ -12,7 +12,7 @@ const HeroCarouselContainer = styled(Carousel)`
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  margin-top: -100px;
+  margin-top: 0;
   margin-bottom: 64px;
   .control-arrow {
     width: 4vw;
