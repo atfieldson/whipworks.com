@@ -57,19 +57,38 @@
   - [ ] Create product cards linking PDFs to YouTube video previews
   - [ ] Embed or link to YouTube playlist for promotion
 
-## Phase 5: Flogger Section
+## Phase 5: Flogger & Snakewhip Sections
+
+### 5A: Flogger
 - [ ] Create flogger product pages
-- [ ] Build "Design Your Own Flogger" customizer
-  - [ ] Color selection (reuse existing color picker)
-  - [ ] Handle pattern selection
-  - [ ] Handle plaited vs unplaited toggle
+- [ ] Build "Design Your Own Flogger" customizer (/design-flogger)
+  - [ ] Primary color selection (reuse existing color picker)
+  - [ ] Secondary color selection (reuse existing color picker)
+  - [ ] Plaited vs Unplaited handle toggle
+  - [ ] Handle pattern selection *(only shown if Plaited selected)*
   - [ ] Concho selection (reuse existing ConchoPicker)
   - [ ] Heel loop yes/no
-  - [ ] Length of lashings selection
-  - [ ] Number of lashings (9, 18, or 27)
+  - [ ] Lashing type — Heavy or Light
+  - [ ] Number of lashings *(Light: 24/36/48/60, Heavy: locked at 9)*
+  - [ ] Lashing length — 16", 18", 20", 22", 24" *(same for both types)*
+  - [ ] Price breakdown component *(awaiting pricing from Adam)*
+  - [ ] Snipcart integration with all custom fields
+- [ ] Add flogger to "Custom Whips" nav dropdown
+- [ ] Add flogger nav thumbnail image
+
+### 5B: Snakewhip
+- [ ] Build "Design a Snakewhip" page (/design-snakewhip)
+  - [ ] Primary color selection (reuse existing color picker)
+  - [ ] Secondary color selection (reuse existing color picker)
+  - [ ] Handle design selection (reuse existing HandleDesignPicker)
+  - [ ] Concho selection (reuse existing ConchoPicker)
+  - [ ] Heel loop yes/no (reuse from Phase 3)
+  - [ ] Waxing yes/no (reuse existing)
+  - [ ] Length selection (3', 3'6", 4', 4'6", 5', 6', 7', 8', 10', 12')
   - [ ] Price breakdown component
   - [ ] Snipcart integration with all custom fields
-- [ ] Add flogger to site navigation
+- [ ] Add snakewhip to "Custom Whips" nav dropdown
+- [ ] Add snakewhip nav thumbnail image
 
 ## Phase 6: SEO & Performance
 - [ ] Set up Google Analytics (GA4)
