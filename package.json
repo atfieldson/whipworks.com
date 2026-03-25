@@ -20,9 +20,11 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "axios": "^1.7.0",
     "@fontsource-variable/domine": "^5.0.16",
     "@fontsource-variable/josefin-sans": "^5.0.19",
     "framer-motion": "^11.0.5",
+    "lodash": "^4.17.21",
     "gatsby": "^5.13.3",
     "gatsby-plugin-image": "^3.13.1",
     "gatsby-plugin-manifest": "^5.13.1",
@@ -40,6 +42,7 @@
     "three": "^0.161.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.0",
     "@types/node": "^20.11.19",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",

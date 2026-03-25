@@ -36,7 +36,7 @@ const AddPoppersModal = ({ isOpen, onClose, location }: Props) => {
             onClick={onClose}
             className="snipcart-add-item snipcart-checkout"
             data-item-id="extra-poppers"
-            data-item-price="20"
+            data-item-price="25"
             data-item-name="10 Extra Poppers"
             data-item-description="10 extra kevlar poppers"
             data-item-url="/accessories/extra-poppers"

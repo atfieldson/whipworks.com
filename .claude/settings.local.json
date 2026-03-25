@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs head:*)",
+      "WebFetch(domain:www.youtube.com)",
+      "WebFetch(domain:www.etsy.com)",
+      "Bash(ls -la /c/Users/atfie/Documents/GitHub/whipworks.com/.claude/worktrees/happy-edison/*.tsx)",
+      "Bash(grep -n \"snipcartOptions\\\\|createPages\\\\|createNodeField\" /c/Users/atfie/Documents/GitHub/whipworks.com/.claude/worktrees/happy-edison/gatsby-node.*)"
+    ]
+  }
+}

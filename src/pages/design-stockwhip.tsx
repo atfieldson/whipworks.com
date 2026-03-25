@@ -5,7 +5,7 @@ import { StockwhipDesigner } from '../components/organisms/BullwhipDesigner/inde
 
 const DesignStockwhipPage = ({ location }: { location: any }) => (
   <Layout>
-    <SEO title="Design a Bullwhip" />
+    <SEO title="Design a Stockwhip" />
     <StockwhipDesigner location={location} />
   </Layout>
 );
