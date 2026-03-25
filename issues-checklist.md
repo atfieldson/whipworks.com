@@ -69,11 +69,12 @@
 
 ## LOW - Cleanup opportunities
 
-- [ ] **Issue 12: Unused dependency — framer-motion**
-  - Listed in package.json but not imported anywhere
-  - Impact: Adds to install size unnecessarily
+- [x] **Issue 12: Unused dependency — framer-motion** *(NOT unused — required by Chakra UI)*
+  - Listed in package.json but not imported directly in source code
+  - However, @chakra-ui/react requires it as a peer dependency for animations
+  - Resolution: Keep it — removing it breaks Chakra UI components
 
-- [ ] **Issue 13: Snipcart API key hardcoded in gatsby-config.ts**
+- [x] **Issue 13: Snipcart API key hardcoded in gatsby-config.ts** *(Won't fix)*
   - File: `gatsby-config.ts` (line 21)
-  - Should use an environment variable instead
-  - Impact: Key is exposed in version control (note: Snipcart public keys are meant to be public, so this is low severity)
+  - Snipcart public keys are designed to be public and visible in browser HTML
+  - Resolution: Won't fix — acceptable for current scale
