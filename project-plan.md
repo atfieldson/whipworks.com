@@ -68,6 +68,8 @@
 ## Phase 4: Whipmaking Materials Section
 - [ ] Create materials listing page (/materials or /whipmaking-materials)
 - [ ] Add "Whipmaking Materials" nav item
+- [ ] Update kevlar poppers product photos on S3
+- [ ] Add nylon poppers listing (product page + Snipcart integration)
 - [ ] Add paracord products
   - [ ] Product cards with color swatches, lengths, pricing
   - [ ] Snipcart integration for each product
