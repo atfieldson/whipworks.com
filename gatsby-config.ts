@@ -12,6 +12,15 @@ const config: GatsbyConfig = {
   // Learn more at: https://gatsby.dev/graphql-typegen
   graphqlTypegen: true,
   plugins: [
+    {
+      resolve: 'gatsby-plugin-google-gtag',
+      options: {
+        trackingIds: ['G-W5F0T5B7KR'],
+        pluginConfig: {
+          head: true,
+        },
+      },
+    },
     'gatsby-plugin-image',
     'gatsby-transformer-remark',
     'gatsby-plugin-sharp',
