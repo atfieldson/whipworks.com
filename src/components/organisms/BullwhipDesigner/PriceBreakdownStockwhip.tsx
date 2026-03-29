@@ -5,12 +5,14 @@ import { conchos } from './constants/conchos';
 import { stockwhipHandleLengths } from './constants/stockwhipHandleLengths';
 import { thongLengths } from './constants/thongLengths';
 import { Concho } from './ConchoPicker';
+import { heelLoops } from './constants/heelLoops';
 
 type Props = {
   stockwhipHandleLength?: string;
   thongLength?: string;
   concho?: string;
   isWaxed?: boolean;
+  heelLoop?: string;
 };
 
 const PriceBreakdownStockwhip = ({
@@ -18,10 +20,12 @@ const PriceBreakdownStockwhip = ({
   thongLength,
   concho,
   isWaxed,
+  heelLoop,
 }: Props) => {
   const [conchoPrice, setConchoPrice] = useState<number | undefined>(undefined);
   const [handlePrice, setHandlePrice] = useState<number | undefined>(undefined);
   const [thongPrice, setThongPrice] = useState<number | undefined>(undefined);
+  const [heelLoopPrice, setHeelLoopPrice] = useState<number>(0);
 
   useEffect(() => {
     if (concho) {
@@ -44,7 +48,19 @@ const PriceBreakdownStockwhip = ({
     }
   }, [thongLength]);
 
-  const total = (conchoPrice || 0) + (handlePrice || 0) + (thongPrice || 0) + (isWaxed ? 25 : 0);
+  useEffect(() => {
+    if (heelLoop) {
+      const obj = heelLoops.filter((h) => h.name === heelLoop)[0];
+      setHeelLoopPrice(obj.price);
+    }
+  }, [heelLoop]);
+
+  const total =
+    (conchoPrice || 0) +
+    (handlePrice || 0) +
+    (thongPrice || 0) +
+    (isWaxed ? 25 : 0) +
+    (heelLoopPrice || 0);
   return (
     <Box mt={4}>
       <Text fontSize="sm" mb="1">
@@ -59,6 +75,10 @@ const PriceBreakdownStockwhip = ({
         <Text>${isWaxed ? 25 : 0}</Text>
         <Text>Thong:</Text>
         <Text>${thongPrice}</Text>
+        <Text fontSize="sm">Extras</Text>
+        <Text> </Text>
+        <Text>Heel Loop:</Text>
+        <Text>${heelLoopPrice}</Text>
         <Text mt="3" fontWeight="bold">
           Total:
         </Text>

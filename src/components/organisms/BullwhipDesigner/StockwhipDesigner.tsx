@@ -18,6 +18,8 @@ import WhipPreview from './WhipPreview';
 import BullwhipAddedModal from '../../molecules/BullwhipAddedModal';
 import { conchoOptions } from './constants/conchos';
 import FinishPicker from './FinishPicker';
+import { heelLoopOptions } from './constants/heelLoops';
+import HeelLoopPicker from './HeelLoopPicker';
 
 // Remove handle designs I don't want for Stockwhips, this needs to be done in tandem with props to HandleDesignPicker
 const updatedHandles = handles.filter(
@@ -48,6 +50,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
   const [stockwhipHandleLength, setStockwhipHandleLength] = useState<string | undefined>(undefined);
   const [handleFinish, setHandleFinish] = useState<string | undefined>(undefined);
   const [concho, setConcho] = useState<string | undefined>(undefined);
+  const [heelLoop, setHeelLoop] = useState('No Heel Loop');
   const [modalOpen, setModalOpen] = useState(false);
 
   const onAccordionChange = (index: any) => {
@@ -64,6 +67,11 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
       // if the user has selected enough things to generate preview,
       // let them fiddle instead of automatically advancing
       if (index <= 2 && primary && secondary && handleDesign) {
+        return;
+      }
+
+      // Don't auto-advance past Extras (index 8) — let users browse multiple options
+      if (index >= 8) {
         return;
       }
 
@@ -101,11 +109,13 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
           <CustomizationLabel label="Handle Length" value={stockwhipHandleLength} />
           <CustomizationLabel label="Handle Finish" value={handleFinish} />
           <CustomizationLabel label="Concho" value={concho} />
+          <CustomizationLabel label="Heel Loop" value={heelLoop} />
           <PriceBreakdownStockwhip
             stockwhipHandleLength={stockwhipHandleLength}
             thongLength={thongLength}
             concho={concho}
             isWaxed={waxed}
+            heelLoop={heelLoop}
           />
         </Stack>
       </Flex>
@@ -158,9 +168,18 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
           </AccordionSection>
           <AccordionSection label="Concho">
             <Text my="2" fontSize="md">
-              A Concho is applied to the heel of every handle, giving your bullwhip a distinct look!
+              A Concho is applied to the heel of every handle, giving your stockwhip a distinct look!
             </Text>
             <ConchoPicker activeConcho={concho} onClick={setConcho} />
+          </AccordionSection>
+          <AccordionSection label="Extras">
+            <Heading size="md" mt="2">
+              Add a Heel Loop
+            </Heading>
+            <Text my="2" fontSize="md">
+              Choose your heel knot style — add a heel loop for easy hanging and storage!
+            </Text>
+            <HeelLoopPicker activeHeelLoop={heelLoop} onClick={setHeelLoop} />
           </AccordionSection>
         </Accordion>
         <Button
@@ -170,7 +189,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
           className="snipcart-add-item"
           data-item-id="custom-stockwhip"
           data-item-name="Custom Stockwhip"
-          data-item-price="204"
+          data-item-price="219"
           data-item-url="/design-stockwhip"
           data-item-description="A custom-designed handmade stockwhip"
           data-item-custom0-name="Primary Color"
@@ -197,6 +216,9 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
           data-item-custom7-name="Waxing"
           data-item-custom7-options="Yes[+25]|No"
           data-item-custom7-value={waxed ? 'Yes' : 'No'}
+          data-item-custom8-name="Heel Loop"
+          data-item-custom8-options={heelLoopOptions}
+          data-item-custom8-value={heelLoop}
           data-item-weight={900}
           data-item-width={46}
           data-item-height={8}

@@ -29,10 +29,11 @@ const ImageButton = ({ onClick, isSelected, label, ...props }: Props) => (
         }
       }}
       cursor="pointer"
-      borderWidth={isSelected ? '3px' : 0}
+      border="none"
+      outline={isSelected ? '4px solid #5A9BBD' : 'none'}
+      outlineOffset="-4px"
       borderRadius="md"
       objectFit="cover"
-      borderColor="blue.300"
       {...props}
     />
     {label && <Label>{label}</Label>}

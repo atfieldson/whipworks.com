@@ -1447,6 +1447,7 @@ type MarkdownRemarkFrontmatter = {
   readonly id: Maybe<Scalars['String']>;
   readonly images: Maybe<ReadonlyArray<Maybe<Scalars['String']>>>;
   readonly price: Maybe<Scalars['Int']>;
+  readonly sortOrder: Maybe<Scalars['Int']>;
   readonly title: Maybe<Scalars['String']>;
   readonly variants: Maybe<ReadonlyArray<Maybe<MarkdownRemarkFrontmatterVariants>>>;
   readonly weight: Maybe<Scalars['Int']>;
@@ -1459,6 +1460,7 @@ type MarkdownRemarkFrontmatterFieldSelector = {
   readonly id: InputMaybe<FieldSelectorEnum>;
   readonly images: InputMaybe<FieldSelectorEnum>;
   readonly price: InputMaybe<FieldSelectorEnum>;
+  readonly sortOrder: InputMaybe<FieldSelectorEnum>;
   readonly title: InputMaybe<FieldSelectorEnum>;
   readonly variants: InputMaybe<MarkdownRemarkFrontmatterVariantsFieldSelector>;
   readonly weight: InputMaybe<FieldSelectorEnum>;
@@ -1471,6 +1473,7 @@ type MarkdownRemarkFrontmatterFilterInput = {
   readonly id: InputMaybe<StringQueryOperatorInput>;
   readonly images: InputMaybe<StringQueryOperatorInput>;
   readonly price: InputMaybe<IntQueryOperatorInput>;
+  readonly sortOrder: InputMaybe<IntQueryOperatorInput>;
   readonly title: InputMaybe<StringQueryOperatorInput>;
   readonly variants: InputMaybe<MarkdownRemarkFrontmatterVariantsFilterListInput>;
   readonly weight: InputMaybe<IntQueryOperatorInput>;
@@ -1483,6 +1486,7 @@ type MarkdownRemarkFrontmatterSortInput = {
   readonly id: InputMaybe<SortOrderEnum>;
   readonly images: InputMaybe<SortOrderEnum>;
   readonly price: InputMaybe<SortOrderEnum>;
+  readonly sortOrder: InputMaybe<SortOrderEnum>;
   readonly title: InputMaybe<SortOrderEnum>;
   readonly variants: InputMaybe<MarkdownRemarkFrontmatterVariantsSortInput>;
   readonly weight: InputMaybe<SortOrderEnum>;

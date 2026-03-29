@@ -1,4 +1,9 @@
 import type { GatsbyConfig } from 'gatsby';
+import dotenv from 'dotenv';
+
+dotenv.config({
+  path: `.env.${process.env.NODE_ENV}`,
+});
 
 const config: GatsbyConfig = {
   siteMetadata: {
@@ -29,7 +34,7 @@ const config: GatsbyConfig = {
     {
       resolve: 'gatsby-plugin-snipcart-advanced',
       options: {
-        publicApiKey: 'NmQxZjU4MTctZmMzZS00MmY0LWJiNWMtMWZjNjA0ZDhlYjE5NjM3MjQ4MDQyMTc1MjE1ODcw',
+        publicApiKey: process.env.SNIPCART_API_KEY || 'NmQxZjU4MTctZmMzZS00MmY0LWJiNWMtMWZjNjA0ZDhlYjE5NjM3MjQ4MDQyMTc1MjE1ODcw',
       },
     },
     {

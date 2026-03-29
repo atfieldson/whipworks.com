@@ -15,6 +15,8 @@ import BullwhipAddedModal from '../../molecules/BullwhipAddedModal';
 import { conchoOptions } from './constants/conchos';
 import { collarOptions } from './constants/collars';
 import CollarPicker from './CollarPicker';
+import { heelLoopOptions } from './constants/heelLoops';
+import HeelLoopPicker from './HeelLoopPicker';
 
 const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
 const handleDesignOptions = handles.map((h) => `${h.name}[+0]`).join('|');
@@ -50,6 +52,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const [handleLength, setHandleLength] = useState<string | undefined>(undefined);
   const [concho, setConcho] = useState<string | undefined>(undefined);
   const [collar, setCollar] = useState('None');
+  const [heelLoop, setHeelLoop] = useState('No Heel Loop');
   const [modalOpen, setModalOpen] = useState(false);
 
   const onAccordionChange = (index: any) => {
@@ -69,11 +72,16 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         return;
       }
 
+      // Don't auto-advance past Extras (index 7) — let users browse multiple options
+      if (index >= 7) {
+        return;
+      }
+
       setTimeout(() => {
         setIndex((index) => index + 1);
       }, 500);
     }
-  }, [primary, secondary, handleDesign, waxed, whipLength, handleLength, concho, collar]);
+  }, [primary, secondary, handleDesign, waxed, whipLength, handleLength, concho]);
 
   const handleAdd = () => {
     setModalOpen(true);
@@ -93,12 +101,14 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           <CustomizationLabel label="Handle Length" value={handleLength} />
           <CustomizationLabel label="Concho" value={concho} />
           <CustomizationLabel label="Collar" value={collar} />
+          <CustomizationLabel label="Heel Loop" value={heelLoop} />
           <PriceBreakdown
             handleLength={handleLength}
             whipLength={whipLength}
             concho={concho}
             isWaxed={waxed}
             collar={collar}
+            heelLoop={heelLoop}
           />
         </Stack>
       </Flex>
@@ -160,6 +170,13 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
               addition looks great on 12 or 14 inch handles!
             </Text>
             <CollarPicker activeCollar={collar} onClick={setCollar} />
+            <Heading size="md" mt="6">
+              Add a Heel Loop
+            </Heading>
+            <Text my="2" fontSize="md">
+              Choose your heel knot style — add a heel loop for easy hanging and storage!
+            </Text>
+            <HeelLoopPicker activeHeelLoop={heelLoop} onClick={setHeelLoop} />
           </AccordionSection>
         </Accordion>
         <Button
@@ -196,6 +213,9 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           data-item-custom7-name="Collar"
           data-item-custom7-options={collarOptions}
           data-item-custom7-value={collar}
+          data-item-custom8-name="Heel Loop"
+          data-item-custom8-options={heelLoopOptions}
+          data-item-custom8-value={heelLoop}
           data-item-weight={900}
           data-item-width={46}
           data-item-height={8}

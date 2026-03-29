@@ -6,6 +6,7 @@ import { handleLengths } from './constants/handleLengths';
 import { whipLengths } from './constants/whipLengths';
 import { Concho } from './ConchoPicker';
 import { collars } from './constants/collars';
+import { heelLoops } from './constants/heelLoops';
 
 type Props = {
   handleLength?: string;
@@ -13,13 +14,15 @@ type Props = {
   concho?: string;
   isWaxed?: boolean;
   collar?: string;
+  heelLoop?: string;
 };
 
-const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed, collar }: Props) => {
+const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed, collar, heelLoop }: Props) => {
   const [conchoPrice, setConchoPrice] = useState<number | undefined>(undefined);
   const [handlePrice, setHandlePrice] = useState<number | undefined>(undefined);
   const [lengthPrice, setLengthPrice] = useState<number | undefined>(undefined);
   const [collarPrice, setCollarPrice] = useState<number | undefined>(undefined);
+  const [heelLoopPrice, setHeelLoopPrice] = useState<number>(0);
 
   useEffect(() => {
     if (concho) {
@@ -49,12 +52,20 @@ const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed, collar }: P
     }
   }, [collar]);
 
+  useEffect(() => {
+    if (heelLoop) {
+      const obj = heelLoops.filter((h) => h.name === heelLoop)[0];
+      setHeelLoopPrice(obj.price);
+    }
+  }, [heelLoop]);
+
   const total =
     (conchoPrice || 0) +
     (handlePrice || 0) +
     (lengthPrice || 0) +
     (isWaxed ? 25 : 0) +
-    (collarPrice || 0);
+    (collarPrice || 0) +
+    (heelLoopPrice || 0);
   return (
     <Box mt={4}>
       <Text fontSize="sm" mb="1">
@@ -73,6 +84,8 @@ const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed, collar }: P
         <Text> </Text>
         <Text>Collar:</Text>
         <Text>${collarPrice}</Text>
+        <Text>Heel Loop:</Text>
+        <Text>${heelLoopPrice}</Text>
         <Text mt="3" fontWeight="bold">
           Total:
         </Text>
