@@ -37,22 +37,37 @@
   - [x] Link "Specialty Whips" nav header to this page (desktop + mobile)
   - [x] Add structured data for the page
   - [x] Make SpecialtyWhipCard responsive (stacks on mobile)
+- [x] Sort specialty whips in nav dropdown by sortOrder
 
-## Phase 3: Improve Design-a-Bullwhip Page
-- [ ] Add Heel Loop option (yes/no toggle)
-  - [ ] Add heelLoop state to BullwhipDesigner
-  - [ ] Add Heel Loop toggle UI in Extras accordion section
-  - [ ] Add Heel Loop to customization summary labels
-  - [ ] Add Heel Loop to PriceBreakdown (need price from Adam)
-  - [ ] Add Snipcart data-item-custom field for Heel Loop
-- [ ] Refactor BullwhipDesigner to be more modular/data-driven
-  - [ ] Make extras section data-driven so new options are easy to add
-  - [ ] Reduce duplication between Bullwhip and Stockwhip designers
+## Phase 3: Improve Design-a-Bullwhip & Stockwhip Pages ✅
+- [x] Add Heel Loop option (4 options with image picker)
+  - [x] Create heelLoops constants with S3 image URLs and prices
+  - [x] Create HeelLoopPicker component (image button grid)
+  - [x] Add to Bullwhip Extras section
+  - [x] Add to Stockwhip Extras section
+  - [x] Add to customization summary labels
+  - [x] Add to PriceBreakdown (both designers)
+  - [x] Add Snipcart custom field for Heel Loop
+  - [x] Options: No Heel Loop (+$0), Heel Loop (+$20), No Heel Loop Rounded (+$5), Heel Loop Rounded (+$25)
+- [x] Add Collar picker to Bullwhip Extras section *(stockwhips don't have collars)*
+- [x] Revamp Add Poppers modal
+  - [x] Color selector (Blue, Red, Yellow) with radio buttons
+  - [x] Popper image in modal
+  - [x] Hidden Snipcart button for reliable add-to-cart
+  - [x] Prevent Snipcart cart flash when modal opens
+  - [x] Modal works on Bullwhip, Stockwhip, and Specialty Whip pages
+- [x] Update popper color from Orange to Red
+- [x] Prevent Extras accordion from auto-collapsing on selection
+- [x] Fix ImageButton selection border (outline approach, muted blue #5A9BBD)
+- [x] Update stockwhip thong lengths and pricing (3'-10', base $219)
+- [x] Remove collar from stockwhip designer
+- [x] Set up Snipcart test mode via environment variable
+- [ ] Refactor BullwhipDesigner to be more modular/data-driven *(stretch goal)*
 - [ ] Verify Three.js 3D preview still works after all changes
-- [ ] Test full Snipcart add-to-cart flow after changes
 
 ## Phase 4: Whipmaking Materials Section
 - [ ] Create materials listing page (/materials or /whipmaking-materials)
+- [ ] Add "Whipmaking Materials" nav item
 - [ ] Add paracord products
   - [ ] Product cards with color swatches, lengths, pricing
   - [ ] Snipcart integration for each product
@@ -73,7 +88,7 @@
   - [ ] Handle pattern selection *(only shown if Plaited selected)*
   - [ ] No Handle reduces base price *(awaiting pricing from Adam)*
   - [ ] Concho selection (reuse existing ConchoPicker)
-  - [ ] Heel loop yes/no
+  - [ ] Heel loop yes/no (reuse from Phase 3)
   - [ ] Lashing type — Heavy or Light
   - [ ] Number of lashings *(Light: 24/36/48/60, Heavy: locked at 9)*
   - [ ] Lashing length — 16", 18", 20", 22", 24" *(same for both types)*
@@ -88,7 +103,7 @@
   - [ ] Secondary color selection (reuse existing color picker)
   - [ ] Handle design selection (reuse existing HandleDesignPicker)
   - [ ] Concho selection (reuse existing ConchoPicker)
-  - [ ] Heel loop yes/no (reuse from Phase 3)
+  - [ ] Heel loop (reuse HeelLoopPicker from Phase 3)
   - [ ] Waxing yes/no (reuse existing)
   - [ ] Length selection (3', 3'6", 4', 4'6", 5', 6', 7', 8', 10', 12')
   - [ ] Price breakdown component
@@ -97,19 +112,20 @@
 - [ ] Add snakewhip nav thumbnail image
 - [ ] Update Contact page internal links to include flogger, snakewhip, and materials pages
 
-## Phase 6: SEO & Performance
+## Phase 6: SEO & Performance ✅
 - [x] Set up Google Analytics (GA4) — Measurement ID: G-W5F0T5B7KR
 - [x] Set up Google Search Console — verified via GA4
 - [x] Add structured data (JSON-LD) for products
 - [x] Improve meta descriptions and page titles across all pages
 - [x] Add/generate sitemap (gatsby-plugin-sitemap)
+- [x] Submit sitemap to Google Search Console
 - [x] Add alt text to all images *(completed in Phase 1)*
 - [x] Optimize image loading and Core Web Vitals (lazy loading on below-the-fold images)
 - [x] Review and improve internal linking
   - [x] Homepage: added Design a Stockwhip button
-  - [x] Contact page: links to custom Bullwhip options and accessories
+  - [x] Contact page: links to Specialty Whips and custom Bullwhip options
   - [x] Accessories page: links to Bullwhip and Stockwhip designers
-  - [x] Specialty whip pages: "Design your own" call-to-action
+  - [x] Specialty whip pages: "View all Specialty Whips" button + "Design your own" CTA
 
 ## Phase 7: Quality Assurance
 - [ ] End-to-end testing of all purchase flows
