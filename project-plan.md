@@ -102,6 +102,7 @@
   - [ ] Primary color selection (reuse existing color picker)
   - [ ] Secondary color selection (reuse existing color picker)
   - [ ] Handle design selection (reuse existing HandleDesignPicker)
+  - [ ] Add Herringbone handle pattern to Three.js 3D preview
   - [ ] Concho selection (reuse existing ConchoPicker)
   - [ ] Heel loop (reuse HeelLoopPicker from Phase 3)
   - [ ] Waxing yes/no (reuse existing)
