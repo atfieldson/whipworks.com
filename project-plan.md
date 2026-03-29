@@ -32,10 +32,11 @@
   - [x] Gradient shadow under header
   - [x] Hero carousel no longer hidden behind header
   - [x] Hover states on dropdown triggers and menu items
-- [ ] Create Specialty Whips landing page (`/specialty-whips`)
-  - [ ] Display all specialty whips with cards, images, descriptions, and prices
-  - [ ] Link "Specialty Whips" nav header to this page
-  - [ ] Add structured data for the page
+- [x] Create Specialty Whips landing page (`/specialty-whips`)
+  - [x] Display all specialty whips with cards, images, descriptions, and prices
+  - [x] Link "Specialty Whips" nav header to this page (desktop + mobile)
+  - [x] Add structured data for the page
+  - [x] Make SpecialtyWhipCard responsive (stacks on mobile)
 
 ## Phase 3: Improve Design-a-Bullwhip Page
 - [ ] Add Heel Loop option (yes/no toggle)

@@ -18,6 +18,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  MenuDivider,
   Text,
   HStack,
 } from '@chakra-ui/react';
@@ -163,6 +164,17 @@ const Header = ({ bg }: { bg?: string }) => {
               </HStack>
             </MenuButton>
             <MenuList>
+              <MenuItem
+                as={Link}
+                to="/specialty-whips"
+                fontWeight="bold"
+                color="gray.900"
+                fontSize="1rem"
+                _hover={{ bg: '#e8e0d8' }}
+              >
+                View All Specialty Whips
+              </MenuItem>
+              <MenuDivider />
               {data.allMarkdownRemark.edges.map((edge: any) => (
                 <MenuItem
                   as={Link}
@@ -229,6 +241,9 @@ const Header = ({ bg }: { bg?: string }) => {
                 Specialty Whips
               </Heading>
               <Stack spacing="3" mt="3" ml="4">
+                <CLink as={Link} to="/specialty-whips" onClick={onClose} fontWeight="bold">
+                  View All
+                </CLink>
                 {data.allMarkdownRemark.edges.map((edge: any) => (
                   <CLink
                     as={Link}

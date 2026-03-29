@@ -23,18 +23,20 @@ const SpecialtyWhipCard = ({
 }: Props) => {
   const isSmall = size && size === 'sm';
   return (
-    <Flex direction={isReversed ? 'row-reverse' : 'row'} flex="1">
+    <Flex direction={{ base: 'column', md: isReversed ? 'row-reverse' : 'row' }} flex="1">
       <Image
         src={image}
         objectFit="cover"
-        width={isSmall ? '250px' : '400px'}
-        height={isSmall ? '150px' : '250px'}
-        mr={isReversed ? 0 : 8}
-        ml={isReversed ? 8 : 0}
+        width={{ base: '100%', md: isSmall ? '250px' : '400px' }}
+        height={{ base: 'auto', md: isSmall ? '150px' : '250px' }}
+        aspectRatio={{ base: '8/5', md: 'auto' }}
+        mr={{ base: 0, md: isReversed ? 0 : 8 }}
+        ml={{ base: 0, md: isReversed ? 8 : 0 }}
+        mb={{ base: 4, md: 0 }}
         borderRadius="md"
         alt={title}
       />
-      <Box textAlign={isReversed ? 'right' : 'left'}>
+      <Box textAlign={{ base: 'left', md: isReversed ? 'right' : 'left' }}>
         <Image
           maxH={isSmall ? '40px' : '60px'}
           maxW={isSmall ? '200px' : '300px'}
