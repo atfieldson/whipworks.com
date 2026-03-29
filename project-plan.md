@@ -106,3 +106,33 @@
 - [ ] Mobile testing across devices
 - [ ] Cart abandonment prevention (error states, validation)
 - [ ] Cross-browser testing
+
+## Phase 8: Ready to Ship Whips
+- [ ] Create data system for listings
+  - [ ] Design JSON/YAML data file structure for ready-to-ship products
+  - [ ] Fields vary by product type (bullwhip, stockwhip, snakewhip, flogger)
+  - [ ] Support 4-7 images per listing with consistent S3 naming (`ready-to-ship/[type]-[name]-[1-7].jpg`)
+  - [ ] Include sold/available status per listing
+- [ ] Build main listing page (`/ready-to-ship`)
+  - [ ] Display all listings sorted by whip type
+  - [ ] Product cards with thumbnail, name, type, price
+  - [ ] Click-through to individual listing detail pages
+- [ ] Build individual listing detail pages
+  - [ ] Full-size photo gallery (4-7 images)
+  - [ ] Product details and description
+  - [ ] Snipcart "Add to Cart" with `max-quantity="1"`
+- [ ] Build per-type listing pages
+  - [ ] `/ready-to-ship/bullwhips`
+  - [ ] `/ready-to-ship/stockwhips`
+  - [ ] `/ready-to-ship/snakewhips`
+  - [ ] `/ready-to-ship/floggers`
+- [ ] Set up Snipcart inventory management
+  - [ ] Configure inventory tracking in Snipcart dashboard (stock = 1 per item)
+  - [ ] "Sold" state displays on listing when stock hits 0 (social proof)
+  - [ ] Test purchase flow to confirm inventory decrements correctly
+- [ ] Build streamlined listing creation workflow
+  - [ ] Create Claude prompt template tailored per product type
+  - [ ] Prompts ask type-specific questions (length, handle length, colors, etc.)
+  - [ ] Output: ready-to-commit data file entry + S3 upload path instructions
+- [ ] Add "Ready to Ship" to site navigation
+- [ ] *(Stretch goal)* Filter/sort by type, price, length
