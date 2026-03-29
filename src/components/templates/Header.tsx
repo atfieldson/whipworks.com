@@ -69,7 +69,10 @@ const NavLink = styled(CLink)`
 
 const query = graphql`
   query {
-    allMarkdownRemark(filter: { fields: { collection: { eq: "specialty" } } }) {
+    allMarkdownRemark(
+      filter: { fields: { collection: { eq: "specialty" } } }
+      sort: { frontmatter: { sortOrder: ASC } }
+    ) {
       edges {
         node {
           fields {

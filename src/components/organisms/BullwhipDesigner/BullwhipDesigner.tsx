@@ -84,7 +84,24 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   }, [primary, secondary, handleDesign, waxed, whipLength, handleLength, concho]);
 
   const handleAdd = () => {
+    // Hide Snipcart's cart container before it can flash on screen
+    const snipcartEl = document.getElementById('snipcart');
+    if (snipcartEl) {
+      snipcartEl.style.visibility = 'hidden';
+    }
+    // Show our modal immediately
     setModalOpen(true);
+    // Close Snipcart's cart and restore visibility
+    setTimeout(() => {
+      if (typeof window !== 'undefined' && (window as any).Snipcart) {
+        (window as any).Snipcart.api.theme.cart.close();
+      }
+      setTimeout(() => {
+        if (snipcartEl) {
+          snipcartEl.style.visibility = 'visible';
+        }
+      }, 300);
+    }, 50);
   };
 
   const readyForOrder = primary && secondary && whipLength && handleLength && concho;

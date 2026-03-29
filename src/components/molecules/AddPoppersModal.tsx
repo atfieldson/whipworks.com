@@ -42,7 +42,7 @@ const AddPoppersModal = ({ isOpen, onClose, location }: Props) => {
             data-item-url="/accessories/extra-poppers"
             data-item-image="https://d3ruufruf2uqog.cloudfront.net/accessories/extraPoppers.jpg"
             data-item-custom1-name="Color"
-            data-item-custom1-options="Blue[+0]|Orange[+0]|Yellow[+0]"
+            data-item-custom1-options="Blue[+0]|Red[+0]|Yellow[+0]"
             ml="4"
           >
             Add Poppers

@@ -10,6 +10,6 @@ variants:
   - name: 'Color'
     options:
       - name: Blue
-      - name: Orange
+      - name: Red
       - name: Yellow
 ---
