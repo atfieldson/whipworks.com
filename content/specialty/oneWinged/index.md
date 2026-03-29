@@ -1,6 +1,7 @@
 ---
 title: The One Winged Bullwhip
 id: onewinged
+sortOrder: 4
 description: This beast of a bullwhip is inspired by the notorious villain from Final Fantasy VII, Sephiroth. It is plaited with silver in the thong and white in the handle, while the handle is covered in Ito cord for a traditional Tsuka-Maki wrap as you would see on a Katana. The whip only comes in 8, 10 and 12 foot lengths because anything shorter just wouldn't do!    
 price: 389
 hasStyles: false

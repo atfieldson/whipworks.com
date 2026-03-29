@@ -14,7 +14,7 @@ const ProductImages = ({ images, alt }: Props) => {
     <Flex flex="1" direction="column" maxW={{ base: '450px', sm: '100%' }}>
       <Image
         bg="gray.800"
-        maxW="460px"
+        maxW="600px"
         mr="sm"
         borderRadius="md"
         objectFit="contain"

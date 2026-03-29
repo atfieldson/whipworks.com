@@ -1,6 +1,7 @@
 ---
 title: The Z Whip
 id: zwhip
+sortOrder: 3
 description: Are you ready to snuff out candles like the masked legend himself? Well look no further, the WhipWorks Z Whip is the perfect target whip!  With a 12 inch handle and a silver collar at the transition, this Bullwhip is as accurate as they come.  
 price: 339
 hasStyles: false

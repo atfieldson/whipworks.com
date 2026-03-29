@@ -1,6 +1,7 @@
 ---
 title: The Indy Bullwhip
 id: indy-bullwhip
+sortOrder: 1
 description: Indiana Jones has been one of my biggest insprirations as a whip maker! Who isn't excited about Bullwhips when they watch him swing across a chasm in a daring escape?  This Bullwhip is perfect for any fan of the franchise.  It has an 8 inch handle and a 13 inch loop at the rounded heel. This Bullwhip has several different styles to choose from!
 price: 294
 hasStyles: true

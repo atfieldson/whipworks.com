@@ -221,6 +221,11 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
         </Flex>
       </Flex>
       <Box mt="70px" mb="10" textAlign="center">
+        <Box mb="5">
+          <Button as={Link} to="/specialty-whips" size="lg">
+            View all Specialty Whips
+          </Button>
+        </Box>
         <Text fontSize="lg">
           Want something unique? Design your own{' '}
           <Link to="/design-bullwhip" style={{ textDecoration: 'underline' }}>custom Bullwhip</Link>
@@ -228,28 +233,6 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           <Link to="/design-stockwhip" style={{ textDecoration: 'underline' }}>custom Stockwhip</Link>
           {' '}from scratch!
         </Text>
-      </Box>
-      <Box mt="70px" mb="10">
-        <Text mb="5">Checkout these other specialty whips</Text>
-        <Flex flexDirection={{ base: 'column', lg: 'row' }}>
-          {previous && (
-            <SpecialtyWhipCard
-              headerImage={previous.frontmatter.headerImage}
-              image={previous.frontmatter.images[0]}
-              description={previous.frontmatter.description}
-              slug={previous.fields.slug}
-            />
-          )}
-          <Box mt={{ base: '6', lg: 0 }} mx={{ base: 0, lg: '6' }} />
-          {next && (
-            <SpecialtyWhipCard
-              headerImage={next.frontmatter.headerImage}
-              image={next.frontmatter.images[0]}
-              description={next.frontmatter.description}
-              slug={next.fields.slug}
-            />
-          )}
-        </Flex>
       </Box>
       <BullwhipAddedModal
         isOpen={modalOpen}

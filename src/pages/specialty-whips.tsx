@@ -8,7 +8,7 @@ import SpecialtyWhipCard from '../components/atoms/SpecialtyWhipCard';
 
 export const pageQuery = graphql`
   query {
-    allMarkdownRemark(filter: { fields: { collection: { eq: "specialty" } } }) {
+    allMarkdownRemark(filter: { fields: { collection: { eq: "specialty" } } }, sort: { frontmatter: { sortOrder: ASC } }) {
       edges {
         node {
           fields {
@@ -34,7 +34,7 @@ const SpecialtyWhipsPage = () => {
     <Layout>
       <SEO
         title="Specialty Whips"
-        description="Browse our collection of signature handcrafted specialty whips. Each design is inspired by pop culture icons and crafted with premium materials."
+        description="Browse our collection of signature specialty whips. Each design is carefully handcrafted and unique."
         structuredData={data.allMarkdownRemark.edges.map((a: any) => ({
           '@context': 'https://schema.org',
           '@type': 'Product',
@@ -56,7 +56,7 @@ const SpecialtyWhipsPage = () => {
       />
       <Heading letterSpacing="wide" mb="2">Specialty Whips</Heading>
       <Text mb="10">
-        Browse our collection of signature handcrafted whips. Each design is inspired by pop culture icons and crafted with premium materials.
+        Browse our collection of signature specialty whips. Each design is carefully handcrafted and unique.
       </Text>
       <Stack spacing={20} shouldWrapChildren>
         {data.allMarkdownRemark.edges.map((specialtyWhip: any) => {

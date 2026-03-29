@@ -1,6 +1,7 @@
 ---
 title: The Catwhip
 id: catwhip
+sortOrder: 2
 description: Catwoman is one of the most iconic characters in modern day pop culture. This bullwhip is the perfect accessory for any Catwoman cosplay! It has a sleek design with a 10 inch handle, no mid knot and a rounded heel knot, in all black of course!
 price: 289
 hasStyles: false

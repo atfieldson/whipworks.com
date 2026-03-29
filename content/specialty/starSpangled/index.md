@@ -1,6 +1,7 @@
 ---
 title: The Star Spangled Bullwhip
 id: starspangled
+sortOrder: 5
 description: This is a custom made to order American Flag inspired Bullwhip! So grill up some burgers, grab a brewskie and make your own fireworks by breaking the sound barrier. You'll be the talk of the neighborhood at your fourth of July gathering! These bullwhips are Red, White and Blue (duh!). This whip is finished at the heel with an American Eagle coin concho. It screams American Pride! These whips are also waxed after completion, giving them a protective layer from moisture and a professional finish.
 price: 309
 hasStyles: false
