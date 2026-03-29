@@ -53,7 +53,7 @@ const ContactForm = ({ ...props }) => {
         You can also browse our{' '}
         <Link to="/design-bullwhip" style={{ textDecoration: 'underline' }}>custom Bullwhip options</Link>
         {' '}or{' '}
-        <Link to="/accessories" style={{ textDecoration: 'underline' }}>accessories</Link>.
+        <Link to="/specialty-whips" style={{ textDecoration: 'underline' }}>Specialty Whips</Link>.
       </Text>
       {status && status !== 'loading' && (
         <Text fontWeight="bold" color={status === 'error' ? 'red.500' : 'green.200'} mt="4">
