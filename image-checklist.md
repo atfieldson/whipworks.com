@@ -43,6 +43,7 @@ All images should be uploaded to S3/CloudFront at `d3ruufruf2uqog.cloudfront.net
 |---|-------|------------|------|-------------|------|
 | 1 | Handle plaited | Plaited flogger handle close-up | 400x400 JPG | `floggers/handlePlaited.jpg` | [ ] |
 | 2 | Handle unplaited | Unplaited flogger handle close-up | 400x400 JPG | `floggers/handleUnplaited.jpg` | [ ] |
+| 3 | No handle | Flogger with no handle close-up | 400x400 JPG | `floggers/noHandle.jpg` | [ ] |
 | ~~3~~ | ~~Handle patterns~~ | ~~Reuse existing bullwhip handle images~~ | — | — | ✅ |
 | 4 | Heavy lashing example | Photo showing heavy lashings (9 count) | 400x400 JPG | `floggers/lashings/heavy.jpg` | [ ] |
 | 5 | Light lashing example | Photo showing light lashings | 400x400 JPG | `floggers/lashings/light.jpg` | [ ] |

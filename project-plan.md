@@ -64,8 +64,9 @@
 - [ ] Build "Design Your Own Flogger" customizer (/design-flogger)
   - [ ] Primary color selection (reuse existing color picker)
   - [ ] Secondary color selection (reuse existing color picker)
-  - [ ] Plaited vs Unplaited handle toggle
+  - [ ] Handle type selection — Plaited, Unplaited, or No Handle
   - [ ] Handle pattern selection *(only shown if Plaited selected)*
+  - [ ] No Handle reduces base price *(awaiting pricing from Adam)*
   - [ ] Concho selection (reuse existing ConchoPicker)
   - [ ] Heel loop yes/no
   - [ ] Lashing type — Heavy or Light
