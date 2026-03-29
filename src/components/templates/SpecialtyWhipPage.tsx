@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { graphql } from 'gatsby';
+import { graphql, Link } from 'gatsby';
 import Layout from './Layout';
 import SEO from './SEO';
 import {
@@ -220,7 +220,16 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           </Stack>
         </Flex>
       </Flex>
-      <Box mt="140px" mb="10">
+      <Box mt="70px" mb="10" textAlign="center">
+        <Text fontSize="lg">
+          Want something unique? Design your own{' '}
+          <Link to="/design-bullwhip" style={{ textDecoration: 'underline' }}>custom Bullwhip</Link>
+          {' '}or{' '}
+          <Link to="/design-stockwhip" style={{ textDecoration: 'underline' }}>custom Stockwhip</Link>
+          {' '}from scratch!
+        </Text>
+      </Box>
+      <Box mt="70px" mb="10">
         <Text mb="5">Checkout these other specialty whips</Text>
         <Flex flexDirection={{ base: 'column', lg: 'row' }}>
           {previous && (

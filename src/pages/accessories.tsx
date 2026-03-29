@@ -1,6 +1,6 @@
 import React from 'react';
-import { SimpleGrid } from '@chakra-ui/react';
-import { graphql, useStaticQuery } from 'gatsby';
+import { SimpleGrid, Text, Box } from '@chakra-ui/react';
+import { graphql, useStaticQuery, Link } from 'gatsby';
 
 import Layout from '../components/templates/Layout';
 import SEO from '../components/templates/SEO';
@@ -53,6 +53,14 @@ const AccessoriesPage = () => {
           },
         }))}
       />
+      <Box mb="6">
+        <Text>
+          Looking for a custom whip instead? Design your own{' '}
+          <Link to="/design-bullwhip" style={{ textDecoration: 'underline' }}>Bullwhip</Link>
+          {' '}or{' '}
+          <Link to="/design-stockwhip" style={{ textDecoration: 'underline' }}>Stockwhip</Link>.
+        </Text>
+      </Box>
       <SimpleGrid spacing="6" minChildWidth="200px">
         {data.allMarkdownRemark.edges.map((a: any) => {
           const product = a.node.frontmatter;

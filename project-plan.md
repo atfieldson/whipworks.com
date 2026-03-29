@@ -32,6 +32,10 @@
   - [x] Gradient shadow under header
   - [x] Hero carousel no longer hidden behind header
   - [x] Hover states on dropdown triggers and menu items
+- [ ] Create Specialty Whips landing page (`/specialty-whips`)
+  - [ ] Display all specialty whips with cards, images, descriptions, and prices
+  - [ ] Link "Specialty Whips" nav header to this page
+  - [ ] Add structured data for the page
 
 ## Phase 3: Improve Design-a-Bullwhip Page
 - [ ] Add Heel Loop option (yes/no toggle)
@@ -90,16 +94,21 @@
   - [ ] Snipcart integration with all custom fields
 - [ ] Add snakewhip to "Custom Whips" nav dropdown
 - [ ] Add snakewhip nav thumbnail image
+- [ ] Update Contact page internal links to include flogger, snakewhip, and materials pages
 
 ## Phase 6: SEO & Performance
 - [x] Set up Google Analytics (GA4) — Measurement ID: G-W5F0T5B7KR
 - [x] Set up Google Search Console — verified via GA4
-- [ ] Add structured data (JSON-LD) for products
-- [ ] Improve meta descriptions and page titles across all pages
-- [ ] Add/generate sitemap
-- [ ] Add alt text to all images
-- [ ] Optimize image loading and Core Web Vitals
-- [ ] Review and improve internal linking
+- [x] Add structured data (JSON-LD) for products
+- [x] Improve meta descriptions and page titles across all pages
+- [x] Add/generate sitemap (gatsby-plugin-sitemap)
+- [x] Add alt text to all images *(completed in Phase 1)*
+- [x] Optimize image loading and Core Web Vitals (lazy loading on below-the-fold images)
+- [x] Review and improve internal linking
+  - [x] Homepage: added Design a Stockwhip button
+  - [x] Contact page: links to custom Bullwhip options and accessories
+  - [x] Accessories page: links to Bullwhip and Stockwhip designers
+  - [x] Specialty whip pages: "Design your own" call-to-action
 
 ## Phase 7: Quality Assurance
 - [ ] End-to-end testing of all purchase flows

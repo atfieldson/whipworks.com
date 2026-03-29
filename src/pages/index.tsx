@@ -76,6 +76,7 @@ const Index = () => {
               mr="5"
               src="https://d3ruufruf2uqog.cloudfront.net/makingOfPhotos/layersOfPlaiting.jpg"
               alt="Layers of plaiting on a WhipWorks Bullwhip"
+              loading="lazy"
             />
             <Box>
               <Heading size="lg" mb="2">
@@ -96,6 +97,7 @@ const Index = () => {
               mr="5"
               src="https://d3ruufruf2uqog.cloudfront.net/makingOfPhotos/loadingCore.jpg"
               alt="Loading steel shot into a bullwhip core"
+              loading="lazy"
             />
             <Box>
               <Heading size="lg" mb="2">
@@ -120,6 +122,7 @@ const Index = () => {
           height="auto"
           objectFit="cover"
           alt="Diagram showing the anatomy of a bullwhip"
+          loading="lazy"
         />
         <Text mb="4" mt="5">
           Here is a break down of a Bullwhip. The handle is the stiff portion containing the 1/4"
@@ -149,6 +152,7 @@ const Index = () => {
             mr="5"
             src="https://d3ruufruf2uqog.cloudfront.net/makingOfPhotos/waxedVsUnwaxed.jpg"
             alt="Waxed vs. Unwaxed"
+            loading="lazy"
           />
           <Box>
             <Heading size="lg" mb="2">
@@ -162,21 +166,36 @@ const Index = () => {
             </Text>
           </Box>
         </Flex>
-        <Button
-          borderWidth="1px"
-          width="200px"
-          alignSelf="center"
-          size="md"
-          color="gray.100"
-          as={Link}
-          to="/design-bullwhip"
-          bg="rgba(255,255,255,0.2)"
-          borderColor="rgba(255,255,255,0.16)"
-          _hover={{ bg: 'rgba(255,255,255,0.16)' }}
-          _active={{ bg: 'rgba(255,255,255,0.16)' }}
-        >
-          DESIGN A BULLWHIP
-        </Button>
+        <Flex gap="4" justifyContent="center">
+          <Button
+            borderWidth="1px"
+            width="200px"
+            size="md"
+            color="gray.100"
+            as={Link}
+            to="/design-bullwhip"
+            bg="rgba(255,255,255,0.2)"
+            borderColor="rgba(255,255,255,0.16)"
+            _hover={{ bg: 'rgba(255,255,255,0.16)' }}
+            _active={{ bg: 'rgba(255,255,255,0.16)' }}
+          >
+            DESIGN A BULLWHIP
+          </Button>
+          <Button
+            borderWidth="1px"
+            width="200px"
+            size="md"
+            color="gray.100"
+            as={Link}
+            to="/design-stockwhip"
+            bg="rgba(255,255,255,0.2)"
+            borderColor="rgba(255,255,255,0.16)"
+            _hover={{ bg: 'rgba(255,255,255,0.16)' }}
+            _active={{ bg: 'rgba(255,255,255,0.16)' }}
+          >
+            DESIGN A STOCKWHIP
+          </Button>
+        </Flex>
       </Stack>
     </Layout>
   );

@@ -29,12 +29,12 @@ const InstaImage = styled(Image)`
 const InstagramFeed = ({ ...props }: BoxProps) => (
   <Container bg="green.300" {...props}>
     <SimpleGrid columns={{ base: 2, sm: 3 }}>
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/batch1.jpg" alt="Batch of handcrafted WhipWorks Whips" />
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/hanging3.jpg" alt="WhipWorks Whip hanging on display" />
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/batch2.jpg" alt="Collection of finished WhipWorks Whips" />
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/holding1.jpg" alt="Holding a WhipWorks Whip" />
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/batch3.jpg" alt="Assortment of WhipWorks Whips ready to ship" />
-      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/hanging1.jpg" alt="WhipWorks Whip on display" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/batch1.jpg" alt="Batch of handcrafted WhipWorks Whips" loading="lazy" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/hanging3.jpg" alt="WhipWorks Whip hanging on display" loading="lazy" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/batch2.jpg" alt="Collection of finished WhipWorks Whips" loading="lazy" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/holding1.jpg" alt="Holding a WhipWorks Whip" loading="lazy" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/batch3.jpg" alt="Assortment of WhipWorks Whips ready to ship" loading="lazy" />
+      <InstaImage src="https://d3ruufruf2uqog.cloudfront.net/instagram/2400x2400versions/hanging1.jpg" alt="WhipWorks Whip on display" loading="lazy" />
     </SimpleGrid>
     <Overlay />
     <Flex position="absolute" bottom="5" left="0" right="0" justifyContent="center">

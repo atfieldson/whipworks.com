@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { navigate } from 'gatsby';
+import { navigate, Link } from 'gatsby';
 
 type FormData = {
   email: string;
@@ -48,6 +48,13 @@ const ContactForm = ({ ...props }) => {
   return (
     <Box maxW="700px" {...props}>
       <Heading letterSpacing="wide">Contact Me!</Heading>
+      <Text mt="2">
+        Have a question about an order or want something custom? Drop me a message below!
+        You can also browse our{' '}
+        <Link to="/design-bullwhip" style={{ textDecoration: 'underline' }}>custom Bullwhip options</Link>
+        {' '}or{' '}
+        <Link to="/accessories" style={{ textDecoration: 'underline' }}>accessories</Link>.
+      </Text>
       {status && status !== 'loading' && (
         <Text fontWeight="bold" color={status === 'error' ? 'red.500' : 'green.200'} mt="4">
           {status === 'error'

@@ -26,7 +26,7 @@ type Props = BoxProps & {
 
 const FullWidthImage = ({ img, alt, ...props }: Props) => (
   <Container {...props}>
-    <StyledImage src={img} alt={alt || ''} />
+    <StyledImage src={img} alt={alt || ''} loading="lazy" />
   </Container>
 );
 
