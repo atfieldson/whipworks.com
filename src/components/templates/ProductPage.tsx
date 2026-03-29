@@ -66,7 +66,28 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
 
   return (
     <Layout>
-      <SEO title={product.title} />
+      <SEO
+        title={product.title}
+        description={product.description}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: product.title,
+          description: product.description,
+          image: product.images?.[0],
+          brand: {
+            '@type': 'Brand',
+            name: 'WhipWorks',
+          },
+          offers: {
+            '@type': 'Offer',
+            url: `https://www.whipworks.com${location.pathname}`,
+            priceCurrency: 'USD',
+            price: product.price,
+            availability: 'https://schema.org/InStock',
+          },
+        }}
+      />
       <Flex flexDirection={{ base: 'column', md: 'row' }}>
         <ProductImages images={product.images} />
         <Flex flex="1" direction="column" ml={{ base: 0, md: '6' }} mt={{ base: '6', md: 0 }}>

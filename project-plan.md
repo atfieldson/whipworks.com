@@ -92,8 +92,8 @@
 - [ ] Add snakewhip nav thumbnail image
 
 ## Phase 6: SEO & Performance
-- [ ] Set up Google Analytics (GA4)
-- [ ] Set up Google Search Console
+- [x] Set up Google Analytics (GA4) — Measurement ID: G-W5F0T5B7KR
+- [x] Set up Google Search Console — verified via GA4
 - [ ] Add structured data (JSON-LD) for products
 - [ ] Improve meta descriptions and page titles across all pages
 - [ ] Add/generate sitemap

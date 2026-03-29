@@ -123,7 +123,32 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
 
   return (
     <Layout>
-      <SEO title={whip.title} />
+      <SEO
+        title={whip.title}
+        description={whip.description}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: whip.title,
+          description: whip.description,
+          image: whip.images?.[0],
+          brand: {
+            '@type': 'Brand',
+            name: 'WhipWorks',
+          },
+          offers: {
+            '@type': 'Offer',
+            url: `https://www.whipworks.com${location.pathname}`,
+            priceCurrency: 'USD',
+            price: whip.price,
+            availability: 'https://schema.org/InStock',
+            seller: {
+              '@type': 'Organization',
+              name: 'WhipWorks',
+            },
+          },
+        }}
+      />
       <Flex flexDirection={{ base: 'column', md: 'row' }}>
         <ProductImages images={images} alt={whip.title} />
         <Flex flex="1" direction="column" ml={{ base: 0, md: '6' }} mt={{ base: '6', md: 0 }}>

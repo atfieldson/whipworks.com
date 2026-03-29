@@ -27,7 +27,24 @@ const Index = () => {
 
   return (
     <Layout headerBackground={showHeader ? undefined : 'rgba(26, 20, 15, 0.6)'}>
-      <SEO title="Home" />
+      <SEO
+        title="Handcrafted Custom Whips"
+        description="Handcrafted custom bullwhips and stockwhips. Design your own or choose from our specialty collection. Made in Minneapolis."
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'WhipWorks',
+          url: 'https://www.whipworks.com',
+          logo: 'https://www.whipworks.com/favicon_large.png',
+          description:
+            'Handcrafted custom bullwhips and stockwhips. Design your own or choose from our specialty collection.',
+          sameAs: [
+            'https://www.etsy.com/shop/WhipWorks',
+            'https://www.youtube.com/@whipworks4468',
+            'https://www.instagram.com/whipworks/',
+          ],
+        }}
+      />
       <HeroCarousel />
       <SpecialtyWhipList />
       <Box mt="32">

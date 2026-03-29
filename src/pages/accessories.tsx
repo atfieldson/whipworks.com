@@ -31,7 +31,28 @@ const AccessoriesPage = () => {
 
   return (
     <Layout>
-      <SEO title="Accessories" />
+      <SEO
+        title="Whip Accessories"
+        description="Whipmaking accessories and extras from WhipWorks."
+        structuredData={data.allMarkdownRemark.edges.map((a: any) => ({
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: a.node.frontmatter.title,
+          description: a.node.frontmatter.description,
+          image: a.node.frontmatter.images?.[0],
+          brand: {
+            '@type': 'Brand',
+            name: 'WhipWorks',
+          },
+          offers: {
+            '@type': 'Offer',
+            url: `https://www.whipworks.com${a.node.fields.slug}`,
+            priceCurrency: 'USD',
+            price: a.node.frontmatter.price,
+            availability: 'https://schema.org/InStock',
+          },
+        }))}
+      />
       <SimpleGrid spacing="6" minChildWidth="200px">
         {data.allMarkdownRemark.edges.map((a: any) => {
           const product = a.node.frontmatter;

@@ -4,9 +4,10 @@ import React from 'react';
 type SEOProps = {
   title: string;
   description?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 };
 
-const SEO = ({ title, description }: SEOProps) => {
+const SEO = ({ title, description, structuredData }: SEOProps) => {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -39,6 +40,11 @@ const SEO = ({ title, description }: SEOProps) => {
       <meta name="twitter:image" content={`${seo.siteUrl}/favicon_large.png`} />
       <meta name="twitter:title" content={seo.title} />
       <meta name="twitter:description" content={seo.description} />
+      {structuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      )}
     </>
   );
 };

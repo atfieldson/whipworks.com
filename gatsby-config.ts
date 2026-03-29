@@ -21,6 +21,7 @@ const config: GatsbyConfig = {
         },
       },
     },
+    'gatsby-plugin-sitemap',
     'gatsby-plugin-image',
     'gatsby-transformer-remark',
     'gatsby-plugin-sharp',
