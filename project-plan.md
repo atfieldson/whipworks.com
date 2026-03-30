@@ -165,3 +165,13 @@
   - [ ] Output: ready-to-commit data file entry + S3 upload path instructions
 - [ ] Add "Ready to Ship" to site navigation
 - [ ] *(Stretch goal)* Filter/sort by type, price, length
+
+## Phase 9: LinkTree Replacement (`/links`)
+- [ ] Build link-in-bio page as Gatsby route (`www.whipworks.com/links`)
+  - [ ] WhipWorks branding (logo, colors, rustic aesthetic)
+  - [ ] Links: Shop, Instagram, YouTube, Etsy, Contact
+  - [ ] Mobile-first responsive design
+- [ ] Deploy and verify
+- [ ] Update social media bios to point to `www.whipworks.com/links`
+- [ ] Cancel LinkTree subscription (~$100/month savings)
+- [ ] *(Optional)* Set up `links.whipworks.com` subdomain redirect to `/links`
