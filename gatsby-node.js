@@ -35,6 +35,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const whipPage = path.resolve(`./src/components/templates/SpecialtyWhipPage.tsx`);
   const productPage = path.resolve('./src/components/templates/ProductPage.tsx');
+  const paracordPage = path.resolve('./src/components/templates/ParacordPage.tsx');
   const result = await graphql(
     `
       {
@@ -50,6 +51,7 @@ exports.createPages = async ({ graphql, actions }) => {
                 images
                 headerImage
                 description
+                customLayout
                 variants {
                   name
                   options {
@@ -81,11 +83,12 @@ exports.createPages = async ({ graphql, actions }) => {
   );
 
   materials.forEach((material) => {
+    const isCustomLayout = material.node.frontmatter.customLayout === true;
     const snipcartOptions = resolveSnipcartFields(material.node.frontmatter.variants);
 
     createPage({
       path: material.node.fields.slug,
-      component: productPage,
+      component: isCustomLayout ? paracordPage : productPage,
       context: {
         slug: material.node.fields.slug,
         snipcartOptions,

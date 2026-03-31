@@ -81,9 +81,12 @@
   - [x] Core Shot ($7.99, variants: #8 Steel/#9 Nickel Plated Lead)
   - [x] Textile Tape ($4.99)
   - [x] Vinyl Tape Measure ($6.99, variants: Yellow/Blue/White)
-- [ ] Add paracord products *(up next — functions differently from other listings)*
-  - [ ] Product cards with color swatches, lengths, pricing
-  - [ ] Snipcart integration for each product
+- [x] Add paracord listing *(custom layout — color chart with lens zoom)*
+  - [x] Custom ParacordPage template with lens zoom + preview overlay
+  - [x] 37 color options, 3 length options (100ft/250ft/1000ft)
+  - [x] Snipcart integration with color and length custom fields
+  - [x] Banner image with paracord1.jpg
+  - [ ] Create a dedicated paracord banner image for the listing
 - [ ] Update kevlar poppers product photos on S3
 - [ ] Add nylon poppers listing (product page + Snipcart integration)
 - [ ] Add instructional PDF products
