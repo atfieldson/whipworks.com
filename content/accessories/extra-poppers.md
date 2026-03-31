@@ -10,6 +10,9 @@ variants:
   - name: 'Color'
     options:
       - name: Blue
+        priceDiff: 0
       - name: Red
+        priceDiff: 0
       - name: Yellow
+        priceDiff: 0
 ---

@@ -1446,7 +1446,7 @@ type MarkdownRemarkFrontmatter = {
   readonly headerImage: Maybe<Scalars['String']>;
   readonly id: Maybe<Scalars['String']>;
   readonly images: Maybe<ReadonlyArray<Maybe<Scalars['String']>>>;
-  readonly price: Maybe<Scalars['Int']>;
+  readonly price: Maybe<Scalars['Float']>;
   readonly sortOrder: Maybe<Scalars['Int']>;
   readonly title: Maybe<Scalars['String']>;
   readonly variants: Maybe<ReadonlyArray<Maybe<MarkdownRemarkFrontmatterVariants>>>;
@@ -1472,7 +1472,7 @@ type MarkdownRemarkFrontmatterFilterInput = {
   readonly headerImage: InputMaybe<StringQueryOperatorInput>;
   readonly id: InputMaybe<StringQueryOperatorInput>;
   readonly images: InputMaybe<StringQueryOperatorInput>;
-  readonly price: InputMaybe<IntQueryOperatorInput>;
+  readonly price: InputMaybe<FloatQueryOperatorInput>;
   readonly sortOrder: InputMaybe<IntQueryOperatorInput>;
   readonly title: InputMaybe<StringQueryOperatorInput>;
   readonly variants: InputMaybe<MarkdownRemarkFrontmatterVariantsFilterListInput>;
@@ -1517,7 +1517,7 @@ type MarkdownRemarkFrontmatterVariantsFilterListInput = {
 type MarkdownRemarkFrontmatterVariantsOptions = {
   readonly images: Maybe<ReadonlyArray<Maybe<Scalars['String']>>>;
   readonly name: Maybe<Scalars['String']>;
-  readonly priceDiff: Maybe<Scalars['String']>;
+  readonly priceDiff: Maybe<Scalars['Float']>;
 };
 
 type MarkdownRemarkFrontmatterVariantsOptionsFieldSelector = {
@@ -1529,7 +1529,7 @@ type MarkdownRemarkFrontmatterVariantsOptionsFieldSelector = {
 type MarkdownRemarkFrontmatterVariantsOptionsFilterInput = {
   readonly images: InputMaybe<StringQueryOperatorInput>;
   readonly name: InputMaybe<StringQueryOperatorInput>;
-  readonly priceDiff: InputMaybe<StringQueryOperatorInput>;
+  readonly priceDiff: InputMaybe<FloatQueryOperatorInput>;
 };
 
 type MarkdownRemarkFrontmatterVariantsOptionsFilterListInput = {

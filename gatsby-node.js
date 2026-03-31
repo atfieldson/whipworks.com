@@ -1,6 +1,16 @@
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
 
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions;
+  createTypes(`
+    type MarkdownRemarkFrontmatterVariantsOptions {
+      name: String
+      priceDiff: Float
+    }
+  `);
+};
+
 const resolveSnipcartFields = (variants) => {
   const fields = {};
   if (!variants) {
@@ -66,6 +76,23 @@ exports.createPages = async ({ graphql, actions }) => {
   const products = result.data.allMarkdownRemark.edges.filter(
     (edge) => edge.node.fields.collection === 'accessories'
   );
+  const materials = result.data.allMarkdownRemark.edges.filter(
+    (edge) => edge.node.fields.collection === 'materials'
+  );
+
+  materials.forEach((material) => {
+    const snipcartOptions = resolveSnipcartFields(material.node.frontmatter.variants);
+
+    createPage({
+      path: material.node.fields.slug,
+      component: productPage,
+      context: {
+        slug: material.node.fields.slug,
+        snipcartOptions,
+        collection: 'materials',
+      },
+    });
+  });
 
   products.forEach((product, index) => {
     const previous = index === products.length - 1 ? products[0].node : products[index + 1].node;

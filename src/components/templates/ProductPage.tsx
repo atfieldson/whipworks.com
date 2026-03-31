@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
-import { graphql } from 'gatsby';
+import { graphql, Link } from 'gatsby';
 import { Flex, Text, Heading, Box, Select, Button } from '@chakra-ui/react';
 
 import Layout from './Layout';
@@ -24,6 +24,7 @@ interface Props {
   };
   pageContext: {
     snipcartOptions: object;
+    collection?: string;
   };
   data: {
     markdownRemark: {
@@ -43,7 +44,7 @@ interface Props {
 
 const ProductPage = ({ data, location, pageContext }: Props) => {
   const product = data.markdownRemark.frontmatter;
-  const { snipcartOptions } = pageContext;
+  const { snipcartOptions, collection } = pageContext;
 
   const [price, setPrice] = useState(product.price);
   const [options, setOptions] = useState({});
@@ -137,6 +138,15 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
           </Button>
         </Flex>
       </Flex>
+      {collection === 'materials' && (
+        <Box mt="70px" mb="10" textAlign="center">
+          <Box mb="5">
+            <Button as={Link} to="/whipmaking-materials" size="lg">
+              View All Whipmaking Materials
+            </Button>
+          </Box>
+        </Box>
+      )}
     </Layout>
   );
 };

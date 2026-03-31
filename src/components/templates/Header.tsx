@@ -195,6 +195,9 @@ const Header = ({ bg }: { bg?: string }) => {
           </Menu>
 
           {/* Flat Links */}
+          <NavLink as={Link} to="/whipmaking-materials">
+            Materials
+          </NavLink>
           <NavLink as={Link} to="/accessories">
             Accessories
           </NavLink>
@@ -263,6 +266,9 @@ const Header = ({ bg }: { bg?: string }) => {
                 More
               </Heading>
               <Stack spacing="3" mt="3" ml="4">
+                <CLink as={Link} to="/whipmaking-materials" onClick={onClose}>
+                  Whipmaking Materials
+                </CLink>
                 <CLink as={Link} to="/accessories" onClick={onClose}>
                   Accessories
                 </CLink>
