@@ -1,10 +1,11 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, useRef, ChangeEvent } from 'react';
 import { graphql, Link } from 'gatsby';
-import { Flex, Text, Heading, Box, Select, Button } from '@chakra-ui/react';
+import { Flex, Text, Heading, Box, Select, Button, useDisclosure } from '@chakra-ui/react';
 
 import Layout from './Layout';
 import SEO from './SEO';
 import ProductImages from '../molecules/ProductImages';
+import AddedToCartModal from '../molecules/AddedToCartModal';
 
 type Option = {
   name: string;
@@ -48,6 +49,32 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
 
   const [price, setPrice] = useState(product.price);
   const [options, setOptions] = useState({});
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef(null);
+
+  // Determine where "Continue Shopping" should go
+  const continuePath = collection === 'materials' ? '/whipmaking-materials' : '/';
+
+  const handleAdd = () => {
+    // Hide Snipcart's cart container before it can flash on screen
+    const snipcartEl = document.getElementById('snipcart');
+    if (snipcartEl) {
+      snipcartEl.style.visibility = 'hidden';
+    }
+    // Show our modal immediately
+    onOpen();
+    // Close Snipcart's cart and restore visibility
+    setTimeout(() => {
+      if (typeof window !== 'undefined' && (window as any).Snipcart) {
+        (window as any).Snipcart.api.theme.cart.close();
+      }
+      setTimeout(() => {
+        if (snipcartEl) {
+          snipcartEl.style.visibility = 'visible';
+        }
+      }, 300);
+    }, 50);
+  };
 
   const handleVariantChange = (e: ChangeEvent<HTMLSelectElement>, variant: Variant) => {
     /** assign snipcart values */
@@ -123,7 +150,7 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
           {data.markdownRemark.html}
           <Button
             mt="4"
-            className="snipcart-add-item snipcart-checkout"
+            className="snipcart-add-item"
             data-item-name={product.title}
             data-item-price={product.price}
             data-item-id={product.id}
@@ -133,6 +160,7 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
             data-item-weight={product.weight}
             {...snipcartOptions}
             {...options}
+            onClick={handleAdd}
           >
             Add to Cart
           </Button>
@@ -147,6 +175,12 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
           </Box>
         </Box>
       )}
+      <AddedToCartModal
+        isOpen={isOpen}
+        onClose={onClose}
+        cancelRef={cancelRef}
+        continuePath={continuePath}
+      />
     </Layout>
   );
 };

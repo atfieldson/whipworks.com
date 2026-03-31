@@ -1,9 +1,10 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { graphql, Link } from 'gatsby';
-import { Flex, Text, Heading, Box, Select, Button, Image } from '@chakra-ui/react';
+import { Flex, Text, Heading, Box, Select, Button, Image, useDisclosure } from '@chakra-ui/react';
 
 import Layout from './Layout';
 import SEO from './SEO';
+import AddedToCartModal from '../molecules/AddedToCartModal';
 
 interface Props {
   location: {
@@ -39,6 +40,26 @@ const ParacordPage = ({ data, location }: Props) => {
   const [isZooming, setIsZooming] = useState(false);
   const [lensPos, setLensPos] = useState({ x: 0, y: 0 });
   const [zoomBgStyle, setZoomBgStyle] = useState({ size: '300%', posX: '0px', posY: '0px' });
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const modalCancelRef = useRef(null);
+
+  const handleAdd = () => {
+    const snipcartEl = document.getElementById('snipcart');
+    if (snipcartEl) {
+      snipcartEl.style.visibility = 'hidden';
+    }
+    onOpen();
+    setTimeout(() => {
+      if (typeof window !== 'undefined' && (window as any).Snipcart) {
+        (window as any).Snipcart.api.theme.cart.close();
+      }
+      setTimeout(() => {
+        if (snipcartEl) {
+          snipcartEl.style.visibility = 'visible';
+        }
+      }, 300);
+    }, 50);
+  };
   const imgRef = useRef<HTMLDivElement>(null);
 
   const LENS_SIZE = 150;
@@ -253,7 +274,7 @@ const ParacordPage = ({ data, location }: Props) => {
 
           <Button
             mt="2"
-            className="snipcart-add-item snipcart-checkout"
+            className="snipcart-add-item"
             data-item-name={product.title}
             data-item-price={product.price}
             data-item-id={product.id}
@@ -267,6 +288,7 @@ const ParacordPage = ({ data, location }: Props) => {
             data-item-custom2-name="Length"
             data-item-custom2-options={lengthOptions}
             data-item-custom2-value={selectedLength.name}
+            onClick={handleAdd}
           >
             Add to Cart
           </Button>
@@ -281,6 +303,11 @@ const ParacordPage = ({ data, location }: Props) => {
           </Button>
         </Box>
       </Box>
+      <AddedToCartModal
+        isOpen={isOpen}
+        onClose={onClose}
+        cancelRef={modalCancelRef}
+      />
     </Layout>
   );
 };

@@ -23,6 +23,17 @@ export const pageQuery = graphql`
         }
       }
     }
+    fid: markdownRemark(frontmatter: { id: { eq: "whipmakers-fid-material" } }) {
+      fields {
+        slug
+      }
+      frontmatter {
+        title
+        images
+        price
+        description
+      }
+    }
   }
 `;
 
@@ -74,6 +85,17 @@ const AccessoriesPage = () => {
             />
           );
         })}
+        {data.fid && (
+          <Box as={Link} to={data.fid.fields.slug} state={{ from: 'accessories' }}>
+            <AccessoryCard
+              key={data.fid.frontmatter.title}
+              title={data.fid.frontmatter.title}
+              image={data.fid.frontmatter.images && data.fid.frontmatter.images[0]}
+              price={data.fid.frontmatter.price}
+              slug={data.fid.fields.slug}
+            />
+          </Box>
+        )}
       </SimpleGrid>
     </Layout>
   );

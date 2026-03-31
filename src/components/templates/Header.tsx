@@ -194,10 +194,34 @@ const Header = ({ bg }: { bg?: string }) => {
             </MenuList>
           </Menu>
 
+          {/* Whipmaking Dropdown */}
+          <Menu>
+            <MenuButton
+              as={Box}
+              cursor="pointer"
+              role="button"
+              aria-label="Whipmaking menu"
+              _hover={{ opacity: 0.7 }}
+              transition="opacity 0.2s"
+            >
+              <HStack spacing="1">
+                <Text fontSize="1.35rem" fontWeight="600" letterSpacing="0.05em">
+                  Whipmaking
+                </Text>
+                <FaChevronDown size={10} />
+              </HStack>
+            </MenuButton>
+            <MenuList>
+              <MenuItem as={Link} to="/materials/paracord/" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                Coreless Paracord
+              </MenuItem>
+              <MenuItem as={Link} to="/whipmaking-materials" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                Whipmaking Materials
+              </MenuItem>
+            </MenuList>
+          </Menu>
+
           {/* Flat Links */}
-          <NavLink as={Link} to="/whipmaking-materials">
-            Materials
-          </NavLink>
           <NavLink as={Link} to="/accessories">
             Accessories
           </NavLink>
@@ -263,12 +287,21 @@ const Header = ({ bg }: { bg?: string }) => {
               </Stack>
 
               <Heading fontSize="md" letterSpacing="wider" mt="6">
-                More
+                Whipmaking
               </Heading>
               <Stack spacing="3" mt="3" ml="4">
+                <CLink as={Link} to="/materials/paracord/" onClick={onClose}>
+                  Coreless Paracord
+                </CLink>
                 <CLink as={Link} to="/whipmaking-materials" onClick={onClose}>
                   Whipmaking Materials
                 </CLink>
+              </Stack>
+
+              <Heading fontSize="md" letterSpacing="wider" mt="6">
+                More
+              </Heading>
+              <Stack spacing="3" mt="3" ml="4">
                 <CLink as={Link} to="/accessories" onClick={onClose}>
                   Accessories
                 </CLink>
