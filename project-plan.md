@@ -65,15 +65,27 @@
 - [ ] Refactor BullwhipDesigner to be more modular/data-driven *(stretch goal)*
 - [ ] Verify Three.js 3D preview still works after all changes
 
-## Phase 4: Whipmaking Materials Section
-- [ ] Create materials listing page (/materials or /whipmaking-materials)
-- [ ] Add "Whipmaking Materials" nav item
-- [ ] Update kevlar poppers product photos on S3
-- [ ] Add nylon poppers listing (product page + Snipcart integration)
-- [ ] Add paracord products
+## Phase 4: Whipmaking Materials Section (In Progress)
+- [x] Create materials listing page (`/whipmaking-materials`)
+- [x] Add "Whipmaking Materials" nav item (desktop + mobile)
+- [x] Add materials source filesystem to gatsby-config
+- [x] Generate individual product pages via gatsby-node
+- [x] Add "View All Whipmaking Materials" button on material product pages
+- [x] Define GraphQL schema for variant priceDiff field
+- [x] Fix Snipcart shipping: resolved $100 minimum order threshold
+- [x] Create product listings:
+  - [x] Concho ($3.49, variants: Silver/Brass/Copper)
+  - [x] Core Material ($19.99, 50' length)
+  - [x] Whipmaker's Fid ($9.99)
+  - [x] Steel Handle Rod ($4.99-$5.99, variants: 8"/10"/12")
+  - [x] Core Shot ($7.99, variants: #8 Steel/#9 Nickel Plated Lead)
+  - [x] Textile Tape ($4.99)
+  - [x] Vinyl Tape Measure ($6.99, variants: Yellow/Blue/White)
+- [ ] Add paracord products *(up next — functions differently from other listings)*
   - [ ] Product cards with color swatches, lengths, pricing
   - [ ] Snipcart integration for each product
-- [ ] Add whipmaker's tools (fid, etc.)
+- [ ] Update kevlar poppers product photos on S3
+- [ ] Add nylon poppers listing (product page + Snipcart integration)
 - [ ] Add instructional PDF products
   - [ ] Set up Snipcart for digital product delivery
   - [ ] Create product cards linking PDFs to YouTube video previews
