@@ -53,7 +53,7 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
   const cancelRef = useRef(null);
 
   // Determine where "Continue Shopping" should go
-  const continuePath = collection === 'materials' ? '/whipmaking-materials' : '/';
+  const continuePath = collection === 'materials' ? '/whipmaking-materials' : collection === 'accessories' ? '/accessories' : '/';
 
   const handleAdd = () => {
     // Hide Snipcart's cart container before it can flash on screen
@@ -171,6 +171,15 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
           <Box mb="5">
             <Button as={Link} to="/whipmaking-materials" size="lg">
               View All Whipmaking Materials
+            </Button>
+          </Box>
+        </Box>
+      )}
+      {collection === 'accessories' && (
+        <Box mt="70px" mb="10" textAlign="center">
+          <Box mb="5">
+            <Button as={Link} to="/accessories" size="lg">
+              View All Accessories
             </Button>
           </Box>
         </Box>

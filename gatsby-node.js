@@ -111,6 +111,7 @@ exports.createPages = async ({ graphql, actions }) => {
         previous,
         next,
         snipcartOptions,
+        collection: 'accessories',
       },
     });
   });

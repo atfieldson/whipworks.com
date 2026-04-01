@@ -26,15 +26,16 @@ type Props = {
 
 const BullwhipAddedModal = ({ isOpen, onClose, location }: Props) => {
   const cancelRef = useRef(null);
-  const addPoppersRef = useRef<HTMLButtonElement>(null);
+  const addKevlarRef = useRef<HTMLButtonElement>(null);
+  const addNylonRef = useRef<HTMLButtonElement>(null);
   const [popperColor, setPopperColor] = useState('Blue');
+  const [popperType, setPopperType] = useState<'kevlar' | 'nylon'>('kevlar');
 
   const handleAddPoppers = () => {
-    // Click the hidden snipcart button to add poppers the HTML way
-    if (addPoppersRef.current) {
-      addPoppersRef.current.click();
+    const ref = popperType === 'kevlar' ? addKevlarRef : addNylonRef;
+    if (ref.current) {
+      ref.current.click();
     }
-    // Delay close so Snipcart can process the click before the button unmounts
     setTimeout(() => {
       onClose();
     }, 500);
@@ -51,32 +52,70 @@ const BullwhipAddedModal = ({ isOpen, onClose, location }: Props) => {
     <>
     <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
       <AlertDialogOverlay />
-      <AlertDialogContent bg="#2D231A" zIndex="modal">
+      <AlertDialogContent bg="#2D231A" zIndex="modal" mx="4">
         <AlertDialogHeader>Whip Successfully Added to Cart</AlertDialogHeader>
         <AlertDialogBody>
           <Text mb="3">
             All WhipWorks Whips come with 5 Nylon Poppers and 3 Kevlar Poppers.
-            Would you like to add 10 extra Kevlar Poppers to your order? (+$25)
+            Would you like to add 10 extra poppers to your order? (+$25)
           </Text>
-          <Flex align="center" gap="4">
-            <Box>
-              <Text fontWeight="bold" mb="2">Select Popper Color:</Text>
-              <RadioGroup value={popperColor} onChange={setPopperColor}>
-                <Stack>
-                  <Radio value="Blue">Blue</Radio>
-                  <Radio value="Red">Red</Radio>
-                  <Radio value="Yellow">Yellow</Radio>
-                </Stack>
-              </RadioGroup>
-            </Box>
-            <Image
-              src="https://d3ruufruf2uqog.cloudfront.net/accessories/extraPoppers.jpg"
-              alt="Kevlar poppers"
-              maxW="200px"
-              borderRadius="md"
-              objectFit="cover"
-            />
-          </Flex>
+          <RadioGroup value={popperType} onChange={(val: string) => setPopperType(val as 'kevlar' | 'nylon')}>
+            <Stack spacing="4">
+              <Box
+                borderWidth="2px"
+                borderColor={popperType === 'kevlar' ? '#5A9BBD' : 'transparent'}
+                borderRadius="md"
+                p="3"
+                cursor="pointer"
+                onClick={() => setPopperType('kevlar')}
+              >
+                <Radio value="kevlar" mb="2">
+                  <Text fontWeight="bold">10 Kevlar Poppers — $25</Text>
+                </Radio>
+                <Flex align="center" gap="4" ml="6">
+                  <Box>
+                    <Text fontWeight="bold" mb="2" fontSize="sm">Select Color:</Text>
+                    <RadioGroup value={popperColor} onChange={setPopperColor}>
+                      <Stack>
+                        <Radio value="Blue" size="sm">Blue</Radio>
+                        <Radio value="Red" size="sm">Red</Radio>
+                        <Radio value="Yellow" size="sm">Yellow</Radio>
+                        <Radio value="Assorted" size="sm">Assorted</Radio>
+                      </Stack>
+                    </RadioGroup>
+                  </Box>
+                  <Image
+                    src="https://d3ruufruf2uqog.cloudfront.net/accessories/kevlarPoppers/kevlarPoppers1.jpg"
+                    alt="Kevlar poppers"
+                    maxW="150px"
+                    borderRadius="md"
+                    objectFit="cover"
+                  />
+                </Flex>
+              </Box>
+              <Box
+                borderWidth="2px"
+                borderColor={popperType === 'nylon' ? '#5A9BBD' : 'transparent'}
+                borderRadius="md"
+                p="3"
+                cursor="pointer"
+                onClick={() => setPopperType('nylon')}
+              >
+                <Radio value="nylon" mb="2">
+                  <Text fontWeight="bold">10 Nylon Poppers — $25</Text>
+                </Radio>
+                <Flex align="center" gap="4" ml="6">
+                  <Image
+                    src="https://d3ruufruf2uqog.cloudfront.net/accessories/nylonPoppers/nylonPoppers1.jpg"
+                    alt="Nylon poppers"
+                    maxW="150px"
+                    borderRadius="md"
+                    objectFit="cover"
+                  />
+                </Flex>
+              </Box>
+            </Stack>
+          </RadioGroup>
         </AlertDialogBody>
         <AlertDialogFooter
           justifyContent="space-between"
@@ -107,19 +146,32 @@ const BullwhipAddedModal = ({ isOpen, onClose, location }: Props) => {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-    {/* Hidden Snipcart button outside the dialog so Snipcart can find it */}
+    {/* Hidden Snipcart buttons outside the dialog so Snipcart can find them */}
     <button
-      ref={addPoppersRef}
+      ref={addKevlarRef}
       className="snipcart-add-item snipcart-checkout"
-      data-item-id="extra-poppers"
+      data-item-id="kevlar-poppers"
       data-item-price="25"
-      data-item-name="10 Extra Poppers"
-      data-item-description="10 extra kevlar poppers"
+      data-item-name="10 Kevlar Poppers"
+      data-item-description="10 extra Kevlar poppers"
       data-item-url="/accessories/extra-poppers"
-      data-item-image="https://d3ruufruf2uqog.cloudfront.net/accessories/extraPoppers.jpg"
+      data-item-image="https://d3ruufruf2uqog.cloudfront.net/accessories/kevlarPoppers/kevlarPoppers1.jpg"
       data-item-custom1-name="Color"
-      data-item-custom1-options="Blue[+0]|Red[+0]|Yellow[+0]"
+      data-item-custom1-options="Blue[+0]|Red[+0]|Yellow[+0]|Assorted[+0]"
       data-item-custom1-value={popperColor}
+      tabIndex={-1}
+      aria-hidden="true"
+      style={{ position: 'absolute', left: '-9999px' }}
+    />
+    <button
+      ref={addNylonRef}
+      className="snipcart-add-item snipcart-checkout"
+      data-item-id="nylon-poppers"
+      data-item-price="25"
+      data-item-name="10 Nylon Poppers"
+      data-item-description="10 extra Nylon poppers"
+      data-item-url="/accessories/nylon-poppers"
+      data-item-image="https://d3ruufruf2uqog.cloudfront.net/accessories/nylonPoppers/nylonPoppers1.jpg"
       tabIndex={-1}
       aria-hidden="true"
       style={{ position: 'absolute', left: '-9999px' }}
