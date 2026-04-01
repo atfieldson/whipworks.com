@@ -62,6 +62,14 @@ const config: GatsbyConfig = {
       __key: 'materials',
     },
     {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/content/blueprints`,
+        name: 'blueprints',
+      },
+      __key: 'blueprints',
+    },
+    {
       resolve: '@chakra-ui/gatsby-plugin',
       options: {
         resetCSS: true,

@@ -32,7 +32,7 @@ const WhipmakingMaterialsPage = ({ data }: any) => {
         }))}
       />
       <Heading as="h1" fontSize="2xl" mb="4">
-        Whipmaking Materials
+        Whip Making Tools and Materials
       </Heading>
       <Box mb="6">
         <Text>

@@ -212,11 +212,14 @@ const Header = ({ bg }: { bg?: string }) => {
               </HStack>
             </MenuButton>
             <MenuList>
+              <MenuItem as={Link} to="/whip-making-blueprints" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                Whip Making Blueprints
+              </MenuItem>
               <MenuItem as={Link} to="/materials/paracord/" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
                 Coreless Paracord
               </MenuItem>
               <MenuItem as={Link} to="/whipmaking-materials" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
-                Whipmaking Materials
+                Tools and Materials
               </MenuItem>
             </MenuList>
           </Menu>
@@ -290,11 +293,14 @@ const Header = ({ bg }: { bg?: string }) => {
                 Whipmaking
               </Heading>
               <Stack spacing="3" mt="3" ml="4">
+                <CLink as={Link} to="/whip-making-blueprints" onClick={onClose}>
+                  Whip Making Blueprints
+                </CLink>
                 <CLink as={Link} to="/materials/paracord/" onClick={onClose}>
                   Coreless Paracord
                 </CLink>
                 <CLink as={Link} to="/whipmaking-materials" onClick={onClose}>
-                  Whipmaking Materials
+                  Tools and Materials
                 </CLink>
               </Stack>
 
