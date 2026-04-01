@@ -87,8 +87,11 @@
   - [x] Snipcart integration with color and length custom fields
   - [x] Banner image with paracord1.jpg
   - [ ] Create a dedicated paracord banner image for the listing
-- [ ] Update kevlar poppers product photos on S3
-- [ ] Add nylon poppers listing (product page + Snipcart integration)
+- [x] Update kevlar poppers listing (renamed to "10 Kevlar Poppers", 6 new photos, Assorted color option)
+- [x] Add nylon poppers listing ("10 Nylon Poppers", $25, 3 images)
+- [x] Update BullwhipAddedModal to offer both Kevlar and Nylon poppers
+- [x] Add "View All Accessories" button on accessory product pages
+- [x] Remove unused AddPoppersModal component
 - [ ] Add instructional PDF products
   - [ ] Set up Snipcart for digital product delivery
   - [ ] Create product cards linking PDFs to YouTube video previews
