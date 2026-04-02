@@ -5,6 +5,8 @@ import { Flex, Text, Heading, Box, Select, Button, Image, useDisclosure } from '
 import Layout from './Layout';
 import SEO from './SEO';
 import AddedToCartModal from '../molecules/AddedToCartModal';
+import StockIndicator from '../atoms/StockIndicator';
+import useStockLevel from '../../hooks/useStockLevel';
 
 interface Props {
   location: {
@@ -42,6 +44,13 @@ const ParacordPage = ({ data, location }: Props) => {
   const [zoomBgStyle, setZoomBgStyle] = useState({ size: '300%', posX: '0px', posY: '0px' });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const modalCancelRef = useRef(null);
+  const { isLoading: stockLoading, getStockForVariant } = useStockLevel(product.id);
+
+  // Only track stock for 1000 Feet option
+  const is1000ft = selectedLength.name === '1000 Feet';
+  const currentStock = is1000ft
+    ? getStockForVariant({ Color: selectedColor, Length: '1000 Feet' })
+    : null;
 
   const handleAdd = () => {
     const snipcartEl = document.getElementById('snipcart');
@@ -272,6 +281,8 @@ const ParacordPage = ({ data, location }: Props) => {
             </Select>
           </Box>
 
+          {is1000ft && <StockIndicator stock={currentStock} isLoading={stockLoading} />}
+
           <Button
             mt="2"
             className="snipcart-add-item"
@@ -289,8 +300,9 @@ const ParacordPage = ({ data, location }: Props) => {
             data-item-custom2-options={lengthOptions}
             data-item-custom2-value={selectedLength.name}
             onClick={handleAdd}
+            isDisabled={is1000ft && currentStock === 0}
           >
-            Add to Cart
+            {is1000ft && currentStock === 0 ? 'Out of Stock' : 'Add to Cart'}
           </Button>
         </Flex>
       </Flex>

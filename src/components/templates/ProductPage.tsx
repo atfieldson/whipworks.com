@@ -6,6 +6,8 @@ import Layout from './Layout';
 import SEO from './SEO';
 import ProductImages from '../molecules/ProductImages';
 import AddedToCartModal from '../molecules/AddedToCartModal';
+import StockIndicator from '../atoms/StockIndicator';
+import useStockLevel from '../../hooks/useStockLevel';
 
 type Option = {
   name: string;
@@ -51,6 +53,19 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
   const [options, setOptions] = useState({});
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
+  const { isLoading: stockLoading, getStockForVariant } = useStockLevel(product.id);
+
+  // Track selected variant values for stock lookup
+  const initialSelections: Record<string, string> = {};
+  product.variants?.forEach((v) => {
+    initialSelections[v.name] = v.defaultValue || v.options?.[0]?.name || '';
+  });
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>(initialSelections);
+
+  // Get stock for the current variant selection
+  const currentStock = product.variants?.length
+    ? getStockForVariant(selectedVariants)
+    : getStockForVariant({});
 
   // Determine where "Continue Shopping" should go
   const continuePath = collection === 'materials' ? '/whipmaking-materials' : collection === 'accessories' ? '/accessories' : '/';
@@ -84,6 +99,9 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
       [`data-item-custom${index + 1}-value`]: e.target.value,
     });
 
+    /** update selected variants for stock lookup */
+    setSelectedVariants((prev) => ({ ...prev, [variant.name]: e.target.value }));
+
     /** update the price if needed */
     const option = variant.options.find((v) => v.name == e.target.value);
     // needed in case priceDiff is 0
@@ -112,7 +130,7 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
             url: `https://www.whipworks.com${location.pathname}`,
             priceCurrency: 'USD',
             price: product.price,
-            availability: 'https://schema.org/InStock',
+            availability: currentStock === 0 ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
           },
         }}
       />
@@ -148,6 +166,7 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
             </Box>
           ))}
           {data.markdownRemark.html}
+          <StockIndicator stock={currentStock} isLoading={stockLoading} />
           <Button
             mt="4"
             className="snipcart-add-item"
@@ -161,8 +180,9 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
             {...snipcartOptions}
             {...options}
             onClick={handleAdd}
+            isDisabled={currentStock === 0}
           >
-            Add to Cart
+            {currentStock === 0 ? 'Out of Stock' : 'Add to Cart'}
           </Button>
         </Flex>
       </Flex>

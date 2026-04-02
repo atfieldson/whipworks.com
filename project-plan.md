@@ -87,11 +87,16 @@
   - [x] Snipcart integration with color and length custom fields
   - [x] Banner image with paracord1.jpg
   - [ ] Create a dedicated paracord banner image for the listing
+  - [ ] Add quantity limits to 1000ft paracord spools (different limit per color)
+- [ ] Inventory management for whipmaking materials
+  - [x] Set up per-variant inventory in Snipcart dashboard (Paracord 1000ft, Concho, Core Material, Fid, Steel Handle Rod, Core Shot, Textile Tape, Vinyl Tape Measure)
+  - [x] Display stock levels on product pages via Snipcart Products API
 - [x] Update kevlar poppers listing (renamed to "10 Kevlar Poppers", 6 new photos, Assorted color option)
 - [x] Add nylon poppers listing ("10 Nylon Poppers", $25, 3 images)
 - [x] Update BullwhipAddedModal to offer both Kevlar and Nylon poppers
 - [x] Add "View All Accessories" button on accessory product pages
 - [x] Remove unused AddPoppersModal component
+- [ ] Add quantity selector to whipmaking materials and tools product pages
 - [x] Add Whip Making Blueprints page (`/whip-making-blueprints`)
   - [x] 17 blueprint listings (7 bullwhip, 7 handle patterns, 3 bundles)
   - [x] Snipcart digital delivery with file GUIDs (live mode)
@@ -109,6 +114,13 @@
   - [x] Authenticated whipworks.com domain via Snipcart SendGrid settings
   - [x] Added CNAME DNS records in AWS Route 53
   - [x] Changed Snipcart sender email to orders@whipworks.com
+- [ ] Create styled and compelling email templates in Snipcart
+- [x] Set up @whipworks.com email accounts to send/receive through personal Gmail
+  - [x] Email forwarding via Squarespace/Mailgun to personal Gmail
+  - [x] Gmail "Send mail as" alias for adam@whipworks.com
+  - [x] Added SPF TXT record (Google, SendGrid, Mailgun, Amazon SES)
+  - [x] Updated contact form Lambda: Node.js 20.x, AWS SDK v3, sender changed to inquiries@whipworks.com
+  - [x] Verified inquiries@whipworks.com in SES (us-east-2)
 
 ## Phase 5: Flogger & Snakewhip Sections
 
