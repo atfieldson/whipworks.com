@@ -75,7 +75,7 @@ const BlueprintCard = ({
           data-item-id={blueprint.id}
           data-item-price={blueprint.price}
           data-item-name={blueprint.title}
-          data-item-url="/whip-making-blueprints"
+          data-item-url="https://www.whipworks.com/whip-making-blueprints"
           data-item-image={blueprint.image}
           data-item-description={blueprint.description || blueprint.title}
           data-item-file-guid={blueprint.fileGuid}
@@ -240,7 +240,7 @@ const WhipMakingBlueprintsPage = ({ data }: any) => {
                   data-item-id={completeBundle.node.frontmatter.id}
                   data-item-price={completeBundle.node.frontmatter.price}
                   data-item-name={completeBundle.node.frontmatter.title}
-                  data-item-url="/whip-making-blueprints"
+                  data-item-url="https://www.whipworks.com/whip-making-blueprints"
                   data-item-image={completeBundle.node.frontmatter.image}
                   data-item-description={completeBundle.node.frontmatter.description}
                   data-item-file-guid={completeBundle.node.frontmatter.fileGuid}
@@ -309,7 +309,7 @@ const WhipMakingBlueprintsPage = ({ data }: any) => {
                 data-item-id={bullwhipBundle.node.frontmatter.id}
                 data-item-price={bullwhipBundle.node.frontmatter.price}
                 data-item-name={bullwhipBundle.node.frontmatter.title}
-                data-item-url="/whip-making-blueprints"
+                data-item-url="https://www.whipworks.com/whip-making-blueprints"
                 data-item-image={bullwhipBundle.node.frontmatter.image}
                 data-item-description={bullwhipBundle.node.frontmatter.description}
                 data-item-file-guid={bullwhipBundle.node.frontmatter.fileGuid}
@@ -448,7 +448,7 @@ const WhipMakingBlueprintsPage = ({ data }: any) => {
                 data-item-id={patternBundle.node.frontmatter.id}
                 data-item-price={patternBundle.node.frontmatter.price}
                 data-item-name={patternBundle.node.frontmatter.title}
-                data-item-url="/whip-making-blueprints"
+                data-item-url="https://www.whipworks.com/whip-making-blueprints"
                 data-item-image={patternBundle.node.frontmatter.image}
                 data-item-description={patternBundle.node.frontmatter.description}
                 data-item-file-guid={patternBundle.node.frontmatter.fileGuid}
@@ -502,7 +502,7 @@ const WhipMakingBlueprintsPage = ({ data }: any) => {
                     data-item-id={completeBundle.node.frontmatter.id}
                     data-item-price={completeBundle.node.frontmatter.price}
                     data-item-name={completeBundle.node.frontmatter.title}
-                    data-item-url="/whip-making-blueprints"
+                    data-item-url="https://www.whipworks.com/whip-making-blueprints"
                     data-item-image={completeBundle.node.frontmatter.image}
                     data-item-description={completeBundle.node.frontmatter.description}
                     data-item-file-guid={completeBundle.node.frontmatter.fileGuid}
