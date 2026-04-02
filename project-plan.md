@@ -92,10 +92,23 @@
 - [x] Update BullwhipAddedModal to offer both Kevlar and Nylon poppers
 - [x] Add "View All Accessories" button on accessory product pages
 - [x] Remove unused AddPoppersModal component
-- [ ] Add instructional PDF products
-  - [ ] Set up Snipcart for digital product delivery
-  - [ ] Create product cards linking PDFs to YouTube video previews
-  - [ ] Embed or link to YouTube playlist for promotion
+- [x] Add Whip Making Blueprints page (`/whip-making-blueprints`)
+  - [x] 17 blueprint listings (7 bullwhip, 7 handle patterns, 3 bundles)
+  - [x] Snipcart digital delivery with file GUIDs (live mode)
+  - [x] `data-item-shippable="false"` for all digital products
+  - [x] AddedToCartModal on all add-to-cart buttons
+  - [x] Hero section with embedded YouTube intro video and sales copy
+  - [x] Free 6-part YouTube video series section with thumbnail grid
+  - [x] Handle pattern preview images with labels (alphabetical)
+  - [x] Featured complete bundle at top and bottom of page
+  - [x] Blueprint and pattern sample images
+  - [x] Added to Whipmaking nav dropdown (top position, desktop + mobile)
+  - [x] Renamed "Whipmaking Materials" to "Tools and Materials" in nav
+  - [x] Updated /whipmaking-materials page header to "Whip Making Tools and Materials"
+- [x] Set up SendGrid domain authentication for email deliverability
+  - [x] Authenticated whipworks.com domain via Snipcart SendGrid settings
+  - [x] Added CNAME DNS records in AWS Route 53
+  - [x] Changed Snipcart sender email to orders@whipworks.com
 
 ## Phase 5: Flogger & Snakewhip Sections
 
