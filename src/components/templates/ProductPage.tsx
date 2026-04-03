@@ -7,6 +7,7 @@ import SEO from './SEO';
 import ProductImages from '../molecules/ProductImages';
 import AddedToCartModal from '../molecules/AddedToCartModal';
 import StockIndicator from '../atoms/StockIndicator';
+import QuantitySelector from '../atoms/QuantitySelector';
 import useStockLevel from '../../hooks/useStockLevel';
 
 type Option = {
@@ -67,6 +68,11 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
     ? getStockForVariant(selectedVariants)
     : getStockForVariant({});
 
+  const [quantity, setQuantity] = useState(1);
+
+  // Cap quantity to stock when stock is tracked and variant changes
+  const maxQuantity = currentStock !== null && currentStock > 0 ? currentStock : undefined;
+
   // Determine where "Continue Shopping" should go
   const continuePath = collection === 'materials' ? '/whipmaking-materials' : collection === 'accessories' ? '/accessories' : '/';
 
@@ -101,6 +107,9 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
 
     /** update selected variants for stock lookup */
     setSelectedVariants((prev) => ({ ...prev, [variant.name]: e.target.value }));
+
+    /** reset quantity when variant changes */
+    setQuantity(1);
 
     /** update the price if needed */
     const option = variant.options.find((v) => v.name == e.target.value);
@@ -166,6 +175,9 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
             </Box>
           ))}
           {data.markdownRemark.html}
+          {(collection === 'materials' || collection === 'accessories') && (
+            <QuantitySelector quantity={quantity} onChange={setQuantity} max={maxQuantity} isOutOfStock={currentStock === 0} />
+          )}
           <StockIndicator stock={currentStock} isLoading={stockLoading} />
           <Button
             mt="4"
@@ -177,6 +189,7 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
             data-item-description={product.description}
             data-item-image={product.images && product.images[0]}
             data-item-weight={product.weight}
+            data-item-quantity={collection === 'materials' || collection === 'accessories' ? quantity : undefined}
             {...snipcartOptions}
             {...options}
             onClick={handleAdd}

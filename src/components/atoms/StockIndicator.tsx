@@ -18,8 +18,14 @@ const StockIndicator = ({ stock, isLoading }: Props) => {
     );
   }
 
-  // Stock not tracked for this product/variant — show nothing
-  if (stock === null || stock === undefined) return null;
+  // Stock not tracked — default to "In Stock"
+  if (stock === null || stock === undefined) {
+    return (
+      <Text fontSize="md" fontWeight="bold" color="green.300" mt="2">
+        In Stock
+      </Text>
+    );
+  }
 
   if (stock === 0) {
     return (

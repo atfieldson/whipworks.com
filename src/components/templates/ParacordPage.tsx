@@ -6,6 +6,7 @@ import Layout from './Layout';
 import SEO from './SEO';
 import AddedToCartModal from '../molecules/AddedToCartModal';
 import StockIndicator from '../atoms/StockIndicator';
+import QuantitySelector from '../atoms/QuantitySelector';
 import useStockLevel from '../../hooks/useStockLevel';
 
 interface Props {
@@ -51,6 +52,9 @@ const ParacordPage = ({ data, location }: Props) => {
   const currentStock = is1000ft
     ? getStockForVariant({ Color: selectedColor, Length: '1000 Feet' })
     : null;
+
+  const [quantity, setQuantity] = useState(1);
+  const maxQuantity = is1000ft && currentStock !== null && currentStock > 0 ? currentStock : undefined;
 
   const handleAdd = () => {
     const snipcartEl = document.getElementById('snipcart');
@@ -106,6 +110,7 @@ const ParacordPage = ({ data, location }: Props) => {
     if (length) {
       setSelectedLength(length);
       setPrice(length.price);
+      setQuantity(1);
     }
   };
 
@@ -244,7 +249,7 @@ const ParacordPage = ({ data, location }: Props) => {
             </Text>
             <Select
               value={selectedColor}
-              onChange={(e) => setSelectedColor(e.target.value)}
+              onChange={(e) => { setSelectedColor(e.target.value); setQuantity(1); }}
               bg="rgba(255,255,255,0.9)"
               borderColor="rgba(255,255,255,0.16)"
               _hover={{ bg: 'rgba(255,255,255,1)' }}
@@ -281,7 +286,8 @@ const ParacordPage = ({ data, location }: Props) => {
             </Select>
           </Box>
 
-          {is1000ft && <StockIndicator stock={currentStock} isLoading={stockLoading} />}
+          <QuantitySelector quantity={quantity} onChange={setQuantity} max={maxQuantity} isOutOfStock={is1000ft && currentStock === 0} />
+          <StockIndicator stock={currentStock} isLoading={stockLoading} />
 
           <Button
             mt="2"
@@ -293,6 +299,7 @@ const ParacordPage = ({ data, location }: Props) => {
             data-item-description={product.description}
             data-item-image={product.thumbnail}
             data-item-weight={product.weight}
+            data-item-quantity={quantity}
             data-item-custom1-name="Color"
             data-item-custom1-options={colorOptions}
             data-item-custom1-value={selectedColor}
