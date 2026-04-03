@@ -39,7 +39,7 @@
   - [x] Make SpecialtyWhipCard responsive (stacks on mobile)
 - [x] Sort specialty whips in nav dropdown by sortOrder
 
-## Phase 3: Improve Design-a-Bullwhip & Stockwhip Pages ✅
+## Phase 3A: Improve Design-a-Bullwhip & Stockwhip Pages ✅
 - [x] Add Heel Loop option (4 options with image picker)
   - [x] Create heelLoops constants with S3 image URLs and prices
   - [x] Create HeelLoopPicker component (image button grid)
@@ -64,6 +64,62 @@
 - [x] Set up Snipcart test mode via environment variable
 - [ ] Refactor BullwhipDesigner to be more modular/data-driven *(stretch goal)*
 - [ ] Verify Three.js 3D preview still works after all changes
+
+### Update 3JS
+- [ ] Address over brightness issue on render
+- [ ] Add interactive rotation or slow down rotation
+- [ ] Create Herringbone pattern
+
+## Phase 3B: Design Page Overhaul (Benchmade-Inspired)
+**Goal:** Redesign the Design-a-Bullwhip, Stockwhip, Flogger, and Snakewhip pages with a split-panel layout inspired by [Benchmade's custom knife builder](https://www.benchmade.com/collections/custom). Product visuals on the left, customization options on the right.
+
+### Layout & Structure
+- [x] Create new shared `DesignerLayout` component with two-panel split
+  - [x] Left panel (scrollable): 3D preview + selected option thumbnails + product photography
+  - [x] Right panel (sticky): customization options, summary, price breakdown, Add to Cart
+  - [ ] Responsive: stacks vertically on mobile (options on top, summary below as sticky footer or collapsible)
+  - [x] Full-width layout breaks out of 1080px container to use full viewport width
+- [ ] Full-width banner at top of page *(explored, decided against — gets in the way of new layout)*
+
+### Left Panel — Scrollable (Visuals)
+- [x] 3D preview (existing Three.js WhipPreview) displayed prominently
+- [x] Selected option thumbnails next to 3D preview
+  - [x] Primary color spool image (80x80px, placeholder when unselected)
+  - [x] Secondary color spool image (80x80px, placeholder when unselected)
+  - [x] Handle design image (80x320px, rotated 90deg inside box, placeholder when unselected)
+- [ ] Gallery of finished whip images below the preview
+  - [ ] Show finished bullwhip examples in various color combos
+  - [ ] Close-up shots of handle designs, conchos, collars, heel loops
+  - [ ] Customer scrolls through inspiration as their selections stay visible on the right
+
+### Right Panel — Sticky (Options + Summary + Cart)
+- [x] Chrome-style horizontal tab navigation (StepNav component)
+  - [x] Tabs: Primary, Secondary, Handle, Waxing, Length, Handle Length, Concho, Extras
+  - [x] Active tab highlighted in white with rounded top corners
+  - [x] Completed steps shown in green
+  - [x] Left/right arrow navigation between steps
+  - [x] Light gray tab bar background
+- [x] One option section visible at a time (replaces vertical accordion)
+- [x] YOUR BULLWHIP summary with all selected options below tabs
+- [x] Running price breakdown always visible
+- [x] Add to Cart button always accessible
+- [x] Panel uses `position: sticky` with `top` offset (desktop only)
+
+### Apply to All Designer Pages
+- [ ] Bullwhip designer
+- [ ] Stockwhip designer
+- [ ] Flogger designer (Phase 5A — will use same layout)
+- [ ] Snakewhip designer (Phase 5B — will use same layout)
+
+### Photography & Assets
+- [ ] Plan and shoot product photography for left-panel galleries
+  - [ ] Finished whip examples (various color combos)
+  - [ ] Handle design close-ups
+  - [ ] Concho close-ups
+  - [ ] Collar and heel loop close-ups
+  - [ ] Workshop/craft process shots
+- [ ] Upload gallery images to S3 (`bannerImages/`, `galleryImages/`)
+- [ ] Create banner images for each designer page (1920x300px)
 
 ## Phase 4: Whipmaking Materials Section (In Progress)
 - [x] Create materials listing page (`/whipmaking-materials`)

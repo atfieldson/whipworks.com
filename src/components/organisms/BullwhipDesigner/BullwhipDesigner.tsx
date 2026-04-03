@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Text, Accordion, Stack, RadioGroup, Radio, Heading, Button } from '@chakra-ui/react';
+import { Flex, Text, Stack, RadioGroup, Radio, Heading, Button, Box, Image } from '@chakra-ui/react';
 import CustomizationLabel from '../../atoms/CustomizationLabel';
-import AccordionSection from '../../atoms/AccordionSection';
+import StepNav from '../../atoms/StepNav';
 import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
 import ConchoPicker from './ConchoPicker';
@@ -17,6 +17,7 @@ import { collarOptions } from './constants/collars';
 import CollarPicker from './CollarPicker';
 import { heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
+import DesignerLayout from '../../templates/DesignerLayout';
 
 const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
 const handleDesignOptions = handles.map((h) => `${h.name}[+0]`).join('|');
@@ -54,34 +55,18 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const [collar, setCollar] = useState('None');
   const [heelLoop, setHeelLoop] = useState('No Heel Loop');
   const [modalOpen, setModalOpen] = useState(false);
+  const TOTAL_STEPS = 8;
 
-  const onAccordionChange = (index: any) => {
-    setIndex(index);
-  };
-
-  useEffect(() => {
-    if (index === undefined) {
-      return;
-    }
-
-    // for 1st render
-    if (index !== 0 || primary !== undefined) {
-      // if the user has selected enough things to generate preview,
-      // let them fiddle instead of automatically advancing
-      if (index <= 2 && primary && secondary && handleDesign) {
-        return;
-      }
-
-      // Don't auto-advance past Extras (index 7) — let users browse multiple options
-      if (index >= 7) {
-        return;
-      }
-
-      setTimeout(() => {
-        setIndex((index) => index + 1);
-      }, 500);
-    }
-  }, [primary, secondary, handleDesign, waxed, whipLength, handleLength, concho]);
+  const steps = [
+    { label: 'Primary', isCompleted: !!primary },
+    { label: 'Secondary', isCompleted: !!secondary },
+    { label: 'Handle', isCompleted: !!handleDesign },
+    { label: 'Waxing', isCompleted: true }, // always has a default
+    { label: 'Length', isCompleted: !!whipLength },
+    { label: 'Handle Length', isCompleted: !!handleLength },
+    { label: 'Concho', isCompleted: !!concho },
+    { label: 'Extras', isCompleted: true }, // optional, always "complete"
+  ];
 
   const handleAdd = () => {
     // Hide Snipcart's cart container before it can flash on screen
@@ -105,11 +90,192 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   };
 
   const readyForOrder = primary && secondary && whipLength && handleLength && concho;
-  return (
-    <Flex flexDirection={{ base: 'column-reverse', md: 'row' }}>
-      <Flex flex="2" order={1} flexDirection="column">
-        <Text>YOUR BULLWHIP</Text>
-        <Stack spacing="3" mt="4" shouldWrapChildren>
+
+  const primarySpool = primary ? spools.find((s) => s.name === primary) : undefined;
+  const secondarySpool = secondary ? spools.find((s) => s.name === secondary) : undefined;
+  const handleObj = handleDesign ? handles.find((h) => h.name === handleDesign) : undefined;
+
+  const leftPanel = (
+    <Box>
+      <Flex justifyContent="center" mb="6" gap="4">
+        {/* Selected options thumbnails */}
+        <Flex direction="column" gap="3" alignItems="center" justifyContent="center">
+          <Box textAlign="center">
+            <Text fontSize="xs" fontWeight="bold" mb="1">Primary</Text>
+            {primarySpool ? (
+              <Box
+                as="img"
+                src={primarySpool.img}
+                alt={primarySpool.name}
+                boxSize="80px"
+                objectFit="cover"
+                borderRadius="md"
+                border="2px solid"
+                borderColor="gray.300"
+              />
+            ) : (
+              <Box boxSize="80px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" />
+            )}
+          </Box>
+          <Box textAlign="center">
+            <Text fontSize="xs" fontWeight="bold" mb="1">Secondary</Text>
+            {secondarySpool ? (
+              <Box
+                as="img"
+                src={secondarySpool.img}
+                alt={secondarySpool.name}
+                boxSize="80px"
+                objectFit="cover"
+                borderRadius="md"
+                border="2px solid"
+                borderColor="gray.300"
+              />
+            ) : (
+              <Box boxSize="80px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" />
+            )}
+          </Box>
+          <Box textAlign="center">
+            <Text fontSize="xs" fontWeight="bold" mb="1">Handle</Text>
+            {handleObj ? (
+              <Box
+                width="80px"
+                height="320px"
+                borderRadius="md"
+                border="2px solid"
+                borderColor="gray.300"
+                overflow="hidden"
+              >
+                <Image
+                  src={handleObj.img}
+                  alt={handleObj.name}
+                  width="320px"
+                  height="80px"
+                  maxW="none"
+                  objectFit="cover"
+                  sx={{
+                    transform: 'rotate(90deg)',
+                    transformOrigin: 'top left',
+                    position: 'relative',
+                    top: '0',
+                    left: '80px',
+                  }}
+                />
+              </Box>
+            ) : (
+              <Box width="80px" height="320px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" />
+            )}
+          </Box>
+        </Flex>
+
+        {/* 3D Preview */}
+        <WhipPreview
+          waxed={waxed}
+          primary={primary}
+          secondary={secondary}
+          pattern={handleDesign}
+        />
+      </Flex>
+
+      {/* Future: gallery of finished whip images will go here */}
+    </Box>
+  );
+
+  const stepContent = () => {
+    switch (index) {
+      case 0:
+        return <WhipColors onClick={(color) => setPrimary(color)} activeColor={primary} />;
+      case 1:
+        return <WhipColors onClick={(color) => setSecondary(color)} activeColor={secondary} />;
+      case 2:
+        return (
+          <HandleDesignPicker
+            activeHandle={handleDesign}
+            onClick={(handleDesign) => setHandle(handleDesign)}
+          />
+        );
+      case 3:
+        return (
+          <RadioGroup onChange={(e) => setWaxed(e === 'true')} value={waxed.toString()}>
+            <Stack>
+              <Radio value="true">Waxed</Radio>
+              <Radio value="false">Unwaxed</Radio>
+            </Stack>
+          </RadioGroup>
+        );
+      case 4:
+        return (
+          <RadioGroup value={whipLength} onChange={setWhipLength}>
+            <Stack>
+              {whipLengths.map((l) => (
+                <Radio value={l.name} key={l.name}>{`${l.name} ($${l.price})`}</Radio>
+              ))}
+            </Stack>
+          </RadioGroup>
+        );
+      case 5:
+        return (
+          <RadioGroup value={handleLength} onChange={setHandleLength}>
+            <Stack>
+              {handleLengths.map((l) => (
+                <Radio key={l.name} value={l.name}>{`${l.name} ($${l.price})`}</Radio>
+              ))}
+            </Stack>
+          </RadioGroup>
+        );
+      case 6:
+        return (
+          <Box>
+            <Text my="2" fontSize="md">
+              A Concho is applied to the heel of every handle, giving your bullwhip a distinct look!
+            </Text>
+            <ConchoPicker activeConcho={concho} onClick={setConcho} />
+          </Box>
+        );
+      case 7:
+        return (
+          <Box>
+            <Heading size="md" mt="2">
+              Add a Collar
+            </Heading>
+            <Text my="2" fontSize="md">
+              A collar is attached to the transition with an additional transition knot added, this
+              addition looks great on 12 or 14 inch handles!
+            </Text>
+            <CollarPicker activeCollar={collar} onClick={setCollar} />
+            <Heading size="md" mt="6">
+              Add a Heel Loop
+            </Heading>
+            <Text my="2" fontSize="md">
+              Choose your heel knot style — add a heel loop for easy hanging and storage!
+            </Text>
+            <HeelLoopPicker activeHeelLoop={heelLoop} onClick={setHeelLoop} />
+          </Box>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const rightPanel = (
+    <Box>
+      <Heading mb="4" textAlign="center">
+        Design your Bullwhip
+      </Heading>
+
+      {/* Step Navigation */}
+      <StepNav steps={steps} activeStep={index} onStepClick={setIndex} />
+
+      {/* Active Step Content */}
+      <Box minH="300px" py="4">
+        {stepContent()}
+      </Box>
+
+      {/* Summary + Add to Cart */}
+      <Box borderTopWidth="1px" borderColor="gray.200" pt="4" mt="4">
+        <Text fontWeight="bold" fontSize="lg" mb="3">
+          YOUR BULLWHIP
+        </Text>
+        <Stack spacing="2" shouldWrapChildren>
           <CustomizationLabel label="Primary Color" value={primary} />
           <CustomizationLabel label="Secondary Color" value={secondary} />
           <CustomizationLabel label="Handle Design" value={handleDesign} />
@@ -128,77 +294,10 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
             heelLoop={heelLoop}
           />
         </Stack>
-      </Flex>
-      <Flex flex="6" order={{ base: 3, md: 2 }} mx={{ base: '0', md: '6' }} flexDirection="column">
-        <Heading mb="8px" textAlign="center">
-          Design your Bullwhip
-        </Heading>
-        <Accordion width="100%" index={index} onChange={onAccordionChange} allowToggle>
-          <AccordionSection label="Primary Color">
-            <WhipColors onClick={(color) => setPrimary(color)} activeColor={primary} />
-          </AccordionSection>
-          <AccordionSection label="Secondary Color">
-            <WhipColors onClick={(color) => setSecondary(color)} activeColor={secondary} />
-          </AccordionSection>
-          <AccordionSection label="Handle Design">
-            <HandleDesignPicker
-              activeHandle={handleDesign}
-              onClick={(handleDesign) => setHandle(handleDesign)}
-            />
-          </AccordionSection>
-          <AccordionSection label="Waxing">
-            <RadioGroup onChange={(e) => setWaxed(e === 'true')} value={waxed.toString()}>
-              <Stack>
-                <Radio value="true">Waxed</Radio>
-                <Radio value="false">Unwaxed</Radio>
-              </Stack>
-            </RadioGroup>
-          </AccordionSection>
-          <AccordionSection label="Whip Length">
-            <RadioGroup value={whipLength} onChange={setWhipLength}>
-              <Stack>
-                {whipLengths.map((l) => (
-                  <Radio value={l.name} key={l.name}>{`${l.name} ($${l.price})`}</Radio>
-                ))}
-              </Stack>
-            </RadioGroup>
-          </AccordionSection>
-          <AccordionSection label="Handle Length">
-            <RadioGroup value={handleLength} onChange={setHandleLength}>
-              <Stack>
-                {handleLengths.map((l) => (
-                  <Radio key={l.name} value={l.name}>{`${l.name} ($${l.price})`}</Radio>
-                ))}
-              </Stack>
-            </RadioGroup>
-          </AccordionSection>
-          <AccordionSection label="Concho">
-            <Text my="2" fontSize="md">
-              A Concho is applied to the heel of every handle, giving your bullwhip a distinct look!
-            </Text>
-            <ConchoPicker activeConcho={concho} onClick={setConcho} />
-          </AccordionSection>
-          <AccordionSection label="Extras">
-            <Heading size="md" mt="2">
-              Add a Collar
-            </Heading>
-            <Text my="2" fontSize="md">
-              A collar is attached to the transition with an additional transition knot added, this
-              addition looks great on 12 or 14 inch handles!
-            </Text>
-            <CollarPicker activeCollar={collar} onClick={setCollar} />
-            <Heading size="md" mt="6">
-              Add a Heel Loop
-            </Heading>
-            <Text my="2" fontSize="md">
-              Choose your heel knot style — add a heel loop for easy hanging and storage!
-            </Text>
-            <HeelLoopPicker activeHeelLoop={heelLoop} onClick={setHeelLoop} />
-          </AccordionSection>
-        </Accordion>
         <Button
           isDisabled={!readyForOrder}
           my="6"
+          width="100%"
           onClick={handleAdd}
           className="snipcart-add-item"
           data-item-id="custom-bullwhip"
@@ -240,20 +339,22 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         >
           Add to Cart
         </Button>
-      </Flex>
-      <WhipPreview
-        order={{ base: 2, md: 3 }}
-        waxed={waxed}
-        primary={primary}
-        secondary={secondary}
-        pattern={handleDesign}
+      </Box>
+    </Box>
+  );
+
+  return (
+    <>
+      <DesignerLayout
+        leftPanel={leftPanel}
+        rightPanel={rightPanel}
       />
       <BullwhipAddedModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         location={location}
       />
-    </Flex>
+    </>
   );
 };
 
