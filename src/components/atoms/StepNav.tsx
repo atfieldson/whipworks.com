@@ -6,11 +6,18 @@ const NavContainer = styled(Flex)`
   background: #e8ecef;
   border-radius: 10px 10px 0 0;
   overflow-x: auto;
-  scrollbar-width: none;
+  scrollbar-width: thin;
   padding: 6px 6px 0 6px;
   align-items: flex-end;
   &::-webkit-scrollbar {
-    display: none;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #a0aec0;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
   }
 `;
 
