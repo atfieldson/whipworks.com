@@ -68,28 +68,28 @@ const PriceBreakdown = ({ handleLength, whipLength, concho, isWaxed, collar, hee
     (heelLoopPrice || 0);
   return (
     <Box mt={4}>
-      <Text fontSize="sm" mb="1">
+      <Text fontSize="sm" mb="1" fontWeight="bold">
         Price Breakdown
       </Text>
-      <SimpleGrid columns={2} fontSize="sm">
+      <SimpleGrid columns={2} fontSize="sm" maxW="250px" spacingY="1">
         <Text>Concho:</Text>
-        <Text>${conchoPrice}</Text>
+        <Text textAlign="right">${conchoPrice}</Text>
         <Text>Handle:</Text>
-        <Text>${handlePrice}</Text>
+        <Text textAlign="right">${handlePrice}</Text>
         <Text>Waxing:</Text>
-        <Text>${isWaxed ? 25 : 0}</Text>
+        <Text textAlign="right">${isWaxed ? 25 : 0}</Text>
         <Text>Length:</Text>
-        <Text>${lengthPrice}</Text>
+        <Text textAlign="right">${lengthPrice}</Text>
         <Text fontSize="sm">Extras</Text>
         <Text> </Text>
         <Text>Collar:</Text>
-        <Text>${collarPrice}</Text>
+        <Text textAlign="right">${collarPrice}</Text>
         <Text>Heel Loop:</Text>
-        <Text>${heelLoopPrice}</Text>
+        <Text textAlign="right">${heelLoopPrice}</Text>
         <Text mt="3" fontWeight="bold">
           Total:
         </Text>
-        <Text mt="3" fontWeight="bold">
+        <Text mt="3" fontWeight="bold" textAlign="right">
           {total <= 0 ? '' : `$${total}`}
         </Text>
       </SimpleGrid>

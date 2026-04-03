@@ -21,7 +21,7 @@ const stockwhipHandles = handles.filter(
 );
 
 const HandleDesignPicker = ({ activeHandle, onClick, whipType }: Props) => (
-  <SimpleGrid spacing="3" columns={2}>
+  <SimpleGrid spacing="2" columns={3}>
     {whipType === 'stockwhip'
       ? stockwhipHandles.map((h: Handle) => (
           <ImageButton

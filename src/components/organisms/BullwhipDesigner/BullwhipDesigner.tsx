@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Text, Stack, RadioGroup, Radio, Heading, Button, Box, Image } from '@chakra-ui/react';
-import CustomizationLabel from '../../atoms/CustomizationLabel';
+import { Flex, Text, Stack, RadioGroup, Radio, Heading, Button, Box, Image, SimpleGrid } from '@chakra-ui/react';
 import StepNav from '../../atoms/StepNav';
 import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
@@ -114,7 +113,9 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
                 borderColor="gray.300"
               />
             ) : (
-              <Box boxSize="80px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" />
+              <Flex boxSize="80px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" alignItems="center" justifyContent="center" p="1">
+                <Text fontSize="xs" color="black" textAlign="center" lineHeight="1.2">Make a selection</Text>
+              </Flex>
             )}
           </Box>
           <Box textAlign="center">
@@ -131,7 +132,9 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
                 borderColor="gray.300"
               />
             ) : (
-              <Box boxSize="80px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" />
+              <Flex boxSize="80px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" alignItems="center" justifyContent="center" p="1">
+                <Text fontSize="xs" color="black" textAlign="center" lineHeight="1.2">Make a selection</Text>
+              </Flex>
             )}
           </Box>
           <Box textAlign="center">
@@ -162,7 +165,9 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
                 />
               </Box>
             ) : (
-              <Box width="80px" height="320px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" />
+              <Flex width="80px" height="320px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" alignItems="center" justifyContent="center" p="1">
+                <Text fontSize="xs" color="black" textAlign="center" lineHeight="1.2">Make a selection</Text>
+              </Flex>
             )}
           </Box>
         </Flex>
@@ -266,7 +271,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
       <StepNav steps={steps} activeStep={index} onStepClick={setIndex} />
 
       {/* Active Step Content */}
-      <Box minH="300px" py="4">
+      <Box height="600px" overflowY="auto" py="4">
         {stepContent()}
       </Box>
 
@@ -275,25 +280,52 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         <Text fontWeight="bold" fontSize="lg" mb="3">
           YOUR BULLWHIP
         </Text>
-        <Stack spacing="2" shouldWrapChildren>
-          <CustomizationLabel label="Primary Color" value={primary} />
-          <CustomizationLabel label="Secondary Color" value={secondary} />
-          <CustomizationLabel label="Handle Design" value={handleDesign} />
-          <CustomizationLabel label="Waxed?" value={waxed ? 'Yes' : 'No'} />
-          <CustomizationLabel label="Whip Length" value={whipLength} />
-          <CustomizationLabel label="Handle Length" value={handleLength} />
-          <CustomizationLabel label="Concho" value={concho} />
-          <CustomizationLabel label="Collar" value={collar} />
-          <CustomizationLabel label="Heel Loop" value={heelLoop} />
-          <PriceBreakdown
-            handleLength={handleLength}
-            whipLength={whipLength}
-            concho={concho}
-            isWaxed={waxed}
-            collar={collar}
-            heelLoop={heelLoop}
-          />
-        </Stack>
+        <SimpleGrid columns={{ base: 2, lg: 3 }} spacing="3" mb="4">
+          <Box>
+            <Text fontSize="xs" color="gray.500">Primary Color</Text>
+            <Text fontWeight="bold" fontSize="sm">{primary || '—'}</Text>
+          </Box>
+          <Box>
+            <Text fontSize="xs" color="gray.500">Secondary Color</Text>
+            <Text fontWeight="bold" fontSize="sm">{secondary || '—'}</Text>
+          </Box>
+          <Box>
+            <Text fontSize="xs" color="gray.500">Handle Design</Text>
+            <Text fontWeight="bold" fontSize="sm">{handleDesign || '—'}</Text>
+          </Box>
+          <Box>
+            <Text fontSize="xs" color="gray.500">Waxed?</Text>
+            <Text fontWeight="bold" fontSize="sm">{waxed ? 'Yes' : 'No'}</Text>
+          </Box>
+          <Box>
+            <Text fontSize="xs" color="gray.500">Whip Length</Text>
+            <Text fontWeight="bold" fontSize="sm">{whipLength || '—'}</Text>
+          </Box>
+          <Box>
+            <Text fontSize="xs" color="gray.500">Handle Length</Text>
+            <Text fontWeight="bold" fontSize="sm">{handleLength || '—'}</Text>
+          </Box>
+          <Box>
+            <Text fontSize="xs" color="gray.500">Concho</Text>
+            <Text fontWeight="bold" fontSize="sm">{concho || '—'}</Text>
+          </Box>
+          <Box>
+            <Text fontSize="xs" color="gray.500">Collar</Text>
+            <Text fontWeight="bold" fontSize="sm">{collar}</Text>
+          </Box>
+          <Box>
+            <Text fontSize="xs" color="gray.500">Heel Loop</Text>
+            <Text fontWeight="bold" fontSize="sm">{heelLoop}</Text>
+          </Box>
+        </SimpleGrid>
+        <PriceBreakdown
+          handleLength={handleLength}
+          whipLength={whipLength}
+          concho={concho}
+          isWaxed={waxed}
+          collar={collar}
+          heelLoop={heelLoop}
+        />
         <Button
           isDisabled={!readyForOrder}
           my="6"

@@ -6,7 +6,7 @@ const Label = styled(Text)`
   font-weight: 600;
   text-align: center;
   margin-top: ${(props: any) => props.theme.space['1']};
-  font-size: ${(props: any) => props.theme.fontSizes.sm};
+  font-size: ${(props: any) => props.theme.fontSizes.xs};
 `;
 
 type Props = ImageProps & {

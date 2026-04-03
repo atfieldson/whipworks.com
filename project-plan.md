@@ -65,11 +65,6 @@
 - [ ] Refactor BullwhipDesigner to be more modular/data-driven *(stretch goal)*
 - [ ] Verify Three.js 3D preview still works after all changes
 
-### Update 3JS
-- [ ] Address over brightness issue on render
-- [ ] Add interactive rotation or slow down rotation
-- [ ] Create Herringbone pattern
-
 ## Phase 3B: Design Page Overhaul (Benchmade-Inspired)
 **Goal:** Redesign the Design-a-Bullwhip, Stockwhip, Flogger, and Snakewhip pages with a split-panel layout inspired by [Benchmade's custom knife builder](https://www.benchmade.com/collections/custom). Product visuals on the left, customization options on the right.
 
@@ -120,6 +115,11 @@
   - [ ] Workshop/craft process shots
 - [ ] Upload gallery images to S3 (`bannerImages/`, `galleryImages/`)
 - [ ] Create banner images for each designer page (1920x300px)
+
+### Update 3JS
+- [ ] Address over brightness issue on render
+- [ ] Add interactive rotation or slow down rotation
+- [ ] Create Herringbone pattern
 
 ## Phase 4: Whipmaking Materials Section (In Progress)
 - [x] Create materials listing page (`/whipmaking-materials`)
