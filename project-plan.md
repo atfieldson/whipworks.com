@@ -96,7 +96,7 @@
 - [x] Update BullwhipAddedModal to offer both Kevlar and Nylon poppers
 - [x] Add "View All Accessories" button on accessory product pages
 - [x] Remove unused AddPoppersModal component
-- [ ] Add quantity selector to whipmaking materials and tools product pages
+- [x] Add quantity selector to whipmaking materials, tools, and accessories product pages
 - [x] Add Whip Making Blueprints page (`/whip-making-blueprints`)
   - [x] 17 blueprint listings (7 bullwhip, 7 handle patterns, 3 bundles)
   - [x] Snipcart digital delivery with file GUIDs (live mode)
