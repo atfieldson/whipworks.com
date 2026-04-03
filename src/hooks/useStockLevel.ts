@@ -57,10 +57,10 @@ const useStockLevel = (productId: string) => {
    */
   const getStockForVariant = useCallback(
     (selections: Record<string, string>): number | null => {
-      if (!stockData || stockData.variants.length === 0) return null;
+      if (!stockData) return null;
 
       const selectionEntries = Object.entries(selections);
-      if (selectionEntries.length === 0) return stockData.stock;
+      if (selectionEntries.length === 0 || stockData.variants.length === 0) return stockData.stock;
 
       const match = stockData.variants.find((v) =>
         selectionEntries.every(([name, option]) =>
