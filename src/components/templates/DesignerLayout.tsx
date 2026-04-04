@@ -10,14 +10,6 @@ const FullWidthContainer = styled(Box)`
   padding: 0 30px;
 `;
 
-const StickyPanel = styled(Box)`
-  position: sticky;
-  top: 100px; /* header height + buffer */
-  align-self: flex-start;
-  max-height: calc(100vh - 120px);
-  overflow-y: auto;
-`;
-
 type Props = {
   bannerImage?: string;
   leftPanel: ReactNode;
@@ -37,13 +29,18 @@ const DesignerLayout = ({ bannerImage, leftPanel, rightPanel }: Props) => (
       </Box>
 
       {/* Right panel — sticky: options, summary, price, Add to Cart */}
-      <StickyPanel
+      <Box
         flex="1"
         width="100%"
         display={{ base: 'none', md: 'block' }}
+        position="sticky"
+        top="100px"
+        alignSelf="flex-start"
+        maxH="calc(100vh - 120px)"
+        overflowY="auto"
       >
         {rightPanel}
-      </StickyPanel>
+      </Box>
 
       {/* Mobile: right panel renders below, not sticky */}
       <Box
