@@ -112,17 +112,18 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
 
   const leftPanel = (
     <Box>
-      <Flex mb="6" gap="4">
+      <Flex mb="6" gap="4" height="700px">
         {/* Gallery preview strip */}
-        <Flex direction="column" gap="3" flex="1" minW="0">
+        <Flex direction="column" gap="2" flex="1" minW="0" height="100%" overflow="hidden">
           {previewImages.map((item) => (
-            <WhipImage
-              key={`${item.whip.id}-${item.angle}`}
-              src={item.src}
-              alt={`${item.whip.id} ${item.angle}`}
-              specs={item.whip.specs}
-              whipId={item.whip.id}
-            />
+            <Box key={`${item.whip.id}-${item.angle}`} flex="1" minH="0">
+              <WhipImage
+                src={item.src}
+                alt={`${item.whip.id} ${item.angle}`}
+                specs={item.whip.specs}
+                whipId={item.whip.id}
+              />
+            </Box>
           ))}
         </Flex>
 

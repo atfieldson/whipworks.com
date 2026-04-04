@@ -68,13 +68,13 @@ export type WhipImageProps = {
 };
 
 export const WhipImage = ({ src, alt, specs, whipId }: WhipImageProps) => (
-  <ImageContainer>
+  <ImageContainer height="100%">
     <Image
       src={src}
       alt={alt}
       width="100%"
       maxW="800px"
-      height="auto"
+      height="100%"
       objectFit="cover"
     />
     <SpecsOverlay className="specs-overlay">
