@@ -75,7 +75,7 @@ export const WhipImage = ({ src, alt, specs, whipId }: WhipImageProps) => (
       width="100%"
       maxW="800px"
       height="100%"
-      objectFit="cover"
+      objectFit="contain"
     />
     <SpecsOverlay className="specs-overlay">
       <Text color="white" fontWeight="bold" fontSize="sm" mb="1">
