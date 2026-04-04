@@ -7,10 +7,13 @@
  *   Angles: Wide, Transition, Handle
  *   Example: BW537Transition.jpg
  *
- * S3 path: galleryImages/bullwhips/
+ * S3 path: gallery/bullwhip/
+ *
+ * Concho group shots (white background) are used to break up the gallery.
+ * They don't have individual specs — just a description.
  */
 
-const GALLERY_BASE_URL = 'https://d3ruufruf2uqog.cloudfront.net/galleryImages/bullwhips';
+const GALLERY_BASE_URL = 'https://d3ruufruf2uqog.cloudfront.net/gallery/bullwhip';
 
 export type GalleryWhip = {
   id: string;
@@ -33,7 +36,22 @@ export type GalleryWhip = {
   };
 };
 
-export const galleryWhips: GalleryWhip[] = [
+export type GalleryBreakImage = {
+  id: string;
+  type: 'break';
+  image: string;
+  description: string;
+};
+
+export type GalleryItem = GalleryWhip | GalleryBreakImage;
+
+export const galleryItems: GalleryItem[] = [
+  {
+    id: 'concho-505-512',
+    type: 'break',
+    image: `${GALLERY_BASE_URL}/BW505-512Concho.jpg`,
+    description: 'A selection of conchos on completed bullwhips',
+  },
   {
     id: 'BW543',
     type: 'bullwhip',
@@ -133,6 +151,12 @@ export const galleryWhips: GalleryWhip[] = [
       collar: 'None',
       heelLoop: 'No Heel Loop',
     },
+  },
+  {
+    id: 'concho-591-596',
+    type: 'break',
+    image: `${GALLERY_BASE_URL}/BW591-596Concho.jpg`,
+    description: 'Concho details on a range of custom bullwhips',
   },
   {
     id: 'BW591',
@@ -255,6 +279,12 @@ export const galleryWhips: GalleryWhip[] = [
     },
   },
   {
+    id: 'concho-597-302',
+    type: 'break',
+    image: `${GALLERY_BASE_URL}/BW597-302Concho.jpg`,
+    description: 'Close-up concho details on finished bullwhips',
+  },
+  {
     id: 'BW601',
     type: 'bullwhip',
     images: {
@@ -336,4 +366,4 @@ export const galleryWhips: GalleryWhip[] = [
   },
 ];
 
-export default galleryWhips;
+export default galleryItems;
