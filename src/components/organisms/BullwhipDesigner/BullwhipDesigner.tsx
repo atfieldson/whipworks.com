@@ -102,8 +102,8 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
       (item): item is GalleryWhip => item.type === 'bullwhip' || item.type === 'fantasy'
     );
     const shuffled = [...whips].sort(() => Math.random() - 0.5);
-    const angles: Array<'wide' | 'transition' | 'handle'> = ['wide', 'transition', 'handle', 'wide', 'transition'];
-    return shuffled.slice(0, 5).map((whip, i) => ({
+    const angles: Array<'wide' | 'transition' | 'handle'> = ['wide', 'transition', 'handle'];
+    return shuffled.slice(0, 3).map((whip, i) => ({
       whip,
       angle: angles[i],
       src: whip.images[angles[i]] || whip.images.wide || '',
@@ -121,14 +121,12 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           overflow="hidden"
           display="grid"
           gridTemplateColumns="1fr 1fr"
-          gridTemplateRows="2fr 1fr 2fr"
+          gridTemplateRows="3fr 2fr"
           gap="2"
           sx={{
             '& > :nth-of-type(1)': { gridColumn: '1 / 3', gridRow: '1' },
             '& > :nth-of-type(2)': { gridColumn: '1', gridRow: '2' },
             '& > :nth-of-type(3)': { gridColumn: '2', gridRow: '2' },
-            '& > :nth-of-type(4)': { gridColumn: '1', gridRow: '3' },
-            '& > :nth-of-type(5)': { gridColumn: '2', gridRow: '3' },
           }}
         >
           {previewImages.map((item) => (
