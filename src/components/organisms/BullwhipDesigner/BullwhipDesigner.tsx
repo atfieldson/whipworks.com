@@ -113,19 +113,36 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const leftPanel = (
     <Box>
       <Flex mb="6" gap="4" height="700px">
-        {/* Gallery preview strip */}
-        <Flex direction="column" gap="2" flex="1" minW="0" height="100%" overflow="hidden">
+        {/* Gallery preview grid */}
+        <Box
+          flex="1"
+          minW="0"
+          height="100%"
+          overflow="hidden"
+          display="grid"
+          gridTemplateColumns="1fr 1fr"
+          gridTemplateRows="2fr 1fr 2fr"
+          gap="2"
+          sx={{
+            '& > :nth-of-type(1)': { gridColumn: '1 / 3', gridRow: '1' },
+            '& > :nth-of-type(2)': { gridColumn: '1', gridRow: '2' },
+            '& > :nth-of-type(3)': { gridColumn: '2', gridRow: '2' },
+            '& > :nth-of-type(4)': { gridColumn: '1', gridRow: '3' },
+            '& > :nth-of-type(5)': { gridColumn: '2', gridRow: '3' },
+          }}
+        >
           {previewImages.map((item) => (
-            <Box key={`${item.whip.id}-${item.angle}`} flex="1" minH="0">
+            <Box key={`${item.whip.id}-${item.angle}`} overflow="hidden" borderRadius="8px">
               <WhipImage
                 src={item.src}
                 alt={`${item.whip.id} ${item.angle}`}
                 specs={item.whip.specs}
                 whipId={item.whip.id}
+                fill
               />
             </Box>
           ))}
-        </Flex>
+        </Box>
 
         {/* Selected options thumbnails */}
         <Flex direction="column" gap="3" alignItems="center" justifyContent="center" flexShrink={0}>

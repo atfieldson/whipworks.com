@@ -65,9 +65,10 @@ export type WhipImageProps = {
   alt: string;
   specs: GalleryWhip['specs'];
   whipId: string;
+  fill?: boolean;
 };
 
-export const WhipImage = ({ src, alt, specs, whipId }: WhipImageProps) => (
+export const WhipImage = ({ src, alt, specs, whipId, fill }: WhipImageProps) => (
   <ImageContainer height="100%">
     <Image
       src={src}
@@ -75,7 +76,7 @@ export const WhipImage = ({ src, alt, specs, whipId }: WhipImageProps) => (
       width="100%"
       maxW="800px"
       height="100%"
-      objectFit="contain"
+      objectFit={fill ? 'cover' : 'contain'}
     />
     <SpecsOverlay className="specs-overlay">
       <Text color="white" fontWeight="bold" fontSize="sm" mb="1">
