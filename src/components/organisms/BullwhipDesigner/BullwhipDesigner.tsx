@@ -97,50 +97,93 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const handleObj = handleDesign ? handles.find((h) => h.name === handleDesign) : undefined;
 
   // Pick random gallery images for the preview strip (once per page load)
+  // Hero is always a Wide image; bottom two are Transition and Handle
   const previewImages = React.useMemo(() => {
     const whips = galleryItems.filter(
       (item): item is GalleryWhip => item.type === 'bullwhip' || item.type === 'fantasy'
     );
     const shuffled = [...whips].sort(() => Math.random() - 0.5);
-    const angles: Array<'wide' | 'transition' | 'handle'> = ['wide', 'transition', 'handle'];
-    return shuffled.slice(0, 3).map((whip, i) => ({
-      whip,
-      angle: angles[i],
-      src: whip.images[angles[i]] || whip.images.wide || '',
-    })).filter((item) => item.src);
+
+    // Pick hero from whips that have a wide image
+    const heroWhip = shuffled.find((w) => w.images.wide);
+    const remaining = shuffled.filter((w) => w !== heroWhip);
+
+    const result: Array<{ whip: GalleryWhip; angle: 'wide' | 'transition' | 'handle'; src: string }> = [];
+
+    if (heroWhip && heroWhip.images.wide) {
+      result.push({ whip: heroWhip, angle: 'wide', src: heroWhip.images.wide });
+    }
+
+    // Pick a transition image
+    const transWhip = remaining.find((w) => w.images.transition);
+    if (transWhip && transWhip.images.transition) {
+      result.push({ whip: transWhip, angle: 'transition', src: transWhip.images.transition });
+    }
+
+    // Pick a handle image
+    const handleWhip = remaining.find((w) => w !== transWhip && w.images.handle);
+    if (handleWhip && handleWhip.images.handle) {
+      result.push({ whip: handleWhip, angle: 'handle', src: handleWhip.images.handle });
+    }
+
+    return result;
   }, []);
 
   const leftPanel = (
     <Box>
       <Flex mb="6" gap="4" height="700px">
         {/* Gallery preview grid */}
-        <Box
+        <Flex
           flex="1"
           minW="0"
           height="100%"
-          overflow="hidden"
-          display="grid"
-          gridTemplateColumns="1fr 1fr"
-          gridTemplateRows="3fr 2fr"
+          direction="column"
           gap="2"
-          sx={{
-            '& > :nth-of-type(1)': { gridColumn: '1 / 3', gridRow: '1' },
-            '& > :nth-of-type(2)': { gridColumn: '1', gridRow: '2' },
-            '& > :nth-of-type(3)': { gridColumn: '2', gridRow: '2' },
-          }}
+          overflow="hidden"
         >
-          {previewImages.map((item) => (
-            <Box key={`${item.whip.id}-${item.angle}`} overflow="hidden" borderRadius="8px">
-              <WhipImage
-                src={item.src}
-                alt={`${item.whip.id} ${item.angle}`}
-                specs={item.whip.specs}
-                whipId={item.whip.id}
-                fill
-              />
-            </Box>
-          ))}
-        </Box>
+          {/* Hero image — 4:3 centered with side margins */}
+          {previewImages[0] && (
+            <Flex flex="1" minH="0" justifyContent="center" alignItems="center">
+              <Box
+                overflow="hidden"
+                borderRadius="8px"
+                sx={{ aspectRatio: '4 / 3' }}
+                height="100%"
+                maxW="100%"
+              >
+                <WhipImage
+                  src={previewImages[0].src}
+                  alt={`${previewImages[0].whip.id} ${previewImages[0].angle}`}
+                  specs={previewImages[0].whip.specs}
+                  whipId={previewImages[0].whip.id}
+                  fill
+                />
+              </Box>
+            </Flex>
+          )}
+          {/* Bottom two images — each 5:3 */}
+          <Flex flex="1" minH="0" gap="2">
+            {previewImages.slice(1).map((item) => (
+              <Flex key={`${item.whip.id}-${item.angle}`} flex="1" justifyContent="center" alignItems="center" minW="0">
+                <Box
+                  overflow="hidden"
+                  borderRadius="8px"
+                  sx={{ aspectRatio: '2 / 1' }}
+                  height="100%"
+                  maxW="100%"
+                >
+                  <WhipImage
+                    src={item.src}
+                    alt={`${item.whip.id} ${item.angle}`}
+                    specs={item.whip.specs}
+                    whipId={item.whip.id}
+                    fill
+                  />
+                </Box>
+              </Flex>
+            ))}
+          </Flex>
+        </Flex>
 
         {/* Selected options thumbnails */}
         <Flex direction="column" gap="3" alignItems="center" justifyContent="center" flexShrink={0}>
