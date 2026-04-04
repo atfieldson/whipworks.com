@@ -52,7 +52,7 @@ export const galleryItems: GalleryItem[] = [
     id: 'concho-505-512',
     type: 'break',
     image: `${GALLERY_BASE_URL}/BW505-512Concho.jpg`,
-    description: 'A selection of conchos on completed bullwhips',
+    description: 'Conchos from left to right; Celtic Silver, Celtic Brass, Celtic Brass, Celtic Copper, Bright, Celtic Copper, Dragon, Celtic Copper',
     layout: 'landscape',
   },
   {
@@ -159,7 +159,7 @@ export const galleryItems: GalleryItem[] = [
     id: 'concho-591-596',
     type: 'break',
     image: `${GALLERY_BASE_URL}/BW591-596Concho.jpg`,
-    description: 'Concho details on a range of custom bullwhips',
+    description: 'Conchos from top to bottom; Celtic Copper, American Eagle, Celtic Silver, Celtic Silver, Pirate Skull, Celtic Silver',
     layout: 'portrait',
   },
   {
@@ -286,7 +286,7 @@ export const galleryItems: GalleryItem[] = [
     id: 'concho-597-302',
     type: 'break',
     image: `${GALLERY_BASE_URL}/BW597-302Concho.jpg`,
-    description: 'Close-up concho details on finished bullwhips',
+    description: 'Conchos from left to right; Celtic Silver, Celtic Brass, Celtic Brass, Celtic Copper, Pirate Skull, Bright',
     layout: 'landscape',
   },
   {

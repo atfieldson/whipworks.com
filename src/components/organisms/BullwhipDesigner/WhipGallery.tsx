@@ -76,7 +76,7 @@ export const WhipImage = ({ src, alt, specs, whipId, fill }: WhipImageProps) => 
       width="100%"
       maxW="800px"
       height="100%"
-      objectFit={fill ? 'cover' : 'contain'}
+      objectFit="cover"
     />
     <SpecsOverlay className="specs-overlay">
       <Text color="white" fontWeight="bold" fontSize="sm" mb="1">
@@ -100,15 +100,22 @@ export const WhipImage = ({ src, alt, specs, whipId, fill }: WhipImageProps) => 
 const BreakImage = ({ item }: { item: GalleryBreakImage }) => {
   const isPortrait = item.layout === 'portrait';
   return (
-    <ImageContainer mx="auto" maxW={isPortrait ? '400px' : '800px'}>
-      <Image
-        src={item.image}
-        alt={item.description}
-        maxW="100%"
-        height="auto"
-        objectFit="cover"
-      />
-    </ImageContainer>
+    <Box mx="auto" maxW={isPortrait ? '400px' : '800px'} width="fit-content">
+      <ImageContainer>
+        <Image
+          src={item.image}
+          alt={item.description}
+          width="100%"
+          height="auto"
+          objectFit="cover"
+        />
+        <SpecsOverlay className="specs-overlay">
+          <Text color="white" fontWeight="bold" fontSize="sm">
+            {item.description}
+          </Text>
+        </SpecsOverlay>
+      </ImageContainer>
+    </Box>
   );
 };
 
@@ -251,7 +258,7 @@ const WhipGallery = () => {
         }
 
         return (
-          <Box key={`block-${blockIdx}`} mb="4">
+          <Box key={`block-${blockIdx}`} mb="4" maxW={block.columns === 1 ? '800px' : undefined} mx={block.columns === 1 ? 'auto' : undefined}>
             <SimpleGrid columns={{ base: 1, sm: Math.min(block.columns, 2), md: block.columns }} spacing="3">
               {block.whips.map((whip) => {
                 const src = whip.images[block.angle];
