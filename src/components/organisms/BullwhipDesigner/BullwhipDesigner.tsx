@@ -362,16 +362,38 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
             </Box>
           </Box>
         );
-      case 4:
+      case 4: {
+        const selectedLength = whipLengths.find((l) => l.name === whipLength);
         return (
-          <RadioGroup value={whipLength} onChange={setWhipLength}>
-            <Stack>
+          <SimpleGrid columns={2} spacing="4">
+            <Stack spacing="2">
               {whipLengths.map((l) => (
-                <Radio value={l.name} key={l.name}>{`${l.name} ($${l.price})`}</Radio>
+                <Button
+                  key={l.name}
+                  size="sm"
+                  width="100%"
+                  bg={whipLength === l.name ? '#2D6A4F' : 'white'}
+                  color={whipLength === l.name ? 'white' : '#4A5568'}
+                  border={whipLength === l.name ? '2px solid' : 'none'}
+                  borderColor={whipLength === l.name ? '#CBD5E0' : undefined}
+                  _hover={{ bg: whipLength === l.name ? '#245C43' : '#F7FAFC' }}
+                  onClick={() => setWhipLength(l.name)}
+                >
+                  {`${l.name} ($${l.price})`}
+                </Button>
               ))}
             </Stack>
-          </RadioGroup>
+            <Box>
+              {selectedLength && (
+                <>
+                  <Text fontWeight="bold" fontSize="sm" mb="2">{selectedLength.name}</Text>
+                  <Text fontSize="sm">{selectedLength.description}</Text>
+                </>
+              )}
+            </Box>
+          </SimpleGrid>
         );
+      }
       case 5:
         return (
           <RadioGroup value={handleLength} onChange={setHandleLength}>
