@@ -10,14 +10,15 @@ const NavContainer = styled(Flex)`
   padding: 6px 6px 0 6px;
   align-items: flex-end;
   &::-webkit-scrollbar {
-    height: 6px;
+    height: 8px;
   }
   &::-webkit-scrollbar-thumb {
     background: #a0aec0;
-    border-radius: 3px;
+    border-radius: 4px;
   }
   &::-webkit-scrollbar-track {
-    background: transparent;
+    background: #d4d8dc;
+    border-radius: 4px;
   }
 `;
 

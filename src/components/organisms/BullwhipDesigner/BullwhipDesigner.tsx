@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Text, Stack, RadioGroup, Radio, Heading, Button, Box, Image, SimpleGrid } from '@chakra-ui/react';
+import { Flex, Text, Stack, RadioGroup, Radio, Heading, Button, Box, Image, SimpleGrid, List, ListItem } from '@chakra-ui/react';
 import StepNav from '../../atoms/StepNav';
 import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
@@ -131,8 +131,8 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
 
   const leftPanel = (
     <Box>
-      <Flex mb="6" gap="4" height="700px">
-        {/* Gallery preview grid */}
+      <Flex mb="6" gap="4" height="700px" justifyContent="center">
+        {/* Gallery preview grid — hidden below 1750px */}
         <Flex
           flex="1"
           minW="0"
@@ -140,6 +140,8 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           direction="column"
           gap="2"
           overflow="hidden"
+          display={{ base: 'none', '2xl': 'none' }}
+          sx={{ '@media (min-width: 1750px)': { display: 'flex' } }}
         >
           {/* Hero image — 4:3 centered with side margins */}
           {previewImages[0] && (
@@ -289,12 +291,76 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         );
       case 3:
         return (
-          <RadioGroup onChange={(e) => setWaxed(e === 'true')} value={waxed.toString()}>
-            <Stack>
-              <Radio value="true">Waxed</Radio>
-              <Radio value="false">Unwaxed</Radio>
-            </Stack>
-          </RadioGroup>
+          <Box>
+            <Text fontSize="sm" mb="4">
+              On completion, a waxed bullwhip is dropped in Paraffin Wax. Paraffin wax is water
+              insoluble and creates a protective layer to the whip. Waxing a paracord bullwhip may
+              or may not be right for you, here are the pros for each:
+            </Text>
+            <SimpleGrid columns={2} spacing="4" mb="4">
+              <Flex direction="column">
+                <Button
+                  size="sm"
+                  width="100%"
+                  mb="3"
+                  bg={waxed ? '#2D6A4F' : 'white'}
+                  color={waxed ? 'white' : '#4A5568'}
+                  border={waxed ? '2px solid' : 'none'}
+                  borderColor={waxed ? '#CBD5E0' : undefined}
+                  _hover={{ bg: waxed ? '#245C43' : '#F7FAFC' }}
+                  onClick={() => setWaxed(true)}
+                >
+                  Waxed
+                </Button>
+                <Text fontSize="sm" fontWeight="semibold" ml="2">Pros:</Text>
+                <List spacing="1" ml="4" fontSize="sm" mb="2">
+                  <ListItem>Creates a water resistant layer to protect the life of your whip</ListItem>
+                  <ListItem>Gives it a professional, matte finish that darkens the paracord</ListItem>
+                  <ListItem>Makes the whip more rugged for harsh conditions</ListItem>
+                </List>
+                <Text fontSize="sm" fontWeight="semibold" ml="2">Cons:</Text>
+                <List spacing="1" ml="4" fontSize="sm">
+                  <ListItem>Makes the whip more stiff, requiring more breaking in (especially in cold conditions)</ListItem>
+                  <ListItem>Some colors of paracord become very dark and subtle — this can be a pro or con</ListItem>
+                </List>
+              </Flex>
+              <Flex direction="column">
+                <Button
+                  size="sm"
+                  width="100%"
+                  mb="3"
+                  bg={!waxed ? '#2D6A4F' : 'white'}
+                  color={!waxed ? 'white' : '#4A5568'}
+                  border={!waxed ? '2px solid' : 'none'}
+                  borderColor={!waxed ? '#CBD5E0' : undefined}
+                  _hover={{ bg: !waxed ? '#245C43' : '#F7FAFC' }}
+                  onClick={() => setWaxed(false)}
+                >
+                  Unwaxed
+                </Button>
+                <Text fontSize="sm" fontWeight="semibold" ml="2">Pros:</Text>
+                <List spacing="1" ml="4" fontSize="sm" mb="2">
+                  <ListItem>More flexible out of the box</ListItem>
+                  <ListItem>Maintains the bright vibrance and color of the paracord</ListItem>
+                </List>
+                <Text fontSize="sm" fontWeight="semibold" ml="2">Cons:</Text>
+                <List spacing="1" ml="4" fontSize="sm">
+                  <ListItem>More susceptible to water damage</ListItem>
+                  <ListItem>Gets dirty faster in outdoor conditions</ListItem>
+                </List>
+              </Flex>
+            </SimpleGrid>
+            <Box>
+              <Text fontWeight="bold" fontSize="sm" mb="1">Overall Thoughts</Text>
+              <Text fontSize="sm">
+                I almost always recommend folks wax their whips. If you're going to use your whip
+                outside or get it wet at all, waxing is the way to go. If you are using
+                your whip indoors only or need it to maintain as much flexibility as possible, then
+                keeping it unwaxed makes sense. I'd recommend unwaxed for stage performers
+                that want their paracord whips to be bright on the stage.
+              </Text>
+            </Box>
+          </Box>
         );
       case 4:
         return (
@@ -351,7 +417,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   };
 
   const rightPanel = (
-    <Box>
+    <Flex direction="column" height="calc(100vh - 120px)" minW="0">
       <Heading mb="4" textAlign="center">
         Design your Bullwhip
       </Heading>
@@ -359,109 +425,98 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
       {/* Step Navigation */}
       <StepNav steps={steps} activeStep={index} onStepClick={setIndex} />
 
-      {/* Active Step Content */}
-      <Box height="600px" overflowY="auto" py="4">
+      {/* Active Step Content — fills remaining space */}
+      <Box
+        flex="1"
+        minH="0"
+        minW="0"
+        overflowY="auto"
+        overflowX="auto"
+        py="4"
+        sx={{
+          scrollbarWidth: 'thin',
+          '&::-webkit-scrollbar': { width: '8px', height: '8px' },
+          '&::-webkit-scrollbar-thumb': { background: '#a0aec0', borderRadius: '4px' },
+          '&::-webkit-scrollbar-track': { background: '#e8ecef', borderRadius: '4px' },
+        }}
+      >
         {stepContent()}
       </Box>
 
-      {/* Summary + Add to Cart */}
-      <Box borderTopWidth="1px" borderColor="gray.200" pt="4" mt="4">
-        <Text fontWeight="bold" fontSize="lg" mb="3">
-          YOUR BULLWHIP
-        </Text>
-        <SimpleGrid columns={{ base: 2, lg: 3 }} spacing="3" mb="4">
-          <Box>
-            <Text fontSize="xs" color="gray.500">Primary Color</Text>
-            <Text fontWeight="bold" fontSize="sm">{primary || '—'}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="xs" color="gray.500">Secondary Color</Text>
-            <Text fontWeight="bold" fontSize="sm">{secondary || '—'}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="xs" color="gray.500">Handle Design</Text>
-            <Text fontWeight="bold" fontSize="sm">{handleDesign || '—'}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="xs" color="gray.500">Waxed?</Text>
-            <Text fontWeight="bold" fontSize="sm">{waxed ? 'Yes' : 'No'}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="xs" color="gray.500">Whip Length</Text>
-            <Text fontWeight="bold" fontSize="sm">{whipLength || '—'}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="xs" color="gray.500">Handle Length</Text>
-            <Text fontWeight="bold" fontSize="sm">{handleLength || '—'}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="xs" color="gray.500">Concho</Text>
-            <Text fontWeight="bold" fontSize="sm">{concho || '—'}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="xs" color="gray.500">Collar</Text>
-            <Text fontWeight="bold" fontSize="sm">{collar}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="xs" color="gray.500">Heel Loop</Text>
-            <Text fontWeight="bold" fontSize="sm">{heelLoop}</Text>
-          </Box>
-        </SimpleGrid>
-        <PriceBreakdown
-          handleLength={handleLength}
-          whipLength={whipLength}
-          concho={concho}
-          isWaxed={waxed}
-          collar={collar}
-          heelLoop={heelLoop}
-        />
-        <Button
-          isDisabled={!readyForOrder}
-          my="6"
-          width="100%"
-          onClick={handleAdd}
-          className="snipcart-add-item"
-          data-item-id="custom-bullwhip"
-          data-item-name="Custom Bullwhip"
-          data-item-price="204"
-          data-item-url="/design-bullwhip"
-          data-item-description="A custom-designed handmade bullwhip"
-          data-item-custom0-name="Primary Color"
-          data-item-custom0-options={colorOptions}
-          data-item-custom0-value={primary}
-          data-item-custom1-name="Secondary Color"
-          data-item-custom1-options={colorOptions}
-          data-item-custom1-value={secondary}
-          data-item-custom2-name="Handle Design"
-          data-item-custom2-options={handleDesignOptions}
-          data-item-custom2-value={handleDesign}
-          data-item-custom3-name="Length"
-          data-item-custom3-options={whipLengthOptions}
-          data-item-custom3-value={whipLength}
-          data-item-custom4-name="Handle Length"
-          data-item-custom4-options={handleLengthOptions}
-          data-item-custom4-value={handleLength}
-          data-item-custom5-name="Concho"
-          data-item-custom5-options={conchoOptions}
-          data-item-custom5-value={concho}
-          data-item-custom6-name="Waxing"
-          data-item-custom6-options="Yes[+25]|No"
-          data-item-custom6-value={waxed ? 'Yes' : 'No'}
-          data-item-custom7-name="Collar"
-          data-item-custom7-options={collarOptions}
-          data-item-custom7-value={collar}
-          data-item-custom8-name="Heel Loop"
-          data-item-custom8-options={heelLoopOptions}
-          data-item-custom8-value={heelLoop}
-          data-item-weight={900}
-          data-item-width={46}
-          data-item-height={8}
-          data-item-length={30}
-        >
-          Add to Cart
-        </Button>
+      {/* Summary + Add to Cart — compact, always visible at bottom */}
+      <Box borderTopWidth="1px" borderColor="gray.200" pt="2" mt="2" flexShrink={0}>
+        <Flex gap="4" alignItems="stretch">
+          <Flex flex="1" direction="column">
+            <Text fontWeight="bold" fontSize="sm" mb="1">YOUR BULLWHIP</Text>
+            <SimpleGrid columns={3} spacing="1">
+              <Text fontSize="xs"><Text as="span" color="gray.500">Primary: </Text>{primary || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Secondary: </Text>{secondary || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Handle: </Text>{handleDesign || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Waxed: </Text>{waxed ? 'Yes' : 'No'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Length: </Text>{whipLength || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Handle: </Text>{handleLength || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Concho: </Text>{concho || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Collar: </Text>{collar}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Heel Loop: </Text>{heelLoop}</Text>
+            </SimpleGrid>
+            <Button
+              isDisabled={!readyForOrder}
+              width="100%"
+              size="sm"
+              mt="auto"
+              onClick={handleAdd}
+              className="snipcart-add-item"
+              data-item-id="custom-bullwhip"
+              data-item-name="Custom Bullwhip"
+              data-item-price="204"
+              data-item-url="/design-bullwhip"
+              data-item-description="A custom-designed handmade bullwhip"
+              data-item-custom0-name="Primary Color"
+              data-item-custom0-options={colorOptions}
+              data-item-custom0-value={primary}
+              data-item-custom1-name="Secondary Color"
+              data-item-custom1-options={colorOptions}
+              data-item-custom1-value={secondary}
+              data-item-custom2-name="Handle Design"
+              data-item-custom2-options={handleDesignOptions}
+              data-item-custom2-value={handleDesign}
+              data-item-custom3-name="Length"
+              data-item-custom3-options={whipLengthOptions}
+              data-item-custom3-value={whipLength}
+              data-item-custom4-name="Handle Length"
+              data-item-custom4-options={handleLengthOptions}
+              data-item-custom4-value={handleLength}
+              data-item-custom5-name="Concho"
+              data-item-custom5-options={conchoOptions}
+              data-item-custom5-value={concho}
+              data-item-custom6-name="Waxing"
+              data-item-custom6-options="Yes[+25]|No"
+              data-item-custom6-value={waxed ? 'Yes' : 'No'}
+              data-item-custom7-name="Collar"
+              data-item-custom7-options={collarOptions}
+              data-item-custom7-value={collar}
+              data-item-custom8-name="Heel Loop"
+              data-item-custom8-options={heelLoopOptions}
+              data-item-custom8-value={heelLoop}
+              data-item-weight={900}
+              data-item-width={46}
+              data-item-height={8}
+              data-item-length={30}
+            >
+              Add to Cart
+            </Button>
+          </Flex>
+          <PriceBreakdown
+            handleLength={handleLength}
+            whipLength={whipLength}
+            concho={concho}
+            isWaxed={waxed}
+            collar={collar}
+            heelLoop={heelLoop}
+          />
+        </Flex>
       </Box>
-    </Box>
+    </Flex>
   );
 
   return (

@@ -15,7 +15,7 @@ type Spool = {
 };
 
 const WhipColors = ({ activeColor, onClick }: Props) => (
-  <SimpleGrid spacing="2" minChildWidth={['45px', '70px']}>
+  <SimpleGrid spacing="2" columns={6} minW="550px">
     {spools.map((c: Spool) => (
       <ImageButton
         key={c.name}
@@ -24,7 +24,7 @@ const WhipColors = ({ activeColor, onClick }: Props) => (
         onClick={() => onClick(c.name)}
         isSelected={activeColor === c.name}
         alt={c.name}
-        maxH="70px"
+        width="100%"
       />
     ))}
   </SimpleGrid>

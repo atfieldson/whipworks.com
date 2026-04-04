@@ -32,12 +32,11 @@ const DesignerLayout = ({ bannerImage, leftPanel, rightPanel }: Props) => (
       <Box
         flex="1"
         width="100%"
+        minW="0"
         display={{ base: 'none', md: 'block' }}
         position="sticky"
         top="100px"
         alignSelf="flex-start"
-        maxH="calc(100vh - 120px)"
-        overflowY="auto"
       >
         {rightPanel}
       </Box>
