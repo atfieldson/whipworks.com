@@ -17,6 +17,7 @@ import CollarPicker from './CollarPicker';
 import { heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
 import DesignerLayout from '../../templates/DesignerLayout';
+import WhipGallery from './WhipGallery';
 
 const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
 const handleDesignOptions = handles.map((h) => `${h.name}[+0]`).join('|');
@@ -181,7 +182,8 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         />
       </Flex>
 
-      {/* Future: gallery of finished whip images will go here */}
+      {/* Gallery of finished whips */}
+      <WhipGallery />
     </Box>
   );
 
