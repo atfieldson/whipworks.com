@@ -25,7 +25,6 @@ const Footer = styled.footer`
 
 const Container = styled.div`
   min-height: 100vh; /* will cover the 100% of viewport */
-  overflow-x: hidden;
   display: block;
   position: relative;
   padding-bottom: 60px;
