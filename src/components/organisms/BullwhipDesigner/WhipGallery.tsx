@@ -1,11 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Box, Text, Flex, Image, SimpleGrid } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import {
   galleryItems,
   GalleryWhip,
   GalleryBreakImage,
-  GalleryItem,
 } from './constants/galleryWhips';
 
 const ImageContainer = styled(Box)`
@@ -74,9 +73,8 @@ const WhipImage = ({ src, alt, specs, whipId }: WhipImageProps) => (
       src={src}
       alt={alt}
       width="100%"
-      height="auto"
+      height="100%"
       objectFit="cover"
-      aspectRatio="4/3"
     />
     <SpecsOverlay className="specs-overlay">
       <Text color="white" fontWeight="bold" fontSize="sm" mb="1">
@@ -109,8 +107,27 @@ const BreakImage = ({ item }: { item: GalleryBreakImage }) => (
   </ImageContainer>
 );
 
+/**
+ * Gallery layout pattern — repeating groups of mixed image types
+ * with concho break images between groups.
+ *
+ * Pattern per cycle:
+ *   3 Transition (3-col grid, medium)
+ *   Concho break (full width, large)
+ *   2 Wide (2-col grid, large)
+ *   4 Handle (4-col grid, small)
+ *   Concho break (full width, large)
+ *   1 Wide (full width, hero)
+ *   3 Handle (3-col grid, medium)
+ *   2 Transition (2-col grid, large)
+ *   Concho break (full width, large)
+ */
+
+type GalleryBlock =
+  | { kind: 'whips'; angle: 'wide' | 'transition' | 'handle'; columns: number; whips: GalleryWhip[] }
+  | { kind: 'break'; item: GalleryBreakImage };
+
 const WhipGallery = () => {
-  // Separate whips from break images
   const whips = galleryItems.filter(
     (item): item is GalleryWhip => item.type === 'bullwhip' || item.type === 'fantasy'
   );
@@ -118,92 +135,136 @@ const WhipGallery = () => {
     (item): item is GalleryBreakImage => item.type === 'break'
   );
 
-  // Randomize whips once per page load, then organize by image type
-  const galleryLayout = useMemo(() => {
-    const shuffled = shuffle(whips);
+  const blocks = useMemo(() => {
+    const shuffledWhips = shuffle(whips);
     const shuffledBreaks = shuffle(breaks);
 
-    // Build sections: Transition, Concho break, Wide, Concho break, Handle
-    const items: { type: 'whip'; angle: string; whip: GalleryWhip }[] | { type: 'break'; item: GalleryBreakImage }[] = [];
+    // Build pools of images by angle
+    const transitionPool = shuffle(
+      shuffledWhips.filter((w) => w.images.transition)
+    );
+    const widePool = shuffle(
+      shuffledWhips.filter((w) => w.images.wide)
+    );
+    const handlePool = shuffle(
+      shuffledWhips.filter((w) => w.images.handle)
+    );
 
-    const sections: Array<{
-      label: string;
-      entries: Array<
-        | { kind: 'whip'; angle: 'wide' | 'transition' | 'handle'; whip: GalleryWhip }
-        | { kind: 'break'; item: GalleryBreakImage }
-      >;
-    }> = [
-      {
-        label: 'Transition',
-        entries: shuffled
-          .filter((w) => w.images.transition)
-          .map((w) => ({ kind: 'whip' as const, angle: 'transition' as const, whip: w })),
-      },
-      {
-        label: '',
-        entries: shuffledBreaks.length > 0
-          ? [{ kind: 'break' as const, item: shuffledBreaks[0] }]
-          : [],
-      },
-      {
-        label: 'Wide',
-        entries: shuffled
-          .filter((w) => w.images.wide)
-          .map((w) => ({ kind: 'whip' as const, angle: 'wide' as const, whip: w })),
-      },
-      {
-        label: '',
-        entries: shuffledBreaks.length > 1
-          ? [{ kind: 'break' as const, item: shuffledBreaks[1] }]
-          : [],
-      },
-      {
-        label: 'Handle',
-        entries: shuffled
-          .filter((w) => w.images.handle)
-          .map((w) => ({ kind: 'whip' as const, angle: 'handle' as const, whip: w })),
-      },
-      {
-        label: '',
-        entries: shuffledBreaks.length > 2
-          ? [{ kind: 'break' as const, item: shuffledBreaks[2] }]
-          : [],
-      },
-    ];
+    // Indexes to pull from each pool
+    let tIdx = 0;
+    let wIdx = 0;
+    let hIdx = 0;
+    let bIdx = 0;
 
-    return sections;
+    const take = (pool: GalleryWhip[], idx: { val: number }, count: number): GalleryWhip[] => {
+      const result: GalleryWhip[] = [];
+      for (let i = 0; i < count; i++) {
+        if (idx.val < pool.length) {
+          result.push(pool[idx.val]);
+          idx.val++;
+        }
+      }
+      return result;
+    };
+
+    const tRef = { val: 0 };
+    const wRef = { val: 0 };
+    const hRef = { val: 0 };
+
+    const nextBreak = (): GalleryBreakImage | null => {
+      if (bIdx < shuffledBreaks.length) {
+        return shuffledBreaks[bIdx++];
+      }
+      // Cycle breaks if we run out
+      if (shuffledBreaks.length > 0) {
+        bIdx = 1;
+        return shuffledBreaks[0];
+      }
+      return null;
+    };
+
+    const result: GalleryBlock[] = [];
+
+    // Block 1: 3 Transition images (3 columns)
+    const t1 = take(transitionPool, tRef, 3);
+    if (t1.length) result.push({ kind: 'whips', angle: 'transition', columns: 3, whips: t1 });
+
+    // Break
+    const b1 = nextBreak();
+    if (b1) result.push({ kind: 'break', item: b1 });
+
+    // Block 2: 2 Wide images (2 columns, larger)
+    const w1 = take(widePool, wRef, 2);
+    if (w1.length) result.push({ kind: 'whips', angle: 'wide', columns: 2, whips: w1 });
+
+    // Block 3: 4 Handle images (4 columns, smaller)
+    const h1 = take(handlePool, hRef, 4);
+    if (h1.length) result.push({ kind: 'whips', angle: 'handle', columns: 4, whips: h1 });
+
+    // Break
+    const b2 = nextBreak();
+    if (b2) result.push({ kind: 'break', item: b2 });
+
+    // Block 4: 1 Wide hero (full width)
+    const w2 = take(widePool, wRef, 1);
+    if (w2.length) result.push({ kind: 'whips', angle: 'wide', columns: 1, whips: w2 });
+
+    // Block 5: 3 Handle images (3 columns)
+    const h2 = take(handlePool, hRef, 3);
+    if (h2.length) result.push({ kind: 'whips', angle: 'handle', columns: 3, whips: h2 });
+
+    // Block 6: 2 Transition images (2 columns)
+    const t2 = take(transitionPool, tRef, 2);
+    if (t2.length) result.push({ kind: 'whips', angle: 'transition', columns: 2, whips: t2 });
+
+    // Break
+    const b3 = nextBreak();
+    if (b3) result.push({ kind: 'break', item: b3 });
+
+    // Block 7: remaining images in mixed groups
+    const remainingT = take(transitionPool, tRef, transitionPool.length);
+    if (remainingT.length) result.push({ kind: 'whips', angle: 'transition', columns: 3, whips: remainingT });
+
+    const remainingW = take(widePool, wRef, widePool.length);
+    if (remainingW.length) result.push({ kind: 'whips', angle: 'wide', columns: 2, whips: remainingW });
+
+    const remainingH = take(handlePool, hRef, handlePool.length);
+    if (remainingH.length) result.push({ kind: 'whips', angle: 'handle', columns: 4, whips: remainingH });
+
+    return result;
   }, []);
 
   return (
     <Box mt="6">
-      {galleryLayout.map((section, sectionIdx) => (
-        <Box key={sectionIdx} mb="6">
-          {section.label && (
-            <Text fontSize="lg" fontWeight="bold" mb="3" textTransform="uppercase" letterSpacing="wide" color="gray.600">
-              {section.label}
-            </Text>
-          )}
-          <SimpleGrid columns={{ base: 1, sm: 2 }} spacing="4">
-            {section.entries.map((entry, entryIdx) => {
-              if (entry.kind === 'break') {
-                return <BreakImage key={entry.item.id} item={entry.item} />;
-              }
-              const { whip, angle } = entry;
-              const src = whip.images[angle];
-              if (!src) return null;
-              return (
-                <WhipImage
-                  key={`${whip.id}-${angle}`}
-                  src={src}
-                  alt={`${whip.id} ${angle}`}
-                  specs={whip.specs}
-                  whipId={whip.id}
-                />
-              );
-            })}
-          </SimpleGrid>
-        </Box>
-      ))}
+      {blocks.map((block, blockIdx) => {
+        if (block.kind === 'break') {
+          return (
+            <Box key={block.item.id} mb="4">
+              <BreakImage item={block.item} />
+            </Box>
+          );
+        }
+
+        return (
+          <Box key={`block-${blockIdx}`} mb="4">
+            <SimpleGrid columns={{ base: 1, sm: Math.min(block.columns, 2), md: block.columns }} spacing="3">
+              {block.whips.map((whip) => {
+                const src = whip.images[block.angle];
+                if (!src) return null;
+                return (
+                  <WhipImage
+                    key={`${whip.id}-${block.angle}`}
+                    src={src}
+                    alt={`${whip.id} ${block.angle}`}
+                    specs={whip.specs}
+                    whipId={whip.id}
+                  />
+                );
+              })}
+            </SimpleGrid>
+          </Box>
+        );
+      })}
     </Box>
   );
 };
