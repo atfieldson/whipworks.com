@@ -41,6 +41,8 @@ export type GalleryBreakImage = {
   type: 'break';
   image: string;
   description: string;
+  /** 'landscape' = 800x600, 'portrait' = 400x900 */
+  layout: 'landscape' | 'portrait';
 };
 
 export type GalleryItem = GalleryWhip | GalleryBreakImage;
@@ -51,6 +53,7 @@ export const galleryItems: GalleryItem[] = [
     type: 'break',
     image: `${GALLERY_BASE_URL}/BW505-512Concho.jpg`,
     description: 'A selection of conchos on completed bullwhips',
+    layout: 'landscape',
   },
   {
     id: 'BW543',
@@ -157,6 +160,7 @@ export const galleryItems: GalleryItem[] = [
     type: 'break',
     image: `${GALLERY_BASE_URL}/BW591-596Concho.jpg`,
     description: 'Concho details on a range of custom bullwhips',
+    layout: 'portrait',
   },
   {
     id: 'BW591',
@@ -283,6 +287,7 @@ export const galleryItems: GalleryItem[] = [
     type: 'break',
     image: `${GALLERY_BASE_URL}/BW597-302Concho.jpg`,
     description: 'Close-up concho details on finished bullwhips',
+    layout: 'landscape',
   },
   {
     id: 'BW601',

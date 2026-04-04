@@ -97,18 +97,20 @@ export const WhipImage = ({ src, alt, specs, whipId, fill }: WhipImageProps) => 
   </ImageContainer>
 );
 
-const BreakImage = ({ item }: { item: GalleryBreakImage }) => (
-  <ImageContainer mx="auto" maxW="800px">
-    <Image
-      src={item.image}
-      alt={item.description}
-      width="100%"
-      maxW="800px"
-      height="auto"
-      objectFit="cover"
-    />
-  </ImageContainer>
-);
+const BreakImage = ({ item }: { item: GalleryBreakImage }) => {
+  const isPortrait = item.layout === 'portrait';
+  return (
+    <ImageContainer mx="auto" maxW={isPortrait ? '400px' : '800px'}>
+      <Image
+        src={item.image}
+        alt={item.description}
+        maxW="100%"
+        height="auto"
+        objectFit="cover"
+      />
+    </ImageContainer>
+  );
+};
 
 /**
  * Gallery layout pattern — repeating groups of mixed image types
