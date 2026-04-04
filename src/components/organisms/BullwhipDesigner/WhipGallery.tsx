@@ -73,7 +73,8 @@ const WhipImage = ({ src, alt, specs, whipId }: WhipImageProps) => (
       src={src}
       alt={alt}
       width="100%"
-      height="100%"
+      maxW="800px"
+      height="auto"
       objectFit="cover"
     />
     <SpecsOverlay className="specs-overlay">
@@ -96,11 +97,12 @@ const WhipImage = ({ src, alt, specs, whipId }: WhipImageProps) => (
 );
 
 const BreakImage = ({ item }: { item: GalleryBreakImage }) => (
-  <ImageContainer>
+  <ImageContainer mx="auto" maxW="800px">
     <Image
       src={item.image}
       alt={item.description}
       width="100%"
+      maxW="800px"
       height="auto"
       objectFit="cover"
     />
