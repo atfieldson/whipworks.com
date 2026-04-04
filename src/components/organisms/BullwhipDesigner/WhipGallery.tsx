@@ -60,14 +60,14 @@ const SpecLabel = ({ label, value }: { label: string; value: string | null }) =>
   );
 };
 
-type WhipImageProps = {
+export type WhipImageProps = {
   src: string;
   alt: string;
   specs: GalleryWhip['specs'];
   whipId: string;
 };
 
-const WhipImage = ({ src, alt, specs, whipId }: WhipImageProps) => (
+export const WhipImage = ({ src, alt, specs, whipId }: WhipImageProps) => (
   <ImageContainer>
     <Image
       src={src}

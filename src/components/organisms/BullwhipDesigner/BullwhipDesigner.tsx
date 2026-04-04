@@ -17,7 +17,8 @@ import CollarPicker from './CollarPicker';
 import { heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
 import DesignerLayout from '../../templates/DesignerLayout';
-import WhipGallery from './WhipGallery';
+import WhipGallery, { WhipImage } from './WhipGallery';
+import { galleryItems, GalleryWhip } from './constants/galleryWhips';
 
 const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
 const handleDesignOptions = handles.map((h) => `${h.name}[+0]`).join('|');
@@ -95,11 +96,38 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const secondarySpool = secondary ? spools.find((s) => s.name === secondary) : undefined;
   const handleObj = handleDesign ? handles.find((h) => h.name === handleDesign) : undefined;
 
+  // Pick random gallery images for the preview strip (once per page load)
+  const previewImages = React.useMemo(() => {
+    const whips = galleryItems.filter(
+      (item): item is GalleryWhip => item.type === 'bullwhip' || item.type === 'fantasy'
+    );
+    const shuffled = [...whips].sort(() => Math.random() - 0.5);
+    const angles: Array<'wide' | 'transition' | 'handle'> = ['wide', 'transition', 'handle', 'wide', 'transition'];
+    return shuffled.slice(0, 5).map((whip, i) => ({
+      whip,
+      angle: angles[i],
+      src: whip.images[angles[i]] || whip.images.wide || '',
+    })).filter((item) => item.src);
+  }, []);
+
   const leftPanel = (
     <Box>
-      <Flex justifyContent="center" mb="6" gap="4">
+      <Flex mb="6" gap="4">
+        {/* Gallery preview strip */}
+        <Flex direction="column" gap="3" flex="1" minW="0">
+          {previewImages.map((item) => (
+            <WhipImage
+              key={`${item.whip.id}-${item.angle}`}
+              src={item.src}
+              alt={`${item.whip.id} ${item.angle}`}
+              specs={item.whip.specs}
+              whipId={item.whip.id}
+            />
+          ))}
+        </Flex>
+
         {/* Selected options thumbnails */}
-        <Flex direction="column" gap="3" alignItems="center" justifyContent="center">
+        <Flex direction="column" gap="3" alignItems="center" justifyContent="center" flexShrink={0}>
           <Box textAlign="center">
             <Text fontSize="xs" fontWeight="bold" mb="1">Primary</Text>
             {primarySpool ? (
