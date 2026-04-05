@@ -79,9 +79,6 @@ export const WhipImage = ({ src, alt, specs, whipId, fill }: WhipImageProps) => 
       objectFit="cover"
     />
     <SpecsOverlay className="specs-overlay">
-      <Text color="white" fontWeight="bold" fontSize={{ base: 'xs', xl: 'md' }} mb="1">
-        {whipId}
-      </Text>
       <SimpleGrid columns={2} spacing="1">
         <SpecLabel label="Primary" value={specs.primaryColor} />
         <SpecLabel label="Secondary" value={specs.secondaryColor} />
