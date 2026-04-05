@@ -135,7 +135,7 @@
 
 ### Update 3JS
 - [x] Address over brightness issue on render (switched MeshBasicMaterial to MeshStandardMaterial)
-- [ ] Add interactive rotation or slow down rotation
+- [x] Add interactive rotation or slow down rotation
 - [ ] Create Herringbone pattern
 
 ## Phase 4: Whipmaking Materials Section (In Progress)

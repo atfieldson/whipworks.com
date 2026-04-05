@@ -57,7 +57,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
   const [stockwhipHandleLength, setStockwhipHandleLength] = useState<string | undefined>(undefined);
   const [handleFinish, setHandleFinish] = useState<string | undefined>(undefined);
   const [concho, setConcho] = useState<string | undefined>(undefined);
-  const [heelLoop, setHeelLoop] = useState('No Heel Loop');
+  const [heelLoop, setHeelLoop] = useState('Squared');
   const [modalOpen, setModalOpen] = useState(false);
 
   const onAccordionChange = (index: any) => {

@@ -54,7 +54,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const [handleLength, setHandleLength] = useState<string | undefined>(undefined);
   const [concho, setConcho] = useState<string | undefined>(undefined);
   const [collar, setCollar] = useState('None');
-  const [heelLoop, setHeelLoop] = useState('No Heel Loop');
+  const [heelLoop, setHeelLoop] = useState('Squared');
   const [modalOpen, setModalOpen] = useState(false);
   const TOTAL_STEPS = 8;
 
