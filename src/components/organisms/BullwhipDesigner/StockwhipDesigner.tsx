@@ -68,10 +68,10 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
     { label: 'Primary', isCompleted: !!primary },
     { label: 'Secondary', isCompleted: !!secondary },
     { label: 'Handle', isCompleted: !!handleDesign },
-    { label: 'Waxing', isCompleted: true }, // always has a default
     { label: 'Thong Length', isCompleted: !!thongLength },
     { label: 'Handle Length', isCompleted: !!stockwhipHandleLength },
     { label: 'Handle Finish', isCompleted: !!handleFinish },
+    { label: 'Waxing', isCompleted: true }, // always has a default
     { label: 'Concho', isCompleted: !!concho },
     { label: 'Extras', isCompleted: true }, // optional, always "complete"
   ];
@@ -126,7 +126,80 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
             onClick={(handleDesign) => setHandle(handleDesign)}
           />
         );
-      case 3:
+      case 3: {
+        const selectedThong = thongLengths.find((l) => l.name === thongLength);
+        return (
+          <SimpleGrid columns={2} spacing="4">
+            <Stack spacing="2">
+              {thongLengths.map((l) => (
+                <Button
+                  key={l.name}
+                  size="sm"
+                  width="100%"
+                  bg={thongLength === l.name ? '#2D6A4F' : 'white'}
+                  color={thongLength === l.name ? 'white' : '#4A5568'}
+                  border={thongLength === l.name ? '2px solid' : 'none'}
+                  borderColor={thongLength === l.name ? '#CBD5E0' : undefined}
+                  _hover={{ bg: thongLength === l.name ? '#245C43' : '#F7FAFC' }}
+                  onClick={() => setThongLength(l.name)}
+                >
+                  {`${l.name} ($${l.price})`}
+                </Button>
+              ))}
+            </Stack>
+            <Box>
+              {selectedThong && (
+                <>
+                  <Text fontWeight="bold" fontSize="sm" mb="2">{selectedThong.name}</Text>
+                  <Text fontSize="sm">{selectedThong.description}</Text>
+                </>
+              )}
+            </Box>
+          </SimpleGrid>
+        );
+      }
+      case 4: {
+        const selectedHandle = stockwhipHandleLengths.find((l) => l.name === stockwhipHandleLength);
+        return (
+          <SimpleGrid columns={2} spacing="4">
+            <Stack spacing="2">
+              {stockwhipHandleLengths.map((l) => (
+                <Button
+                  key={l.name}
+                  size="sm"
+                  width="100%"
+                  bg={stockwhipHandleLength === l.name ? '#2D6A4F' : 'white'}
+                  color={stockwhipHandleLength === l.name ? 'white' : '#4A5568'}
+                  border={stockwhipHandleLength === l.name ? '2px solid' : 'none'}
+                  borderColor={stockwhipHandleLength === l.name ? '#CBD5E0' : undefined}
+                  _hover={{ bg: stockwhipHandleLength === l.name ? '#245C43' : '#F7FAFC' }}
+                  onClick={() => setStockwhipHandleLength(l.name)}
+                >
+                  {`${l.name} ($${l.price})`}
+                </Button>
+              ))}
+            </Stack>
+            <Box>
+              {selectedHandle && (
+                <>
+                  <Text fontWeight="bold" fontSize="sm" mb="2">{selectedHandle.name}</Text>
+                  <Text fontSize="sm">{selectedHandle.description}</Text>
+                </>
+              )}
+            </Box>
+          </SimpleGrid>
+        );
+      }
+      case 5:
+        return (
+          <Box>
+            <Text my="2" fontSize="md">
+              Choose a stain for your stockwhip's wooden handle. Each finish gives the handle a unique look and feel.
+            </Text>
+            <FinishPicker activeFinish={handleFinish} onClick={setHandleFinish} />
+          </Box>
+        );
+      case 6:
         return (
           <Box>
             <Text fontSize="sm" mb="4">
@@ -197,79 +270,6 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
                 that want their paracord whips to be bright on the stage.
               </Text>
             </Box>
-          </Box>
-        );
-      case 4: {
-        const selectedThong = thongLengths.find((l) => l.name === thongLength);
-        return (
-          <SimpleGrid columns={2} spacing="4">
-            <Stack spacing="2">
-              {thongLengths.map((l) => (
-                <Button
-                  key={l.name}
-                  size="sm"
-                  width="100%"
-                  bg={thongLength === l.name ? '#2D6A4F' : 'white'}
-                  color={thongLength === l.name ? 'white' : '#4A5568'}
-                  border={thongLength === l.name ? '2px solid' : 'none'}
-                  borderColor={thongLength === l.name ? '#CBD5E0' : undefined}
-                  _hover={{ bg: thongLength === l.name ? '#245C43' : '#F7FAFC' }}
-                  onClick={() => setThongLength(l.name)}
-                >
-                  {`${l.name} ($${l.price})`}
-                </Button>
-              ))}
-            </Stack>
-            <Box>
-              {selectedThong && (
-                <>
-                  <Text fontWeight="bold" fontSize="sm" mb="2">{selectedThong.name}</Text>
-                  <Text fontSize="sm">{selectedThong.description}</Text>
-                </>
-              )}
-            </Box>
-          </SimpleGrid>
-        );
-      }
-      case 5: {
-        const selectedHandle = stockwhipHandleLengths.find((l) => l.name === stockwhipHandleLength);
-        return (
-          <SimpleGrid columns={2} spacing="4">
-            <Stack spacing="2">
-              {stockwhipHandleLengths.map((l) => (
-                <Button
-                  key={l.name}
-                  size="sm"
-                  width="100%"
-                  bg={stockwhipHandleLength === l.name ? '#2D6A4F' : 'white'}
-                  color={stockwhipHandleLength === l.name ? 'white' : '#4A5568'}
-                  border={stockwhipHandleLength === l.name ? '2px solid' : 'none'}
-                  borderColor={stockwhipHandleLength === l.name ? '#CBD5E0' : undefined}
-                  _hover={{ bg: stockwhipHandleLength === l.name ? '#245C43' : '#F7FAFC' }}
-                  onClick={() => setStockwhipHandleLength(l.name)}
-                >
-                  {`${l.name} ($${l.price})`}
-                </Button>
-              ))}
-            </Stack>
-            <Box>
-              {selectedHandle && (
-                <>
-                  <Text fontWeight="bold" fontSize="sm" mb="2">{selectedHandle.name}</Text>
-                  <Text fontSize="sm">{selectedHandle.description}</Text>
-                </>
-              )}
-            </Box>
-          </SimpleGrid>
-        );
-      }
-      case 6:
-        return (
-          <Box>
-            <Text my="2" fontSize="md">
-              Choose a stain for your stockwhip's wooden handle. Each finish gives the handle a unique look and feel.
-            </Text>
-            <FinishPicker activeFinish={handleFinish} onClick={setHandleFinish} />
           </Box>
         );
       case 7:

@@ -62,9 +62,9 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
     { label: 'Primary', isCompleted: !!primary },
     { label: 'Secondary', isCompleted: !!secondary },
     { label: 'Handle', isCompleted: !!handleDesign },
-    { label: 'Waxing', isCompleted: true }, // always has a default
     { label: 'Length', isCompleted: !!whipLength },
     { label: 'Handle Length', isCompleted: !!handleLength },
+    { label: 'Waxing', isCompleted: true }, // always has a default
     { label: 'Concho', isCompleted: !!concho },
     { label: 'Extras', isCompleted: true }, // optional, always "complete"
   ];
@@ -299,7 +299,79 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
             onClick={(handleDesign) => setHandle(handleDesign)}
           />
         );
-      case 3:
+      case 3: {
+        const selectedLength = whipLengths.find((l) => l.name === whipLength);
+        return (
+          <SimpleGrid columns={2} spacing="4">
+            <Stack spacing="2">
+              {whipLengths.map((l) => (
+                <Button
+                  key={l.name}
+                  size="sm"
+                  width="100%"
+                  bg={whipLength === l.name ? '#2D6A4F' : 'white'}
+                  color={whipLength === l.name ? 'white' : '#4A5568'}
+                  border={whipLength === l.name ? '2px solid' : 'none'}
+                  borderColor={whipLength === l.name ? '#CBD5E0' : undefined}
+                  _hover={{ bg: whipLength === l.name ? '#245C43' : '#F7FAFC' }}
+                  onClick={() => setWhipLength(l.name)}
+                >
+                  {`${l.name} ($${l.price})`}
+                </Button>
+              ))}
+            </Stack>
+            <Box>
+              {selectedLength && (
+                <>
+                  <Text fontWeight="bold" fontSize="sm" mb="2">{selectedLength.name}</Text>
+                  <Text fontSize="sm">{selectedLength.description}</Text>
+                </>
+              )}
+            </Box>
+          </SimpleGrid>
+        );
+      }
+      case 4: {
+        const selectedHandle = handleLengths.find((l) => l.name === handleLength);
+        return (
+          <Box>
+            <SimpleGrid columns={2} spacing="4">
+              <Stack spacing="2">
+                {handleLengths.map((l) => (
+                  <Button
+                    key={l.name}
+                    size="sm"
+                    width="100%"
+                    bg={handleLength === l.name ? '#2D6A4F' : 'white'}
+                    color={handleLength === l.name ? 'white' : '#4A5568'}
+                    border={handleLength === l.name ? '2px solid' : 'none'}
+                    borderColor={handleLength === l.name ? '#CBD5E0' : undefined}
+                    _hover={{ bg: handleLength === l.name ? '#245C43' : '#F7FAFC' }}
+                    onClick={() => setHandleLength(l.name)}
+                  >
+                    {`${l.name} ($${l.price})`}
+                  </Button>
+                ))}
+              </Stack>
+              <Box>
+                {selectedHandle && (
+                  <>
+                    <Text fontWeight="bold" fontSize="sm" mb="2">{selectedHandle.name}</Text>
+                    <Text fontSize="sm">{selectedHandle.description}</Text>
+                  </>
+                )}
+              </Box>
+            </SimpleGrid>
+            <Text fontSize="sm" fontStyle="italic" mt="4" mb="2">
+              Note: Bullwhips are measured from the Heel Knot to the Hitch Knot (where the fall is
+              tied on). The handle length does not add to the overall whip length, it just
+              determines how much of the whip length is steel rod and rigid.
+            </Text>
+            <Image src="https://whipworks.s3.us-east-2.amazonaws.com/misc/AnatomyOfABullwhip.jpg" alt="Anatomy of a Bullwhip" width="100%" />
+          </Box>
+        );
+      }
+      case 5:
         return (
           <Box>
             <Text fontSize="sm" mb="4">
@@ -372,78 +444,6 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
             </Box>
           </Box>
         );
-      case 4: {
-        const selectedLength = whipLengths.find((l) => l.name === whipLength);
-        return (
-          <SimpleGrid columns={2} spacing="4">
-            <Stack spacing="2">
-              {whipLengths.map((l) => (
-                <Button
-                  key={l.name}
-                  size="sm"
-                  width="100%"
-                  bg={whipLength === l.name ? '#2D6A4F' : 'white'}
-                  color={whipLength === l.name ? 'white' : '#4A5568'}
-                  border={whipLength === l.name ? '2px solid' : 'none'}
-                  borderColor={whipLength === l.name ? '#CBD5E0' : undefined}
-                  _hover={{ bg: whipLength === l.name ? '#245C43' : '#F7FAFC' }}
-                  onClick={() => setWhipLength(l.name)}
-                >
-                  {`${l.name} ($${l.price})`}
-                </Button>
-              ))}
-            </Stack>
-            <Box>
-              {selectedLength && (
-                <>
-                  <Text fontWeight="bold" fontSize="sm" mb="2">{selectedLength.name}</Text>
-                  <Text fontSize="sm">{selectedLength.description}</Text>
-                </>
-              )}
-            </Box>
-          </SimpleGrid>
-        );
-      }
-      case 5: {
-        const selectedHandle = handleLengths.find((l) => l.name === handleLength);
-        return (
-          <Box>
-            <SimpleGrid columns={2} spacing="4">
-              <Stack spacing="2">
-                {handleLengths.map((l) => (
-                  <Button
-                    key={l.name}
-                    size="sm"
-                    width="100%"
-                    bg={handleLength === l.name ? '#2D6A4F' : 'white'}
-                    color={handleLength === l.name ? 'white' : '#4A5568'}
-                    border={handleLength === l.name ? '2px solid' : 'none'}
-                    borderColor={handleLength === l.name ? '#CBD5E0' : undefined}
-                    _hover={{ bg: handleLength === l.name ? '#245C43' : '#F7FAFC' }}
-                    onClick={() => setHandleLength(l.name)}
-                  >
-                    {`${l.name} ($${l.price})`}
-                  </Button>
-                ))}
-              </Stack>
-              <Box>
-                {selectedHandle && (
-                  <>
-                    <Text fontWeight="bold" fontSize="sm" mb="2">{selectedHandle.name}</Text>
-                    <Text fontSize="sm">{selectedHandle.description}</Text>
-                  </>
-                )}
-              </Box>
-            </SimpleGrid>
-            <Text fontSize="sm" fontStyle="italic" mt="4" mb="2">
-              Note: Bullwhips are measured from the Heel Knot to the Hitch Knot (where the fall is
-              tied on). The handle length does not add to the overall whip length, it just
-              determines how much of the whip length is steel rod and rigid.
-            </Text>
-            <Image src="https://whipworks.s3.us-east-2.amazonaws.com/misc/AnatomyOfABullwhip.jpg" alt="Anatomy of a Bullwhip" width="100%" />
-          </Box>
-        );
-      }
       case 6:
         return (
           <Box>
