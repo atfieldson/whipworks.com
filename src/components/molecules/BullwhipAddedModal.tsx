@@ -19,12 +19,13 @@ import {
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  onCheckout?: () => void;
   location: {
     pathname: string;
   };
 };
 
-const BullwhipAddedModal = ({ isOpen, onClose, location }: Props) => {
+const BullwhipAddedModal = ({ isOpen, onClose, onCheckout, location }: Props) => {
   const cancelRef = useRef(null);
   const addKevlarRef = useRef<HTMLButtonElement>(null);
   const addNylonRef = useRef<HTMLButtonElement>(null);
@@ -36,13 +37,25 @@ const BullwhipAddedModal = ({ isOpen, onClose, location }: Props) => {
     if (ref.current) {
       ref.current.click();
     }
+    // Wait for Snipcart to process the item, then open checkout
     setTimeout(() => {
-      onClose();
+      if (onCheckout) {
+        onCheckout();
+      } else {
+        onClose();
+      }
+      if (typeof window !== 'undefined' && (window as any).Snipcart) {
+        (window as any).Snipcart.api.theme.cart.open();
+      }
     }, 500);
   };
 
   const handleCheckout = () => {
-    onClose();
+    if (onCheckout) {
+      onCheckout();
+    } else {
+      onClose();
+    }
     if (typeof window !== 'undefined' && (window as any).Snipcart) {
       (window as any).Snipcart.api.theme.cart.open();
     }

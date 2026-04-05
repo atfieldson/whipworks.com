@@ -15,11 +15,12 @@ import { navigate } from 'gatsby';
 interface AddedToCartModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onCheckout?: () => void;
   cancelRef: React.RefObject<any>;
   continuePath?: string; // undefined = stay on page, string = navigate there
 }
 
-const AddedToCartModal = ({ isOpen, onClose, cancelRef, continuePath }: AddedToCartModalProps) => {
+const AddedToCartModal = ({ isOpen, onClose, onCheckout, cancelRef, continuePath }: AddedToCartModalProps) => {
   const handleContinueShopping = () => {
     onClose();
     if (continuePath) {
@@ -28,7 +29,11 @@ const AddedToCartModal = ({ isOpen, onClose, cancelRef, continuePath }: AddedToC
   };
 
   const handleGoToCheckout = () => {
-    onClose();
+    if (onCheckout) {
+      onCheckout();
+    } else {
+      onClose();
+    }
     // Open Snipcart checkout
     if (typeof window !== 'undefined' && (window as any).Snipcart) {
       (window as any).Snipcart.api.theme.cart.open();

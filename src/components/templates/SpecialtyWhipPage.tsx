@@ -118,30 +118,34 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
   };
 
   const handleAdd = () => {
-    // Hide Snipcart's cart container so it doesn't flash behind our modal
+    // Hide Snipcart so its cart open/close doesn't affect the page
     const snipcartEl = document.getElementById('snipcart');
     if (snipcartEl) {
       snipcartEl.style.visibility = 'hidden';
     }
-    // Show our modal immediately
     setModalOpen(true);
-    // Close Snipcart's cart (it stays hidden until our modal closes)
-    setTimeout(() => {
-      if (typeof window !== 'undefined' && (window as any).Snipcart) {
-        (window as any).Snipcart.api.theme.cart.close();
-      }
-    }, 50);
   };
 
   const handleModalClose = () => {
     setModalOpen(false);
-    // Restore Snipcart visibility now that our modal is gone
+    // Close Snipcart's cart while still hidden, then restore visibility
+    if (typeof window !== 'undefined' && (window as any).Snipcart) {
+      (window as any).Snipcart.api.theme.cart.close();
+    }
     setTimeout(() => {
       const snipcartEl = document.getElementById('snipcart');
       if (snipcartEl) {
         snipcartEl.style.visibility = 'visible';
       }
-    }, 100);
+    }, 500);
+  };
+
+  const handleCheckout = () => {
+    const snipcartEl = document.getElementById('snipcart');
+    if (snipcartEl) {
+      snipcartEl.style.visibility = 'visible';
+    }
+    setModalOpen(false);
   };
 
   return (
@@ -260,6 +264,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
       <BullwhipAddedModal
         isOpen={modalOpen}
         onClose={handleModalClose}
+        onCheckout={handleCheckout}
         location={location}
       />
     </Layout>

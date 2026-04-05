@@ -95,29 +95,34 @@ const WhipMakingBlueprintsPage = ({ data }: any) => {
   const cancelRef = useRef(null);
 
   const handleAdd = () => {
-    // Hide Snipcart's cart container so it doesn't flash behind our modal
+    // Hide Snipcart so its cart open/close doesn't affect the page
     const snipcartEl = document.getElementById('snipcart');
     if (snipcartEl) {
       snipcartEl.style.visibility = 'hidden';
     }
     onOpen();
-    // Close Snipcart's cart (it stays hidden until our modal closes)
-    setTimeout(() => {
-      if (typeof window !== 'undefined' && (window as any).Snipcart) {
-        (window as any).Snipcart.api.theme.cart.close();
-      }
-    }, 50);
   };
 
   const handleModalClose = () => {
     onClose();
-    // Restore Snipcart visibility now that our modal is gone
+    // Close Snipcart's cart while still hidden, then restore visibility
+    if (typeof window !== 'undefined' && (window as any).Snipcart) {
+      (window as any).Snipcart.api.theme.cart.close();
+    }
     setTimeout(() => {
       const snipcartEl = document.getElementById('snipcart');
       if (snipcartEl) {
         snipcartEl.style.visibility = 'visible';
       }
-    }, 100);
+    }, 500);
+  };
+
+  const handleCheckout = () => {
+    const snipcartEl = document.getElementById('snipcart');
+    if (snipcartEl) {
+      snipcartEl.style.visibility = 'visible';
+    }
+    onClose();
   };
 
   const bullwhipBlueprints = blueprints
@@ -529,6 +534,7 @@ const WhipMakingBlueprintsPage = ({ data }: any) => {
       <AddedToCartModal
         isOpen={isOpen}
         onClose={handleModalClose}
+        onCheckout={handleCheckout}
         cancelRef={cancelRef}
       />
     </Layout>

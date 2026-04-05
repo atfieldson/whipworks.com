@@ -79,30 +79,34 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
   // No auto-advance — users navigate via StepNav tabs
 
   const handleAdd = () => {
-    // Hide Snipcart's cart container so it doesn't flash behind our modal
+    // Hide Snipcart so its cart open/close doesn't affect the page
     const snipcartEl = document.getElementById('snipcart');
     if (snipcartEl) {
       snipcartEl.style.visibility = 'hidden';
     }
-    // Show our modal immediately
     setModalOpen(true);
-    // Close Snipcart's cart (it stays hidden until our modal closes)
-    setTimeout(() => {
-      if (typeof window !== 'undefined' && (window as any).Snipcart) {
-        (window as any).Snipcart.api.theme.cart.close();
-      }
-    }, 50);
   };
 
   const handleModalClose = () => {
     setModalOpen(false);
-    // Restore Snipcart visibility now that our modal is gone
+    // Close Snipcart's cart while still hidden, then restore visibility
+    if (typeof window !== 'undefined' && (window as any).Snipcart) {
+      (window as any).Snipcart.api.theme.cart.close();
+    }
     setTimeout(() => {
       const snipcartEl = document.getElementById('snipcart');
       if (snipcartEl) {
         snipcartEl.style.visibility = 'visible';
       }
-    }, 100);
+    }, 500);
+  };
+
+  const handleCheckout = () => {
+    const snipcartEl = document.getElementById('snipcart');
+    if (snipcartEl) {
+      snipcartEl.style.visibility = 'visible';
+    }
+    setModalOpen(false);
   };
 
   const readyForOrder =
@@ -309,13 +313,14 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
   const leftPanel = (
     <Box>
       <Flex mb="6" gap="4" height="700px" justifyContent="center">
-        {/* Random stockwhip photo — 1x1 */}
+        {/* Random stockwhip photo — 1x1, hidden below 1750px */}
         {previewImage && (
           <Box
             overflow="hidden"
             borderRadius="8px"
             flexShrink={0}
-            sx={{ aspectRatio: '1 / 1' }}
+            display={{ base: 'none', '2xl': 'none' }}
+            sx={{ aspectRatio: '1 / 1', '@media (min-width: 1750px)': { display: 'block' } }}
             height="100%"
           >
             <StockwhipImage
@@ -525,6 +530,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
       <BullwhipAddedModal
         isOpen={modalOpen}
         onClose={handleModalClose}
+        onCheckout={handleCheckout}
         location={location}
       />
     </>
