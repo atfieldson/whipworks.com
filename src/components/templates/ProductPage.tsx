@@ -77,24 +77,30 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
   const continuePath = collection === 'materials' ? '/whipmaking-materials' : collection === 'accessories' ? '/accessories' : '/';
 
   const handleAdd = () => {
-    // Hide Snipcart's cart container before it can flash on screen
+    // Hide Snipcart's cart container so it doesn't flash behind our modal
     const snipcartEl = document.getElementById('snipcart');
     if (snipcartEl) {
       snipcartEl.style.visibility = 'hidden';
     }
     // Show our modal immediately
     onOpen();
-    // Close Snipcart's cart and restore visibility
+    // Close Snipcart's cart (it stays hidden until our modal closes)
     setTimeout(() => {
       if (typeof window !== 'undefined' && (window as any).Snipcart) {
         (window as any).Snipcart.api.theme.cart.close();
       }
-      setTimeout(() => {
-        if (snipcartEl) {
-          snipcartEl.style.visibility = 'visible';
-        }
-      }, 300);
     }, 50);
+  };
+
+  const handleModalClose = () => {
+    onClose();
+    // Restore Snipcart visibility now that our modal is gone
+    setTimeout(() => {
+      const snipcartEl = document.getElementById('snipcart');
+      if (snipcartEl) {
+        snipcartEl.style.visibility = 'visible';
+      }
+    }, 100);
   };
 
   const handleVariantChange = (e: ChangeEvent<HTMLSelectElement>, variant: Variant) => {
@@ -219,7 +225,7 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
       )}
       <AddedToCartModal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleModalClose}
         cancelRef={cancelRef}
         continuePath={continuePath}
       />

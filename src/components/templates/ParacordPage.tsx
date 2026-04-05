@@ -57,21 +57,29 @@ const ParacordPage = ({ data, location }: Props) => {
   const maxQuantity = is1000ft && currentStock !== null && currentStock > 0 ? currentStock : undefined;
 
   const handleAdd = () => {
+    // Hide Snipcart's cart container so it doesn't flash behind our modal
     const snipcartEl = document.getElementById('snipcart');
     if (snipcartEl) {
       snipcartEl.style.visibility = 'hidden';
     }
     onOpen();
+    // Close Snipcart's cart (it stays hidden until our modal closes)
     setTimeout(() => {
       if (typeof window !== 'undefined' && (window as any).Snipcart) {
         (window as any).Snipcart.api.theme.cart.close();
       }
-      setTimeout(() => {
-        if (snipcartEl) {
-          snipcartEl.style.visibility = 'visible';
-        }
-      }, 300);
     }, 50);
+  };
+
+  const handleModalClose = () => {
+    onClose();
+    // Restore Snipcart visibility now that our modal is gone
+    setTimeout(() => {
+      const snipcartEl = document.getElementById('snipcart');
+      if (snipcartEl) {
+        snipcartEl.style.visibility = 'visible';
+      }
+    }, 100);
   };
   const imgRef = useRef<HTMLDivElement>(null);
 
@@ -324,7 +332,7 @@ const ParacordPage = ({ data, location }: Props) => {
       </Box>
       <AddedToCartModal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleModalClose}
         cancelRef={modalCancelRef}
       />
     </Layout>

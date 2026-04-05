@@ -87,7 +87,9 @@ const BullwhipAddedModal = ({ isOpen, onClose, location }: Props) => {
                   <Image
                     src="https://d3ruufruf2uqog.cloudfront.net/accessories/kevlarPoppers/kevlarPoppers1.jpg"
                     alt="Kevlar poppers"
-                    maxW="150px"
+                    w="150px"
+                    h="150px"
+                    minW="150px"
                     borderRadius="md"
                     objectFit="cover"
                   />
@@ -108,7 +110,9 @@ const BullwhipAddedModal = ({ isOpen, onClose, location }: Props) => {
                   <Image
                     src="https://d3ruufruf2uqog.cloudfront.net/accessories/nylonPoppers/nylonPoppers1.jpg"
                     alt="Nylon poppers"
-                    maxW="150px"
+                    w="150px"
+                    h="150px"
+                    minW="150px"
                     borderRadius="md"
                     objectFit="cover"
                   />
