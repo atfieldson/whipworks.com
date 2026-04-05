@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Text, Accordion, Stack, RadioGroup, Radio, Heading, Button } from '@chakra-ui/react';
-import CustomizationLabel from '../../atoms/CustomizationLabel';
-import AccordionSection from '../../atoms/AccordionSection';
+import { Flex, Text, Stack, RadioGroup, Radio, Heading, Button, Box, Image, SimpleGrid, List, ListItem } from '@chakra-ui/react';
+import StepNav from '../../atoms/StepNav';
 import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
 import ConchoPicker from './ConchoPicker';
+import DesignerLayout from '../../templates/DesignerLayout';
 import {
   stockwhipHandleLengths,
   stockwhipHandleLengthOptions,
@@ -60,42 +60,21 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
   const [heelLoop, setHeelLoop] = useState('Squared');
   const [modalOpen, setModalOpen] = useState(false);
 
-  const onAccordionChange = (index: any) => {
-    setIndex(index);
-  };
+  const TOTAL_STEPS = 9;
 
-  useEffect(() => {
-    if (index === undefined) {
-      return;
-    }
+  const steps = [
+    { label: 'Primary', isCompleted: !!primary },
+    { label: 'Secondary', isCompleted: !!secondary },
+    { label: 'Handle', isCompleted: !!handleDesign },
+    { label: 'Waxing', isCompleted: true }, // always has a default
+    { label: 'Thong Length', isCompleted: !!thongLength },
+    { label: 'Handle Length', isCompleted: !!stockwhipHandleLength },
+    { label: 'Handle Finish', isCompleted: !!handleFinish },
+    { label: 'Concho', isCompleted: !!concho },
+    { label: 'Extras', isCompleted: true }, // optional, always "complete"
+  ];
 
-    // for 1st render
-    if (index !== 0 || primary !== undefined) {
-      // if the user has selected enough things to generate preview,
-      // let them fiddle instead of automatically advancing
-      if (index <= 2 && primary && secondary && handleDesign) {
-        return;
-      }
-
-      // Don't auto-advance past Extras (index 8) — let users browse multiple options
-      if (index >= 8) {
-        return;
-      }
-
-      setTimeout(() => {
-        setIndex((index) => index + 1);
-      }, 500);
-    }
-  }, [
-    primary,
-    secondary,
-    handleDesign,
-    waxed,
-    thongLength,
-    stockwhipHandleLength,
-    handleFinish,
-    concho,
-  ]);
+  // No auto-advance — users navigate via StepNav tabs
 
   const handleAdd = () => {
     // Hide Snipcart's cart container before it can flash on screen
@@ -120,83 +99,179 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
 
   const readyForOrder =
     primary && secondary && thongLength && stockwhipHandleLength && concho && handleFinish;
-  return (
-    <Flex flexDirection={{ base: 'column-reverse', md: 'row' }}>
-      <Flex flex="2" order={1} flexDirection="column">
-        <Text>YOUR STOCKWHIP</Text>
-        <Stack spacing="3" mt="4" shouldWrapChildren>
-          <CustomizationLabel label="Primary Color" value={primary} />
-          <CustomizationLabel label="Secondary Color" value={secondary} />
-          <CustomizationLabel label="Handle Design" value={handleDesign} />
-          <CustomizationLabel label="Waxed?" value={waxed ? 'Yes' : 'No'} />
-          <CustomizationLabel label="Thong Length" value={thongLength} />
-          <CustomizationLabel label="Handle Length" value={stockwhipHandleLength} />
-          <CustomizationLabel label="Handle Finish" value={handleFinish} />
-          <CustomizationLabel label="Concho" value={concho} />
-          <CustomizationLabel label="Heel Loop" value={heelLoop} />
-          <PriceBreakdownStockwhip
-            stockwhipHandleLength={stockwhipHandleLength}
-            thongLength={thongLength}
-            concho={concho}
-            isWaxed={waxed}
-            heelLoop={heelLoop}
+
+  const stepContent = () => {
+    switch (index) {
+      case 0:
+        return <WhipColors onClick={(color) => setPrimary(color)} activeColor={primary} />;
+      case 1:
+        return <WhipColors onClick={(color) => setSecondary(color)} activeColor={secondary} />;
+      case 2:
+        return (
+          <HandleDesignPicker
+            whipType="stockwhip"
+            activeHandle={handleDesign}
+            onClick={(handleDesign) => setHandle(handleDesign)}
           />
-        </Stack>
-      </Flex>
-      <Flex flex="6" order={{ base: 3, md: 2 }} mx={{ base: '0', md: '6' }} flexDirection="column">
-        <Heading mb="8px" textAlign="center">
-          Design your Stockwhip
-        </Heading>
-        <Accordion width="100%" index={index} onChange={onAccordionChange} allowToggle>
-          <AccordionSection label="Primary Color">
-            <WhipColors onClick={(color) => setPrimary(color)} activeColor={primary} />
-          </AccordionSection>
-          <AccordionSection label="Secondary Color">
-            <WhipColors onClick={(color) => setSecondary(color)} activeColor={secondary} />
-          </AccordionSection>
-          <AccordionSection label="Handle Design">
-            <HandleDesignPicker
-              whipType="stockwhip"
-              activeHandle={handleDesign}
-              onClick={(handleDesign) => setHandle(handleDesign)}
-            />
-          </AccordionSection>
-          <AccordionSection label="Waxing">
-            <RadioGroup onChange={(e) => setWaxed(e === 'true')} value={waxed.toString()}>
-              <Stack>
-                <Radio value="true">Waxed</Radio>
-                <Radio value="false">Unwaxed</Radio>
-              </Stack>
-            </RadioGroup>
-          </AccordionSection>
-          <AccordionSection label="Thong Length">
-            <RadioGroup value={thongLength} onChange={setThongLength}>
-              <Stack>
-                {thongLengths.map((l) => (
-                  <Radio value={l.name} key={l.name}>{`${l.name} ($${l.price})`}</Radio>
-                ))}
-              </Stack>
-            </RadioGroup>
-          </AccordionSection>
-          <AccordionSection label="Handle Length">
-            <RadioGroup value={stockwhipHandleLength} onChange={setStockwhipHandleLength}>
-              <Stack>
-                {stockwhipHandleLengths.map((l) => (
-                  <Radio key={l.name} value={l.name}>{`${l.name} ($${l.price})`}</Radio>
-                ))}
-              </Stack>
-            </RadioGroup>
-          </AccordionSection>
-          <AccordionSection label="Handle Finish">
+        );
+      case 3:
+        return (
+          <Box>
+            <Text fontSize="sm" mb="4">
+              On completion, a waxed bullwhip is dropped in Paraffin Wax. Paraffin wax is water
+              insoluble and creates a protective layer to the whip. Waxing a paracord stockwhip may
+              or may not be right for you, here are the pros for each:
+            </Text>
+            <SimpleGrid columns={2} spacing="4" mb="4">
+              <Flex direction="column">
+                <Button
+                  size="sm"
+                  width="100%"
+                  mb="3"
+                  bg={waxed ? '#2D6A4F' : 'white'}
+                  color={waxed ? 'white' : '#4A5568'}
+                  border={waxed ? '2px solid' : 'none'}
+                  borderColor={waxed ? '#CBD5E0' : undefined}
+                  _hover={{ bg: waxed ? '#245C43' : '#F7FAFC' }}
+                  onClick={() => setWaxed(true)}
+                >
+                  Waxed
+                </Button>
+                <Text fontSize="sm" fontWeight="semibold" ml="2">Pros:</Text>
+                <List spacing="1" ml="4" fontSize="sm" mb="2">
+                  <ListItem>Creates a water resistant layer to protect the life of your whip</ListItem>
+                  <ListItem>Gives it a professional, matte finish that darkens the paracord</ListItem>
+                  <ListItem>Makes the whip more rugged for harsh conditions</ListItem>
+                </List>
+                <Text fontSize="sm" fontWeight="semibold" ml="2">Cons:</Text>
+                <List spacing="1" ml="4" fontSize="sm">
+                  <ListItem>Makes the whip more stiff, requiring more breaking in (especially in cold conditions)</ListItem>
+                  <ListItem>Some colors of paracord become very dark and subtle — this can be a pro or con</ListItem>
+                </List>
+              </Flex>
+              <Flex direction="column">
+                <Button
+                  size="sm"
+                  width="100%"
+                  mb="3"
+                  bg={!waxed ? '#2D6A4F' : 'white'}
+                  color={!waxed ? 'white' : '#4A5568'}
+                  border={!waxed ? '2px solid' : 'none'}
+                  borderColor={!waxed ? '#CBD5E0' : undefined}
+                  _hover={{ bg: !waxed ? '#245C43' : '#F7FAFC' }}
+                  onClick={() => setWaxed(false)}
+                >
+                  Unwaxed
+                </Button>
+                <Text fontSize="sm" fontWeight="semibold" ml="2">Pros:</Text>
+                <List spacing="1" ml="4" fontSize="sm" mb="2">
+                  <ListItem>More flexible out of the box</ListItem>
+                  <ListItem>Maintains the bright vibrance and color of the paracord</ListItem>
+                </List>
+                <Text fontSize="sm" fontWeight="semibold" ml="2">Cons:</Text>
+                <List spacing="1" ml="4" fontSize="sm">
+                  <ListItem>More susceptible to water damage</ListItem>
+                  <ListItem>Gets dirty faster in outdoor conditions</ListItem>
+                </List>
+              </Flex>
+            </SimpleGrid>
+            <Box>
+              <Text fontWeight="bold" fontSize="sm" mb="1">Overall Thoughts</Text>
+              <Text fontSize="sm">
+                I almost always recommend folks wax their whips. If you're going to use your whip
+                outside or get it wet at all, waxing is the way to go. If you are using
+                your whip indoors only or need it to maintain as much flexibility as possible, then
+                keeping it unwaxed makes sense. I'd recommend unwaxed for stage performers
+                that want their paracord whips to be bright on the stage.
+              </Text>
+            </Box>
+          </Box>
+        );
+      case 4: {
+        const selectedThong = thongLengths.find((l) => l.name === thongLength);
+        return (
+          <SimpleGrid columns={2} spacing="4">
+            <Stack spacing="2">
+              {thongLengths.map((l) => (
+                <Button
+                  key={l.name}
+                  size="sm"
+                  width="100%"
+                  bg={thongLength === l.name ? '#2D6A4F' : 'white'}
+                  color={thongLength === l.name ? 'white' : '#4A5568'}
+                  border={thongLength === l.name ? '2px solid' : 'none'}
+                  borderColor={thongLength === l.name ? '#CBD5E0' : undefined}
+                  _hover={{ bg: thongLength === l.name ? '#245C43' : '#F7FAFC' }}
+                  onClick={() => setThongLength(l.name)}
+                >
+                  {`${l.name} ($${l.price})`}
+                </Button>
+              ))}
+            </Stack>
+            <Box>
+              {selectedThong && (
+                <>
+                  <Text fontWeight="bold" fontSize="sm" mb="2">{selectedThong.name}</Text>
+                  <Text fontSize="sm">{selectedThong.description}</Text>
+                </>
+              )}
+            </Box>
+          </SimpleGrid>
+        );
+      }
+      case 5: {
+        const selectedHandle = stockwhipHandleLengths.find((l) => l.name === stockwhipHandleLength);
+        return (
+          <SimpleGrid columns={2} spacing="4">
+            <Stack spacing="2">
+              {stockwhipHandleLengths.map((l) => (
+                <Button
+                  key={l.name}
+                  size="sm"
+                  width="100%"
+                  bg={stockwhipHandleLength === l.name ? '#2D6A4F' : 'white'}
+                  color={stockwhipHandleLength === l.name ? 'white' : '#4A5568'}
+                  border={stockwhipHandleLength === l.name ? '2px solid' : 'none'}
+                  borderColor={stockwhipHandleLength === l.name ? '#CBD5E0' : undefined}
+                  _hover={{ bg: stockwhipHandleLength === l.name ? '#245C43' : '#F7FAFC' }}
+                  onClick={() => setStockwhipHandleLength(l.name)}
+                >
+                  {`${l.name} ($${l.price})`}
+                </Button>
+              ))}
+            </Stack>
+            <Box>
+              {selectedHandle && (
+                <>
+                  <Text fontWeight="bold" fontSize="sm" mb="2">{selectedHandle.name}</Text>
+                  <Text fontSize="sm">{selectedHandle.description}</Text>
+                </>
+              )}
+            </Box>
+          </SimpleGrid>
+        );
+      }
+      case 6:
+        return (
+          <Box>
+            <Text my="2" fontSize="md">
+              Choose a stain for your stockwhip's wooden handle. Each finish gives the handle a unique look and feel.
+            </Text>
             <FinishPicker activeFinish={handleFinish} onClick={setHandleFinish} />
-          </AccordionSection>
-          <AccordionSection label="Concho">
+          </Box>
+        );
+      case 7:
+        return (
+          <Box>
             <Text my="2" fontSize="md">
               A Concho is applied to the heel of every handle, giving your stockwhip a distinct look!
             </Text>
             <ConchoPicker activeConcho={concho} onClick={setConcho} exclude={stockwhipConchoExclude} />
-          </AccordionSection>
-          <AccordionSection label="Extras">
+          </Box>
+        );
+      case 8:
+        return (
+          <Box>
             <Heading size="md" mt="2">
               Add a Heel Loop
             </Heading>
@@ -204,66 +279,220 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
               Choose your heel knot style — add a heel loop for easy hanging and storage!
             </Text>
             <HeelLoopPicker activeHeelLoop={heelLoop} onClick={setHeelLoop} />
-          </AccordionSection>
-        </Accordion>
-        <Button
-          isDisabled={!readyForOrder}
-          my="6"
-          onClick={handleAdd}
-          className="snipcart-add-item"
-          data-item-id="custom-stockwhip"
-          data-item-name="Custom Stockwhip"
-          data-item-price="219"
-          data-item-url="/design-stockwhip"
-          data-item-description="A custom-designed handmade stockwhip"
-          data-item-custom0-name="Primary Color"
-          data-item-custom0-options={colorOptions}
-          data-item-custom0-value={primary}
-          data-item-custom1-name="Secondary Color"
-          data-item-custom1-options={colorOptions}
-          data-item-custom1-value={secondary}
-          data-item-custom2-name="Handle Design"
-          data-item-custom2-options={handleDesignOptions}
-          data-item-custom2-value={handleDesign}
-          data-item-custom3-name="Thong Length"
-          data-item-custom3-options={thongLengthOptions}
-          data-item-custom3-value={thongLength}
-          data-item-custom4-name="Handle Length"
-          data-item-custom4-options={stockwhipHandleLengthOptions}
-          data-item-custom4-value={stockwhipHandleLength}
-          data-item-custom5-name="Handle Finish"
-          data-item-custom5-options={stockwhipFinishesOptions}
-          data-item-custom5-value={handleFinish}
-          data-item-custom6-name="Concho"
-          data-item-custom6-options={stockwhipConchoOptions}
-          data-item-custom6-value={concho}
-          data-item-custom7-name="Waxing"
-          data-item-custom7-options="Yes[+25]|No"
-          data-item-custom7-value={waxed ? 'Yes' : 'No'}
-          data-item-custom8-name="Heel Loop"
-          data-item-custom8-options={heelLoopOptions}
-          data-item-custom8-value={heelLoop}
-          data-item-weight={900}
-          data-item-width={46}
-          data-item-height={8}
-          data-item-length={30}
-        >
-          Add to Cart
-        </Button>
+          </Box>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const primarySpool = spools.find((s) => s.name === primary);
+  const secondarySpool = spools.find((s) => s.name === secondary);
+  const handleObj = updatedHandles.find((h) => h.name === handleDesign);
+
+  const leftPanel = (
+    <Box>
+      <Flex mb="6" gap="4" height="700px" justifyContent="center">
+        {/* Selected options thumbnails */}
+        <Flex direction="column" gap="3" alignItems="center" justifyContent="center" flexShrink={0}>
+          <Box textAlign="center">
+            <Text fontSize="xs" fontWeight="bold" mb="1">Primary</Text>
+            {primarySpool ? (
+              <Box
+                as="img"
+                src={primarySpool.img}
+                alt={primarySpool.name}
+                boxSize="80px"
+                objectFit="cover"
+                borderRadius="md"
+                border="2px solid"
+                borderColor="gray.300"
+              />
+            ) : (
+              <Flex boxSize="80px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" alignItems="center" justifyContent="center" p="1">
+                <Text fontSize="xs" color="black" textAlign="center" lineHeight="1.2">Make a selection</Text>
+              </Flex>
+            )}
+          </Box>
+          <Box textAlign="center">
+            <Text fontSize="xs" fontWeight="bold" mb="1">Secondary</Text>
+            {secondarySpool ? (
+              <Box
+                as="img"
+                src={secondarySpool.img}
+                alt={secondarySpool.name}
+                boxSize="80px"
+                objectFit="cover"
+                borderRadius="md"
+                border="2px solid"
+                borderColor="gray.300"
+              />
+            ) : (
+              <Flex boxSize="80px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" alignItems="center" justifyContent="center" p="1">
+                <Text fontSize="xs" color="black" textAlign="center" lineHeight="1.2">Make a selection</Text>
+              </Flex>
+            )}
+          </Box>
+          <Box textAlign="center">
+            <Text fontSize="xs" fontWeight="bold" mb="1">Handle</Text>
+            {handleObj ? (
+              <Box
+                width="80px"
+                height="320px"
+                borderRadius="md"
+                border="2px solid"
+                borderColor="gray.300"
+                overflow="hidden"
+              >
+                <Image
+                  src={handleObj.img}
+                  alt={handleObj.name}
+                  width="320px"
+                  height="80px"
+                  maxW="none"
+                  objectFit="cover"
+                  sx={{
+                    transform: 'rotate(90deg)',
+                    transformOrigin: 'top left',
+                    position: 'relative',
+                    top: '0',
+                    left: '80px',
+                  }}
+                />
+              </Box>
+            ) : (
+              <Flex width="80px" height="320px" bg="gray.100" borderRadius="md" border="2px dashed" borderColor="gray.300" alignItems="center" justifyContent="center" p="1">
+                <Text fontSize="xs" color="black" textAlign="center" lineHeight="1.2">Make a selection</Text>
+              </Flex>
+            )}
+          </Box>
+        </Flex>
+
+        {/* 3D Preview */}
+        <WhipPreview
+          waxed={waxed}
+          primary={primary}
+          secondary={secondary}
+          pattern={handleDesign}
+        />
       </Flex>
-      <WhipPreview
-        order={{ base: 2, md: 3 }}
-        waxed={waxed}
-        primary={primary}
-        secondary={secondary}
-        pattern={handleDesign}
+    </Box>
+  );
+
+  const rightPanel = (
+    <Flex direction="column" height="calc(100vh - 120px)" minW="0">
+      <Heading mb="4" textAlign="center">
+        Design your Stockwhip
+      </Heading>
+
+      {/* Step Navigation */}
+      <StepNav steps={steps} activeStep={index} onStepClick={setIndex} />
+
+      {/* Active Step Content — fills remaining space */}
+      <Box
+        flex="1"
+        minH="0"
+        minW="0"
+        overflowY="auto"
+        overflowX="auto"
+        py="4"
+        sx={{
+          scrollbarWidth: 'thin',
+          '&::-webkit-scrollbar': { width: '8px', height: '8px' },
+          '&::-webkit-scrollbar-thumb': { background: '#a0aec0', borderRadius: '4px' },
+          '&::-webkit-scrollbar-track': { background: '#e8ecef', borderRadius: '4px' },
+        }}
+      >
+        {stepContent()}
+      </Box>
+
+      {/* Summary + Add to Cart — compact, always visible at bottom */}
+      <Box borderTopWidth="1px" borderColor="gray.200" pt="2" mt="2" flexShrink={0}>
+        <Flex gap="4" alignItems="stretch">
+          <Flex flex="1" direction="column">
+            <Text fontWeight="bold" fontSize="sm" mb="1">YOUR STOCKWHIP</Text>
+            <SimpleGrid columns={3} spacing="1">
+              <Text fontSize="xs"><Text as="span" color="gray.500">Primary: </Text>{primary || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Secondary: </Text>{secondary || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Handle: </Text>{handleDesign || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Waxed: </Text>{waxed ? 'Yes' : 'No'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Thong: </Text>{thongLength || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Handle: </Text>{stockwhipHandleLength || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Finish: </Text>{handleFinish || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Concho: </Text>{concho || '—'}</Text>
+              <Text fontSize="xs"><Text as="span" color="gray.500">Heel Loop: </Text>{heelLoop}</Text>
+            </SimpleGrid>
+            <Button
+              isDisabled={!readyForOrder}
+              width="100%"
+              size="sm"
+              mt="auto"
+              onClick={handleAdd}
+              className="snipcart-add-item"
+              data-item-id="custom-stockwhip"
+              data-item-name="Custom Stockwhip"
+              data-item-price="219"
+              data-item-url="/design-stockwhip"
+              data-item-description="A custom-designed handmade stockwhip"
+              data-item-custom0-name="Primary Color"
+              data-item-custom0-options={colorOptions}
+              data-item-custom0-value={primary}
+              data-item-custom1-name="Secondary Color"
+              data-item-custom1-options={colorOptions}
+              data-item-custom1-value={secondary}
+              data-item-custom2-name="Handle Design"
+              data-item-custom2-options={handleDesignOptions}
+              data-item-custom2-value={handleDesign}
+              data-item-custom3-name="Thong Length"
+              data-item-custom3-options={thongLengthOptions}
+              data-item-custom3-value={thongLength}
+              data-item-custom4-name="Handle Length"
+              data-item-custom4-options={stockwhipHandleLengthOptions}
+              data-item-custom4-value={stockwhipHandleLength}
+              data-item-custom5-name="Handle Finish"
+              data-item-custom5-options={stockwhipFinishesOptions}
+              data-item-custom5-value={handleFinish}
+              data-item-custom6-name="Concho"
+              data-item-custom6-options={stockwhipConchoOptions}
+              data-item-custom6-value={concho}
+              data-item-custom7-name="Waxing"
+              data-item-custom7-options="Yes[+25]|No"
+              data-item-custom7-value={waxed ? 'Yes' : 'No'}
+              data-item-custom8-name="Heel Loop"
+              data-item-custom8-options={heelLoopOptions}
+              data-item-custom8-value={heelLoop}
+              data-item-weight={900}
+              data-item-width={46}
+              data-item-height={8}
+              data-item-length={30}
+            >
+              Add to Cart
+            </Button>
+          </Flex>
+          <PriceBreakdownStockwhip
+            stockwhipHandleLength={stockwhipHandleLength}
+            thongLength={thongLength}
+            concho={concho}
+            isWaxed={waxed}
+            heelLoop={heelLoop}
+          />
+        </Flex>
+      </Box>
+    </Flex>
+  );
+
+  return (
+    <>
+      <DesignerLayout
+        leftPanel={leftPanel}
+        rightPanel={rightPanel}
       />
       <BullwhipAddedModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         location={location}
       />
-    </Flex>
+    </>
   );
 };
 
