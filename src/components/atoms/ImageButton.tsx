@@ -16,7 +16,7 @@ type Props = ImageProps & {
 };
 
 const ImageButton = ({ onClick, isSelected, label, ...props }: Props) => (
-  <Box>
+  <Box display="flex" flexDirection="column" alignItems="center">
     <Image
       onClick={onClick}
       role="button"

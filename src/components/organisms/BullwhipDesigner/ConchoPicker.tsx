@@ -7,6 +7,7 @@ import { conchos } from './constants/conchos';
 type Props = {
   activeConcho?: string;
   onClick: (concho: string) => void;
+  exclude?: string[];
 };
 
 export type Concho = {
@@ -15,9 +16,9 @@ export type Concho = {
   price: number;
 };
 
-const ConchoPicker = ({ activeConcho, onClick }: Props) => (
+const ConchoPicker = ({ activeConcho, onClick, exclude = [] }: Props) => (
   <SimpleGrid spacing="3" columns={4}>
-    {conchos.map((c: Concho) => (
+    {conchos.filter((c) => !exclude.includes(c.name)).map((c: Concho) => (
       <ImageButton
         key={c.name}
         src={c.img}

@@ -89,12 +89,13 @@ export const conchos = [
     name: 'Cobra Pommel',
     price: 120,
   },
-  {
-    img: 'https://d3ruufruf2uqog.cloudfront.net/conchos/dragonPommel.jpg',
-    name: 'Dragon Pommel',
-    price: 120,
-  },
+  // {
+  //   img: 'https://d3ruufruf2uqog.cloudfront.net/conchos/dragonPommel.jpg',
+  //   name: 'Dragon Pommel',
+  //   price: 120,
+  // },
 ];
 
 export const conchoOptions =
-  'Celtic Brass[+0]|Celtic Copper[+0]|Celtic Silver[+0]|Bright[+5]|Swirl[+5]|Wave Brass[+5]|Wave Silver[+5]|Cross[+8]|American Eagle[+8]|Lady Liberty[+8]|Dragon[+10]|Buck[+10]|Elk[+10]|Fish[+10]|Flaming Skull[+10]|Pirate Skull[+10]|Wolf Pommel[+120]|Cobra Pommel[+120]|Dragon Pommel[+120]';
+  'Celtic Brass[+0]|Celtic Copper[+0]|Celtic Silver[+0]|Bright[+5]|Swirl[+5]|Wave Brass[+5]|Wave Silver[+5]|Cross[+8]|American Eagle[+8]|Lady Liberty[+8]|Dragon[+10]|Buck[+10]|Elk[+10]|Fish[+10]|Flaming Skull[+10]|Pirate Skull[+10]|Wolf Pommel[+120]|Cobra Pommel[+120]';
+  // Dragon Pommel removed from options while out of stock — add '|Dragon Pommel[+120]' to restore

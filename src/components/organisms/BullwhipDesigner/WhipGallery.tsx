@@ -32,7 +32,7 @@ const SpecsOverlay = styled(Flex)`
   left: 0;
   right: 0;
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
-  padding: 40px 12px 12px;
+  padding: 30px 8px 8px;
   opacity: 0;
   transition: opacity 0.3s ease;
   flex-direction: column;
@@ -53,10 +53,10 @@ const shuffle = <T,>(arr: T[]): T[] => {
 const SpecLabel = ({ label, value }: { label: string; value: string | null }) => {
   if (!value) return null;
   return (
-    <Flex justifyContent="space-between" fontSize="xs">
-      <Text color="gray.300">{label}</Text>
-      <Text color="white" fontWeight="bold">{value}</Text>
-    </Flex>
+    <Box>
+      <Text color="gray.400" fontSize={{ base: '2xs', xl: 'sm' }} lineHeight="1.2">{label}</Text>
+      <Text color="white" fontWeight="bold" fontSize={{ base: 'xs', xl: 'md' }} lineHeight="1.2">{value}</Text>
+    </Box>
   );
 };
 
@@ -79,20 +79,22 @@ export const WhipImage = ({ src, alt, specs, whipId, fill }: WhipImageProps) => 
       objectFit="cover"
     />
     <SpecsOverlay className="specs-overlay">
-      <Text color="white" fontWeight="bold" fontSize="sm" mb="1">
+      <Text color="white" fontWeight="bold" fontSize={{ base: 'xs', xl: 'md' }} mb="1">
         {whipId}
       </Text>
-      <SpecLabel label="Primary" value={specs.primaryColor} />
-      <SpecLabel label="Secondary" value={specs.secondaryColor} />
-      <SpecLabel label="Handle" value={specs.handleDesign} />
-      <SpecLabel label="Waxed" value={specs.waxed ? 'Yes' : 'No'} />
-      <SpecLabel label="Length" value={specs.whipLength} />
-      <SpecLabel label="Handle Length" value={specs.handleLength} />
-      <SpecLabel label="Concho" value={specs.concho} />
-      {specs.collar !== 'None' && <SpecLabel label="Collar" value={specs.collar} />}
-      {specs.heelLoop !== 'No Heel Loop' && specs.heelLoop !== 'None' && (
-        <SpecLabel label="Heel Loop" value={specs.heelLoop} />
-      )}
+      <SimpleGrid columns={2} spacing="1">
+        <SpecLabel label="Primary" value={specs.primaryColor} />
+        <SpecLabel label="Secondary" value={specs.secondaryColor} />
+        <SpecLabel label="Handle" value={specs.handleDesign} />
+        <SpecLabel label="Waxed" value={specs.waxed ? 'Yes' : 'No'} />
+        <SpecLabel label="Length" value={specs.whipLength} />
+        <SpecLabel label="Handle Length" value={specs.handleLength} />
+        <SpecLabel label="Concho" value={specs.concho} />
+        {specs.collar !== 'None' && <SpecLabel label="Collar" value={specs.collar} />}
+        {specs.heelLoop !== 'No Heel Loop' && specs.heelLoop !== 'None' && (
+          <SpecLabel label="Heel Loop" value={specs.heelLoop} />
+        )}
+      </SimpleGrid>
     </SpecsOverlay>
   </ImageContainer>
 );

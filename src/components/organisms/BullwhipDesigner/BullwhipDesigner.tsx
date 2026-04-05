@@ -271,10 +271,10 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         />
       </Flex>
 
-      {/* Gallery of finished whips */}
-      <WhipGallery />
     </Box>
   );
+
+  const galleryPanel = <WhipGallery />;
 
   const stepContent = () => {
     switch (index) {
@@ -394,16 +394,46 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
           </SimpleGrid>
         );
       }
-      case 5:
+      case 5: {
+        const selectedHandle = handleLengths.find((l) => l.name === handleLength);
         return (
-          <RadioGroup value={handleLength} onChange={setHandleLength}>
-            <Stack>
-              {handleLengths.map((l) => (
-                <Radio key={l.name} value={l.name}>{`${l.name} ($${l.price})`}</Radio>
-              ))}
-            </Stack>
-          </RadioGroup>
+          <Box>
+            <SimpleGrid columns={2} spacing="4">
+              <Stack spacing="2">
+                {handleLengths.map((l) => (
+                  <Button
+                    key={l.name}
+                    size="sm"
+                    width="100%"
+                    bg={handleLength === l.name ? '#2D6A4F' : 'white'}
+                    color={handleLength === l.name ? 'white' : '#4A5568'}
+                    border={handleLength === l.name ? '2px solid' : 'none'}
+                    borderColor={handleLength === l.name ? '#CBD5E0' : undefined}
+                    _hover={{ bg: handleLength === l.name ? '#245C43' : '#F7FAFC' }}
+                    onClick={() => setHandleLength(l.name)}
+                  >
+                    {`${l.name} ($${l.price})`}
+                  </Button>
+                ))}
+              </Stack>
+              <Box>
+                {selectedHandle && (
+                  <>
+                    <Text fontWeight="bold" fontSize="sm" mb="2">{selectedHandle.name}</Text>
+                    <Text fontSize="sm">{selectedHandle.description}</Text>
+                  </>
+                )}
+              </Box>
+            </SimpleGrid>
+            <Text fontSize="sm" fontStyle="italic" mt="4" mb="2">
+              Note: Bullwhips are measured from the Heel Knot to the Hitch Knot (where the fall is
+              tied on). The handle length does not add to the overall whip length, it just
+              determines how much of the whip length is steel rod and rigid.
+            </Text>
+            <Image src="https://whipworks.s3.us-east-2.amazonaws.com/misc/AnatomyOfABullwhip.jpg" alt="Anatomy of a Bullwhip" width="100%" />
+          </Box>
         );
+      }
       case 6:
         return (
           <Box>
@@ -415,23 +445,27 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         );
       case 7:
         return (
-          <Box>
-            <Heading size="md" mt="2">
-              Add a Collar
-            </Heading>
-            <Text my="2" fontSize="md">
-              A collar is attached to the transition with an additional transition knot added, this
-              addition looks great on 12 or 14 inch handles!
-            </Text>
-            <CollarPicker activeCollar={collar} onClick={setCollar} />
-            <Heading size="md" mt="6">
-              Add a Heel Loop
-            </Heading>
-            <Text my="2" fontSize="md">
-              Choose your heel knot style — add a heel loop for easy hanging and storage!
-            </Text>
-            <HeelLoopPicker activeHeelLoop={heelLoop} onClick={setHeelLoop} />
-          </Box>
+          <SimpleGrid columns={{ base: 1, xl: 2 }} spacing="4" sx={{ '@media (max-width: 1300px)': { gridTemplateColumns: '1fr' } }}>
+            <Box>
+              <Heading size="md" mt="2">
+                Add a Collar
+              </Heading>
+              <Text my="2" fontSize="md">
+                A collar is attached to the transition with an additional transition knot added, this
+                addition looks great on 12 or 14 inch handles!
+              </Text>
+              <CollarPicker activeCollar={collar} onClick={setCollar} />
+            </Box>
+            <Box>
+              <Heading size="md" mt="2">
+                Add a Heel Loop
+              </Heading>
+              <Text my="2" fontSize="md">
+                Choose your heel knot style — add a heel loop for easy hanging and storage!
+              </Text>
+              <HeelLoopPicker activeHeelLoop={heelLoop} onClick={setHeelLoop} />
+            </Box>
+          </SimpleGrid>
         );
       default:
         return null;
@@ -545,6 +579,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
     <>
       <DesignerLayout
         leftPanel={leftPanel}
+        leftPanelBottom={galleryPanel}
         rightPanel={rightPanel}
       />
       <BullwhipAddedModal

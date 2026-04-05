@@ -36,7 +36,7 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       const handleCanvas = canvasRef.current;
 
-      const light = new THREE.AmbientLight(0xffffff, 0.3);
+      const light = new THREE.AmbientLight(0xffffff, 0.45);
       scene.add(light);
 
       const light1 = new THREE.PointLight(0xffffff, 0.6);
@@ -49,7 +49,7 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
 
       const texture = new THREE.CanvasTexture(handleCanvas);
       const handleGeo = new THREE.CylinderGeometry(4, 4, 80, 16);
-      const material = new THREE.MeshBasicMaterial({
+      const material = new THREE.MeshStandardMaterial({
         color: 0xffffff,
         map: texture,
       });

@@ -16,7 +16,7 @@ import { spools } from './constants/spoolColors';
 import { handles } from './constants/handleDesigns';
 import WhipPreview from './WhipPreview';
 import BullwhipAddedModal from '../../molecules/BullwhipAddedModal';
-import { conchoOptions } from './constants/conchos';
+import { conchos, conchoOptions } from './constants/conchos';
 import FinishPicker from './FinishPicker';
 import { heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
@@ -28,6 +28,13 @@ const updatedHandles = handles.filter(
 
 const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
 const handleDesignOptions = updatedHandles.map((h) => `${h.name}[+0]`).join('|');
+
+// Pommels are not available for stockwhips
+const stockwhipConchoExclude = ['Wolf Pommel', 'Cobra Pommel', 'Dragon Pommel'];
+const stockwhipConchoOptions = conchos
+  .filter((c) => !stockwhipConchoExclude.includes(c.name))
+  .map((c) => `${c.name}[+${c.price}]`)
+  .join('|');
 
 const resolveWeight = (thongLength?: string) => {
   switch (thongLength) {
@@ -187,7 +194,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
             <Text my="2" fontSize="md">
               A Concho is applied to the heel of every handle, giving your stockwhip a distinct look!
             </Text>
-            <ConchoPicker activeConcho={concho} onClick={setConcho} />
+            <ConchoPicker activeConcho={concho} onClick={setConcho} exclude={stockwhipConchoExclude} />
           </AccordionSection>
           <AccordionSection label="Extras">
             <Heading size="md" mt="2">
@@ -228,7 +235,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
           data-item-custom5-options={stockwhipFinishesOptions}
           data-item-custom5-value={handleFinish}
           data-item-custom6-name="Concho"
-          data-item-custom6-options={conchoOptions}
+          data-item-custom6-options={stockwhipConchoOptions}
           data-item-custom6-value={concho}
           data-item-custom7-name="Waxing"
           data-item-custom7-options="Yes[+25]|No"

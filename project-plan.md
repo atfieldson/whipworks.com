@@ -72,9 +72,9 @@
 - [x] Create new shared `DesignerLayout` component with two-panel split
   - [x] Left panel (scrollable): 3D preview + selected option thumbnails + product photography
   - [x] Right panel (sticky): customization options, summary, price breakdown, Add to Cart
-  - [ ] Responsive: stacks vertically on mobile (options on top, summary below as sticky footer or collapsible)
+  - [x] Responsive: stacks vertically on mobile (designer between 3D preview and gallery)
   - [x] Full-width layout breaks out of 1080px container to use full viewport width
-- [ ] Full-width banner at top of page *(explored, decided against — gets in the way of new layout)*
+- [x] ~~Full-width banner at top of page~~ *(explored, decided against — gets in the way of new layout)*
 
 ### Left Panel — Scrollable (Visuals)
 - [x] 3D preview (existing Three.js WhipPreview) displayed prominently
@@ -82,10 +82,14 @@
   - [x] Primary color spool image (80x80px, placeholder when unselected)
   - [x] Secondary color spool image (80x80px, placeholder when unselected)
   - [x] Handle design image (80x320px, rotated 90deg inside box, placeholder when unselected)
-- [ ] Gallery of finished whip images below the preview
-  - [ ] Show finished bullwhip examples in various color combos
-  - [ ] Close-up shots of handle designs, conchos, collars, heel loops
-  - [ ] Customer scrolls through inspiration as their selections stay visible on the right
+- [x] Gallery of finished whip images below the preview
+  - [x] Show finished bullwhip examples in various color combos
+  - [x] Close-up shots of handle designs, conchos, collars, heel loops
+  - [x] Customer scrolls through inspiration as their selections stay visible on the right
+  - [x] Hover overlay with whip specs in compact 2-column grid, responsive text sizing
+  - [x] Concho break images with hover descriptions, sized by native dimensions (landscape/portrait)
+  - [x] Gallery preview grid hidden below 1750px, remaining elements centered
+  - [x] Gallery renders below designer on mobile
 
 ### Right Panel — Sticky (Options + Summary + Cart)
 - [x] Chrome-style horizontal tab navigation (StepNav component)
@@ -99,6 +103,10 @@
 - [x] Running price breakdown always visible
 - [x] Add to Cart button always accessible
 - [x] Panel uses `position: sticky` with `top` offset (desktop only)
+- [x] Panel fits viewport height with scrollable step content (no outer scrollbar)
+- [x] Compact YOUR BULLWHIP summary (3-column inline specs) with Add to Cart and PriceBreakdown side-by-side
+- [x] Fixed sticky by moving `overflow-x: hidden` from body to html only
+- [x] `minW="0"` through flex ancestor chain to enable overflow scrolling
 
 ### Apply to All Designer Pages
 - [ ] Bullwhip designer
@@ -116,8 +124,17 @@
 - [ ] Upload gallery images to S3 (`bannerImages/`, `galleryImages/`)
 - [ ] Create banner images for each designer page (1920x300px)
 
+### Right Panel — Detailed Step Content
+- [x] Waxing tab: intro paragraph, two-column layout with styled toggle buttons, pros/cons lists, overall thoughts
+- [x] Length tab: two-column layout with styled buttons (left) and description text (right) for each length
+- [x] Handle Length tab: same two-column layout with descriptions + Anatomy of a Bullwhip image
+- [x] Extras tab: two-column layout (Collar left, Heel Loop right), collapses to single column at 1300px
+- [x] Concho picker: centered images in grid cells
+- [x] Color picker: fixed 6-column grid with horizontal scrollbar at narrow widths
+- [x] Dragon Pommel commented out (out of stock), Wolf/Cobra Pommel excluded from stockwhip designer
+
 ### Update 3JS
-- [ ] Address over brightness issue on render
+- [x] Address over brightness issue on render (switched MeshBasicMaterial to MeshStandardMaterial)
 - [ ] Add interactive rotation or slow down rotation
 - [ ] Create Herringbone pattern
 
