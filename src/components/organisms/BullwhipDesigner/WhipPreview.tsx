@@ -39,11 +39,11 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
       const light = new THREE.AmbientLight(0xffffff, 0.45);
       scene.add(light);
 
-      const light1 = new THREE.PointLight(0xffffff, 0.6);
+      const light1 = new THREE.PointLight(0xffffff, 0.9);
       light1.position.set(-50, -15, 15);
       scene.add(light1);
 
-      const light2 = new THREE.PointLight(0xffffff, 0.6);
+      const light2 = new THREE.PointLight(0xffffff, 0.9);
       light2.position.set(50, 15, 15);
       scene.add(light2);
 
@@ -59,14 +59,58 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
       handle.rotation.y = Math.PI;
       camera.position.set(0, 0, 100);
       scene.add(handle);
+
+      // Interactive drag-to-rotate
+      let isDragging = false;
+      let previousX = 0;
+      let autoRotate = true;
+
+      const domEl = renderer.domElement;
+      domEl.style.cursor = 'grab';
+      domEl.style.touchAction = 'none';
+
+      const onPointerDown = (e: PointerEvent) => {
+        isDragging = true;
+        previousX = e.clientX;
+        autoRotate = false;
+        domEl.style.cursor = 'grabbing';
+        domEl.setPointerCapture(e.pointerId);
+      };
+
+      const onPointerMove = (e: PointerEvent) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - previousX;
+        handle.rotation.y += deltaX * 0.01;
+        previousX = e.clientX;
+      };
+
+      const onPointerUp = (e: PointerEvent) => {
+        isDragging = false;
+        domEl.style.cursor = 'grab';
+        domEl.releasePointerCapture(e.pointerId);
+      };
+
+      domEl.addEventListener('pointerdown', onPointerDown);
+      domEl.addEventListener('pointermove', onPointerMove);
+      domEl.addEventListener('pointerup', onPointerUp);
+      domEl.addEventListener('pointercancel', onPointerUp);
+
       let frameId: any;
       const animate = function () {
         frameId = requestAnimationFrame(animate);
-        handle.rotation.y -= 0.01;
+        if (autoRotate) {
+          handle.rotation.y -= 0.001;
+        }
         renderer.render(scene, camera);
       };
       animate();
-      return () => cancelAnimationFrame(frameId);
+      return () => {
+        cancelAnimationFrame(frameId);
+        domEl.removeEventListener('pointerdown', onPointerDown);
+        domEl.removeEventListener('pointermove', onPointerMove);
+        domEl.removeEventListener('pointerup', onPointerUp);
+        domEl.removeEventListener('pointercancel', onPointerUp);
+      };
     }
   }, []);
 
@@ -112,6 +156,9 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
         </Flex>
       )}
       <Box ref={threeRef} />
+      <Text fontSize="sm" textAlign="center" color="whiteAlpha.700" mt={1}>
+        Click and drag to rotate
+      </Text>
       <img
         crossOrigin="anonymous"
         style={{ display: 'none' }}
