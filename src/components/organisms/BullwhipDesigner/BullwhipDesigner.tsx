@@ -59,14 +59,14 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const TOTAL_STEPS = 8;
 
   const steps = [
-    { label: 'Primary', isCompleted: !!primary },
-    { label: 'Secondary', isCompleted: !!secondary },
-    { label: 'Handle', isCompleted: !!handleDesign },
-    { label: 'Length', isCompleted: !!whipLength },
-    { label: 'Handle Length', isCompleted: !!handleLength },
-    { label: 'Waxing', isCompleted: true }, // always has a default
-    { label: 'Concho', isCompleted: !!concho },
-    { label: 'Extras', isCompleted: true }, // optional, always "complete"
+    { label: 'Primary', navLabel: 'Primary Color', isCompleted: !!primary },
+    { label: 'Secondary', navLabel: 'Secondary Color', isCompleted: !!secondary },
+    { label: 'Handle', navLabel: 'Handle Design', isCompleted: !!handleDesign },
+    { label: 'Length', navLabel: 'Whip Length', isCompleted: !!whipLength },
+    { label: 'Handle Length', navLabel: 'Handle Length', isCompleted: !!handleLength },
+    { label: 'Waxing', navLabel: 'Waxing', isCompleted: true }, // always has a default
+    { label: 'Concho', navLabel: 'Concho', isCompleted: !!concho },
+    { label: 'Extras', navLabel: 'Extras', isCompleted: true }, // optional, always "complete"
   ];
 
   const handleAdd = () => {
@@ -509,21 +509,66 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         {stepContent()}
       </Box>
 
+      {/* Previous / Next navigation — sits between scroll area and summary */}
+      <Flex justifyContent="space-between" alignItems="center" pt="2" pb="1" flexShrink={0}>
+        {index > 0 ? (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setIndex(index - 1)}
+            color="white"
+            borderColor="gray.500"
+            _hover={{ bg: 'whiteAlpha.200' }}
+            flexShrink={0}
+          >
+            ← {steps[index - 1].navLabel}
+          </Button>
+        ) : (
+          <Box />
+        )}
+        <Text
+          fontWeight="bold"
+          fontSize="sm"
+          display="block"
+          textAlign="center"
+          px="2"
+        >
+          {steps[index].navLabel}
+        </Text>
+        {index < steps.length - 1 ? (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setIndex(index + 1)}
+            isDisabled={!steps[index].isCompleted}
+            color="white"
+            borderColor="gray.500"
+            _hover={{ bg: 'whiteAlpha.200' }}
+            _disabled={{ opacity: 0.4, cursor: 'not-allowed' }}
+            flexShrink={0}
+          >
+            {steps[index + 1].navLabel} →
+          </Button>
+        ) : (
+          <Box />
+        )}
+      </Flex>
+
       {/* Summary + Add to Cart — compact, always visible at bottom */}
       <Box borderTopWidth="1px" borderColor="gray.200" pt="2" mt="2" flexShrink={0}>
         <Flex gap="4" alignItems="stretch">
           <Flex flex="1" direction="column">
-            <Text fontWeight="bold" fontSize="sm" mb="1">YOUR BULLWHIP</Text>
+            <Text fontWeight="bold" fontSize="lg" mb="1">YOUR BULLWHIP</Text>
             <SimpleGrid columns={3} spacing="1">
-              <Text fontSize="xs"><Text as="span" color="gray.500">Primary: </Text>{primary || '—'}</Text>
-              <Text fontSize="xs"><Text as="span" color="gray.500">Secondary: </Text>{secondary || '—'}</Text>
-              <Text fontSize="xs"><Text as="span" color="gray.500">Handle: </Text>{handleDesign || '—'}</Text>
-              <Text fontSize="xs"><Text as="span" color="gray.500">Waxed: </Text>{waxed ? 'Yes' : 'No'}</Text>
-              <Text fontSize="xs"><Text as="span" color="gray.500">Length: </Text>{whipLength || '—'}</Text>
-              <Text fontSize="xs"><Text as="span" color="gray.500">Handle: </Text>{handleLength || '—'}</Text>
-              <Text fontSize="xs"><Text as="span" color="gray.500">Concho: </Text>{concho || '—'}</Text>
-              <Text fontSize="xs"><Text as="span" color="gray.500">Collar: </Text>{collar}</Text>
-              <Text fontSize="xs"><Text as="span" color="gray.500">Heel Loop: </Text>{heelLoop}</Text>
+              <Text fontSize="sm"><Text as="span" color="gray.500">Primary: </Text>{primary || '—'}</Text>
+              <Text fontSize="sm"><Text as="span" color="gray.500">Secondary: </Text>{secondary || '—'}</Text>
+              <Text fontSize="sm"><Text as="span" color="gray.500">Handle: </Text>{handleDesign || '—'}</Text>
+              <Text fontSize="sm"><Text as="span" color="gray.500">Waxed: </Text>{waxed ? 'Yes' : 'No'}</Text>
+              <Text fontSize="sm"><Text as="span" color="gray.500">Length: </Text>{whipLength || '—'}</Text>
+              <Text fontSize="sm"><Text as="span" color="gray.500">Handle: </Text>{handleLength || '—'}</Text>
+              <Text fontSize="sm"><Text as="span" color="gray.500">Concho: </Text>{concho || '—'}</Text>
+              <Text fontSize="sm"><Text as="span" color="gray.500">Collar: </Text>{collar}</Text>
+              <Text fontSize="sm"><Text as="span" color="gray.500">Heel Loop: </Text>{heelLoop}</Text>
             </SimpleGrid>
             <Button
               isDisabled={!readyForOrder}
