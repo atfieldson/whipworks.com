@@ -146,6 +146,17 @@ const Header = ({ bg }: { bg?: string }) => {
                 />
                 <span>Design a Stockwhip</span>
               </MenuItem>
+              <MenuItem as={Link} to="/design-snakewhip" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                <Image
+                  height="2rem"
+                  width="2rem"
+                  rounded="full"
+                  src="https://d3ruufruf2uqog.cloudfront.net/thumbnails/snakewhipThumbnail.png"
+                  alt="Design a Snakewhip"
+                  mr="12px"
+                />
+                <span>Design a Snakewhip</span>
+              </MenuItem>
             </MenuList>
           </Menu>
 
@@ -267,6 +278,9 @@ const Header = ({ bg }: { bg?: string }) => {
                 </CLink>
                 <CLink as={Link} to="/design-stockwhip" onClick={onClose}>
                   Design a Stockwhip
+                </CLink>
+                <CLink as={Link} to="/design-snakewhip" onClick={onClose}>
+                  Design a Snakewhip
                 </CLink>
               </Stack>
 
