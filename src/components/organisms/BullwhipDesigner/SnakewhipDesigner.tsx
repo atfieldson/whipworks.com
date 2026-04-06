@@ -60,7 +60,7 @@ const SnakewhipDesigner = ({ location }: { location: any }) => {
   const [index, setIndex] = useState<number>(0);
   const [primary, setPrimary] = useState<string | undefined>(undefined);
   const [secondary, setSecondary] = useState<string | undefined>(undefined);
-  const [handleDesign, setHandle] = useState<string | undefined>(undefined);
+  const [handleDesign, setHandle] = useState<string | undefined>('Herringbone');
   const [waxed, setWaxed] = useState(true);
   const [whipLength, setWhipLength] = useState<string | undefined>(undefined);
   const [concho, setConcho] = useState<string | undefined>(undefined);

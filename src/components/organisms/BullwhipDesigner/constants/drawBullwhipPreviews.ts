@@ -591,6 +591,28 @@ export const drawBullwhipPreviews = (pattern: string) => {
         }
       }
     },
+    Herringbone: () => {
+      // Pattern tiles every 16 units; expanded to cover i/b16 range of -8 to 32
+      const pattern1 = [-8, -7, -6, -5, 0, 1, 2, 3, 8, 9, 10, 11, 16, 17, 18, 19, 24, 25, 26, 27, 32];
+
+      for (let j = -b16 * 16; j <= b16 * 62; j += b16 * 2) {
+        for (let i = -b16 * 8; i <= bw * 2; i += b16) {
+          c.beginPath();
+          c.moveTo(i, i + j + 2 * b16);
+          c.lineTo(i - b16, i + j + b16);
+          c.lineTo(i, i + j);
+          c.lineTo(i + b16, i + j + b16);
+          c.closePath();
+          c.stroke();
+          if (pattern1.includes(i / b16)) {
+            c.fillStyle = color1;
+          } else {
+            c.fillStyle = color2;
+          }
+          c.fill();
+        }
+      }
+    },
   };
 
   patterns[pattern]();

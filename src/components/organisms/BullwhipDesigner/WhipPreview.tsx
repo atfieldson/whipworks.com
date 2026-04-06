@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Text, Flex, Box, BoxProps } from '@chakra-ui/react';
 import * as THREE from 'three';
 
@@ -17,8 +17,20 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
   const threeRef = useRef<any>(undefined);
   const canvasRef = useRef<any>(undefined);
   const textureRef = useRef<any>(undefined);
+  const primaryLoadedRef = useRef(false);
+  const secondaryLoadedRef = useRef(false);
   const [primaryImage, setPrimaryImage] = useState<string | undefined>('');
   const [secondaryImage, setSecondaryImage] = useState<string | undefined>('');
+  const [showOverlay, setShowOverlay] = useState(true);
+
+  // Draw the pattern only when both images are loaded — same timing as bullwhip
+  const tryDraw = useCallback(() => {
+    if (primaryLoadedRef.current && secondaryLoadedRef.current && pattern) {
+      drawBullwhipPreviews(pattern);
+      textureRef.current.needsUpdate = true;
+      setShowOverlay(false);
+    }
+  }, [pattern]);
 
   useEffect(() => {
     if (threeRef.current) {
@@ -116,31 +128,43 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
 
   useEffect(() => {
     if (primary) {
-      const url = resolveColorUrl(waxed, primary, true);
-      setPrimaryImage(url);
+      primaryLoadedRef.current = false;
+      setShowOverlay(true);
+      setPrimaryImage(resolveColorUrl(waxed, primary, true));
     }
-    if (secondary) {
-      setSecondaryImage(resolveColorUrl(waxed, secondary, false));
-    }
-    if (primary && secondary && pattern) {
-      /* for some god-damn reason, this needs to be done twice */
-      drawBullwhipPreviews(pattern);
-      textureRef.current.needsUpdate = true;
-    }
-  }, [waxed, primary, secondary, pattern]);
+  }, [waxed, primary]);
 
   useEffect(() => {
-    if (pattern) {
-      setTimeout(() => {
-        drawBullwhipPreviews(pattern);
-        textureRef.current.needsUpdate = true;
-      }, 400);
+    if (secondary) {
+      secondaryLoadedRef.current = false;
+      setShowOverlay(true);
+      setSecondaryImage(resolveColorUrl(waxed, secondary, false));
     }
-  }, [primaryImage, secondaryImage, pattern]);
+  }, [waxed, secondary]);
+
+  // When pattern changes and both images are already loaded (bullwhip/stockwhip flow),
+  // draw immediately
+  useEffect(() => {
+    if (pattern && primaryLoadedRef.current && secondaryLoadedRef.current) {
+      drawBullwhipPreviews(pattern);
+      textureRef.current.needsUpdate = true;
+      setShowOverlay(false);
+    }
+  }, [pattern]);
+
+  const onPrimaryLoad = useCallback(() => {
+    primaryLoadedRef.current = true;
+    tryDraw();
+  }, [tryDraw]);
+
+  const onSecondaryLoad = useCallback(() => {
+    secondaryLoadedRef.current = true;
+    tryDraw();
+  }, [tryDraw]);
 
   return (
     <Box width={width} height={height} bg="gray.500" pos="relative" {...props}>
-      {(!primary || !secondary || !pattern) && (
+      {showOverlay && (
         <Flex
           flex={1}
           bg="blackAlpha.700"
@@ -149,6 +173,7 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
           alignItems="center"
           p="5"
           pos="absolute"
+          zIndex={1}
         >
           <Text opacity={1} textAlign="center">
             Select colors and handle pattern to see your handle design!
@@ -165,6 +190,7 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
         src={primaryImage}
         id="primary-image-uri"
         alt="primary-color"
+        onLoad={onPrimaryLoad}
       />
       <img
         crossOrigin="anonymous"
@@ -172,6 +198,7 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
         src={secondaryImage}
         id="secondary-image-uri"
         alt="secondary-color"
+        onLoad={onSecondaryLoad}
       />
       <canvas
         ref={canvasRef}
