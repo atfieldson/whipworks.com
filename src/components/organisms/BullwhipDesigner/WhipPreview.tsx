@@ -19,6 +19,7 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
   const textureRef = useRef<any>(undefined);
   const primaryLoadedRef = useRef(false);
   const secondaryLoadedRef = useRef(false);
+  const hasRenderedRef = useRef(false);
   const [primaryImage, setPrimaryImage] = useState<string | undefined>('');
   const [secondaryImage, setSecondaryImage] = useState<string | undefined>('');
   const [showOverlay, setShowOverlay] = useState(true);
@@ -28,7 +29,10 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
     if (primaryLoadedRef.current && secondaryLoadedRef.current && pattern) {
       drawBullwhipPreviews(pattern);
       textureRef.current.needsUpdate = true;
-      setShowOverlay(false);
+      if (!hasRenderedRef.current) {
+        hasRenderedRef.current = true;
+        setShowOverlay(false);
+      }
     }
   }, [pattern]);
 
@@ -129,7 +133,6 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
   useEffect(() => {
     if (primary) {
       primaryLoadedRef.current = false;
-      setShowOverlay(true);
       setPrimaryImage(resolveColorUrl(waxed, primary, true));
     }
   }, [waxed, primary]);
@@ -137,7 +140,6 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
   useEffect(() => {
     if (secondary) {
       secondaryLoadedRef.current = false;
-      setShowOverlay(true);
       setSecondaryImage(resolveColorUrl(waxed, secondary, false));
     }
   }, [waxed, secondary]);
@@ -148,7 +150,10 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
     if (pattern && primaryLoadedRef.current && secondaryLoadedRef.current) {
       drawBullwhipPreviews(pattern);
       textureRef.current.needsUpdate = true;
-      setShowOverlay(false);
+      if (!hasRenderedRef.current) {
+        hasRenderedRef.current = true;
+        setShowOverlay(false);
+      }
     }
   }, [pattern]);
 
