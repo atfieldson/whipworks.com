@@ -52,22 +52,38 @@ const WhipPreview = ({ waxed, primary, secondary, pattern, ...props }: Props) =>
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       const handleCanvas = canvasRef.current;
 
-      const light = new THREE.AmbientLight(0xffffff, 0.45);
+      const light = new THREE.AmbientLight(0xffffff, 0.2);
       scene.add(light);
 
-      const light1 = new THREE.PointLight(0xffffff, 0.9);
-      light1.position.set(-50, -15, 15);
+      // Key light — strong, upper-left front
+      const light1 = new THREE.PointLight(0xffffff, 1.5);
+      light1.position.set(-30, 25, 35);
       scene.add(light1);
 
-      const light2 = new THREE.PointLight(0xffffff, 0.9);
-      light2.position.set(50, 15, 15);
+      // Fill light — moderate, right side
+      const light2 = new THREE.PointLight(0xffffff, 0.5);
+      light2.position.set(50, -10, 20);
       scene.add(light2);
+
+      // Rim light — behind and above for edge definition
+      const light3 = new THREE.PointLight(0xffffff, 0.7);
+      light3.position.set(0, 30, -25);
+      scene.add(light3);
+
+      // Bottom accent light — subtle uplighting
+      const light4 = new THREE.PointLight(0xffffff, 0.3);
+      light4.position.set(0, -40, 15);
+      scene.add(light4);
 
       const texture = new THREE.CanvasTexture(handleCanvas);
       const handleGeo = new THREE.CylinderGeometry(4, 4, 80, 16);
-      const material = new THREE.MeshStandardMaterial({
+      const material = new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
         map: texture,
+        roughness: 0.3,
+        metalness: 0.2,
+        clearcoat: 0.4,
+        clearcoatRoughness: 0.2,
       });
       textureRef.current = texture;
       const handle = new THREE.Mesh(handleGeo, material);
