@@ -5,8 +5,7 @@ import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
 import ConchoPicker from './ConchoPicker';
 import DesignerLayout from '../../templates/DesignerLayout';
-import StockwhipGallery, { StockwhipImage } from './StockwhipGallery';
-import { stockwhipGalleryItems, StockwhipGalleryWhip } from './constants/galleryStockwhips';
+import StockwhipGallery from './StockwhipGallery';
 import {
   stockwhipHandleLengths,
   stockwhipHandleLengthOptions,
@@ -302,36 +301,9 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
   const secondarySpool = spools.find((s) => s.name === secondary);
   const handleObj = updatedHandles.find((h) => h.name === handleDesign);
 
-  const previewImage = React.useMemo(() => {
-    const whips = stockwhipGalleryItems.filter(
-      (item): item is StockwhipGalleryWhip => item.type === 'stockwhip' && !!item.images.wide1x1
-    );
-    const pick = whips[Math.floor(Math.random() * whips.length)];
-    return pick ? { src: pick.images.wide1x1!, id: pick.id, specs: pick.specs } : null;
-  }, []);
-
   const leftPanel = (
     <Box>
       <Flex mb="6" gap="4" height="700px" justifyContent="center">
-        {/* Random stockwhip photo — 1x1, hidden below 1750px */}
-        {previewImage && (
-          <Box
-            overflow="hidden"
-            borderRadius="8px"
-            flexShrink={0}
-            display={{ base: 'none', '2xl': 'none' }}
-            sx={{ aspectRatio: '1 / 1', '@media (min-width: 1750px)': { display: 'block' } }}
-            height="100%"
-          >
-            <StockwhipImage
-              src={previewImage.src}
-              alt={previewImage.id}
-              specs={previewImage.specs}
-              whipId={previewImage.id}
-            />
-          </Box>
-        )}
-
         {/* Selected options thumbnails */}
         <Flex direction="column" gap="3" alignItems="center" justifyContent="center" flexShrink={0}>
           <Box textAlign="center">
