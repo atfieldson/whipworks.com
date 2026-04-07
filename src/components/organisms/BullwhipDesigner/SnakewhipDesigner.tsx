@@ -25,7 +25,8 @@ import { conchos, conchoOptions } from './constants/conchos';
 import { heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
 import DesignerLayout from '../../templates/DesignerLayout';
-import SnakewhipGallery from './SnakewhipGallery';
+import SnakewhipGallery, { SnakewhipImage } from './SnakewhipGallery';
+import { snakewhipGalleryItems, SnakewhipGalleryWhip } from './constants/gallerySnakewhips';
 
 const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
 
@@ -119,9 +120,37 @@ const SnakewhipDesigner = ({ location }: { location: any }) => {
     ? allSnakewhipHandles.find((h) => h.name === handleDesign)
     : undefined;
 
+  // Pick a random gallery image for the preview strip (once per page load)
+  const previewImage = React.useMemo(() => {
+    const whips = snakewhipGalleryItems.filter(
+      (item): item is SnakewhipGalleryWhip => item.type === 'snakewhip' && !!item.images.wide
+    );
+    const pick = whips[Math.floor(Math.random() * whips.length)];
+    return pick ? { src: pick.images.wide!, id: pick.id, specs: pick.specs } : null;
+  }, []);
+
   const leftPanel = (
     <Box>
       <Flex mb="6" gap="4" height="700px" justifyContent="center">
+        {/* Random snakewhip photo — 4:3, hidden below 1750px */}
+        {previewImage && (
+          <Box
+            overflow="hidden"
+            borderRadius="8px"
+            flexShrink={0}
+            display={{ base: 'none', '2xl': 'none' }}
+            sx={{ aspectRatio: '4 / 3', '@media (min-width: 1750px)': { display: 'block' } }}
+            height="100%"
+          >
+            <SnakewhipImage
+              src={previewImage.src}
+              alt={previewImage.id}
+              specs={previewImage.specs}
+              whipId={previewImage.id}
+            />
+          </Box>
+        )}
+
         {/* Selected options thumbnails */}
         <Flex direction="column" gap="3" alignItems="center" justifyContent="center" flexShrink={0}>
           <Box textAlign="center">
