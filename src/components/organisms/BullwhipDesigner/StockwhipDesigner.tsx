@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Flex, Text, Stack, RadioGroup, Radio, Heading, Button, Box, Image, SimpleGrid, List, ListItem } from '@chakra-ui/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import StepNav from '../../atoms/StepNav';
 import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
@@ -19,7 +20,7 @@ import WhipPreview from './WhipPreview';
 import BullwhipAddedModal from '../../molecules/BullwhipAddedModal';
 import { conchos, conchoOptions } from './constants/conchos';
 import FinishPicker from './FinishPicker';
-import { heelLoopOptions } from './constants/heelLoops';
+import { heelLoops, heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
 
 // Remove handle designs I don't want for Stockwhips, this needs to be done in tandem with props to HandleDesignPicker
@@ -60,6 +61,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
   const [concho, setConcho] = useState<string | undefined>(undefined);
   const [heelLoop, setHeelLoop] = useState('Squared');
   const [modalOpen, setModalOpen] = useState(false);
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
 
   const TOTAL_STEPS = 9;
 
@@ -110,6 +112,13 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
 
   const readyForOrder =
     primary && secondary && thongLength && stockwhipHandleLength && concho && handleFinish;
+
+  // Calculate total for collapsed summary display
+  const swThongPrice = thongLength ? thongLengths.find((l) => l.name === thongLength)?.price || 0 : 0;
+  const swHandlePrice = stockwhipHandleLength ? stockwhipHandleLengths.find((h) => h.name === stockwhipHandleLength)?.price || 0 : 0;
+  const swConchoPrice = concho ? conchos.find((c) => c.name === concho)?.price || 0 : 0;
+  const swHeelLoopPrice = heelLoop ? heelLoops.find((h) => h.name === heelLoop)?.price || 0 : 0;
+  const total = swThongPrice + swHandlePrice + swConchoPrice + (waxed ? 25 : 0) + swHeelLoopPrice;
 
   const stepContent = () => {
     switch (index) {
@@ -462,76 +471,111 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
         )}
       </Flex>
 
-      {/* Summary + Add to Cart — compact, always visible at bottom */}
+      {/* Collapsible summary + Add to Cart — always visible at bottom */}
       <Box borderTopWidth="1px" borderColor="gray.200" pt="2" mt="2" flexShrink={0}>
-        <Flex gap="4" alignItems="stretch">
-          <Flex flex="1" direction="column">
-            <Text fontWeight="bold" fontSize="lg" mb="1">YOUR STOCKWHIP</Text>
-            <SimpleGrid columns={3} spacing="1">
-              <Text fontSize="sm"><Text as="span" color="gray.500">Primary: </Text>{primary || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Secondary: </Text>{secondary || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Handle: </Text>{handleDesign || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Waxed: </Text>{waxed ? 'Yes' : 'No'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Thong: </Text>{thongLength || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Handle: </Text>{stockwhipHandleLength || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Finish: </Text>{handleFinish || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Concho: </Text>{concho || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Heel Loop: </Text>{heelLoop}</Text>
-            </SimpleGrid>
-            <Button
-              isDisabled={!readyForOrder}
-              width="100%"
-              size="sm"
-              mt="auto"
-              onClick={handleAdd}
-              className="snipcart-add-item"
-              data-item-id="custom-stockwhip"
-              data-item-name="Custom Stockwhip"
-              data-item-price="219"
-              data-item-url="/design-stockwhip"
-              data-item-description="A custom-designed handmade stockwhip"
-              data-item-custom0-name="Primary Color"
-              data-item-custom0-options={colorOptions}
-              data-item-custom0-value={primary}
-              data-item-custom1-name="Secondary Color"
-              data-item-custom1-options={colorOptions}
-              data-item-custom1-value={secondary}
-              data-item-custom2-name="Handle Design"
-              data-item-custom2-options={handleDesignOptions}
-              data-item-custom2-value={handleDesign}
-              data-item-custom3-name="Thong Length"
-              data-item-custom3-options={thongLengthOptions}
-              data-item-custom3-value={thongLength}
-              data-item-custom4-name="Handle Length"
-              data-item-custom4-options={stockwhipHandleLengthOptions}
-              data-item-custom4-value={stockwhipHandleLength}
-              data-item-custom5-name="Handle Finish"
-              data-item-custom5-options={stockwhipFinishesOptions}
-              data-item-custom5-value={handleFinish}
-              data-item-custom6-name="Concho"
-              data-item-custom6-options={stockwhipConchoOptions}
-              data-item-custom6-value={concho}
-              data-item-custom7-name="Waxing"
-              data-item-custom7-options="Yes[+25]|No"
-              data-item-custom7-value={waxed ? 'Yes' : 'No'}
-              data-item-custom8-name="Heel Loop"
-              data-item-custom8-options={heelLoopOptions}
-              data-item-custom8-value={heelLoop}
-              data-item-weight={900}
-              data-item-width={46}
-              data-item-height={8}
-              data-item-length={30}
+        {/* Toggle bar */}
+        <Flex
+          onClick={() => setDetailsExpanded(!detailsExpanded)}
+          cursor="pointer"
+          alignItems="center"
+          justifyContent="center"
+          py="1"
+          _hover={{ bg: 'whiteAlpha.100' }}
+          borderRadius="md"
+        >
+          <Text fontSize="sm" fontWeight="bold" mr="2">
+            {detailsExpanded ? 'Hide' : 'See'} your Stockwhip Details
+          </Text>
+          <Text fontSize="xs">{detailsExpanded ? '▲' : '▼'}</Text>
+        </Flex>
+
+        {/* Expandable details */}
+        <AnimatePresence initial={false}>
+          {detailsExpanded && (
+            <motion.div
+              key="details"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              style={{ overflow: 'hidden' }}
             >
-              Add to Cart
-            </Button>
-          </Flex>
-          <PriceBreakdownStockwhip
-            stockwhipHandleLength={stockwhipHandleLength}
-            thongLength={thongLength}
-            concho={concho}
-            isWaxed={waxed}
-            heelLoop={heelLoop}
-          />
+              <Flex gap="4" alignItems="stretch" mt="2">
+                <Flex flex="1" direction="column">
+                  <Text fontWeight="bold" fontSize="lg" mb="1">YOUR STOCKWHIP</Text>
+                  <SimpleGrid columns={3} spacing="1">
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Primary: </Text>{primary || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Secondary: </Text>{secondary || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Handle: </Text>{handleDesign || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Waxed: </Text>{waxed ? 'Yes' : 'No'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Thong: </Text>{thongLength || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Handle: </Text>{stockwhipHandleLength || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Finish: </Text>{handleFinish || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Concho: </Text>{concho || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Heel Loop: </Text>{heelLoop}</Text>
+                  </SimpleGrid>
+                </Flex>
+                <PriceBreakdownStockwhip
+                  stockwhipHandleLength={stockwhipHandleLength}
+                  thongLength={thongLength}
+                  concho={concho}
+                  isWaxed={waxed}
+                  heelLoop={heelLoop}
+                />
+              </Flex>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Always visible: Add to Cart + Total */}
+        <Flex alignItems="center" justifyContent="center" gap="3" mt="2">
+          <Button
+            isDisabled={!readyForOrder}
+            size="sm"
+            onClick={handleAdd}
+            className="snipcart-add-item"
+            data-item-id="custom-stockwhip"
+            data-item-name="Custom Stockwhip"
+            data-item-price="219"
+            data-item-url="/design-stockwhip"
+            data-item-description="A custom-designed handmade stockwhip"
+            data-item-custom0-name="Primary Color"
+            data-item-custom0-options={colorOptions}
+            data-item-custom0-value={primary}
+            data-item-custom1-name="Secondary Color"
+            data-item-custom1-options={colorOptions}
+            data-item-custom1-value={secondary}
+            data-item-custom2-name="Handle Design"
+            data-item-custom2-options={handleDesignOptions}
+            data-item-custom2-value={handleDesign}
+            data-item-custom3-name="Thong Length"
+            data-item-custom3-options={thongLengthOptions}
+            data-item-custom3-value={thongLength}
+            data-item-custom4-name="Handle Length"
+            data-item-custom4-options={stockwhipHandleLengthOptions}
+            data-item-custom4-value={stockwhipHandleLength}
+            data-item-custom5-name="Handle Finish"
+            data-item-custom5-options={stockwhipFinishesOptions}
+            data-item-custom5-value={handleFinish}
+            data-item-custom6-name="Concho"
+            data-item-custom6-options={stockwhipConchoOptions}
+            data-item-custom6-value={concho}
+            data-item-custom7-name="Waxing"
+            data-item-custom7-options="Yes[+25]|No"
+            data-item-custom7-value={waxed ? 'Yes' : 'No'}
+            data-item-custom8-name="Heel Loop"
+            data-item-custom8-options={heelLoopOptions}
+            data-item-custom8-value={heelLoop}
+            data-item-weight={900}
+            data-item-width={46}
+            data-item-height={8}
+            data-item-length={30}
+          >
+            Add to Cart
+          </Button>
+          <Text fontWeight="bold" fontSize="sm">
+            {total > 0 ? `Total: $${total}` : 'Total: —'}
+          </Text>
         </Flex>
       </Box>
     </Flex>

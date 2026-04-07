@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Flex, Text, Stack, RadioGroup, Radio, Heading, Button, Box, Image, SimpleGrid, List, ListItem } from '@chakra-ui/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import StepNav from '../../atoms/StepNav';
 import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
@@ -11,10 +12,10 @@ import { spools } from './constants/spoolColors';
 import { handles } from './constants/handleDesigns';
 import WhipPreview from './WhipPreview';
 import BullwhipAddedModal from '../../molecules/BullwhipAddedModal';
-import { conchoOptions } from './constants/conchos';
-import { collarOptions } from './constants/collars';
+import { conchos, conchoOptions } from './constants/conchos';
+import { collars, collarOptions } from './constants/collars';
 import CollarPicker from './CollarPicker';
-import { heelLoopOptions } from './constants/heelLoops';
+import { heelLoops, heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
 import DesignerLayout from '../../templates/DesignerLayout';
 import WhipGallery from './WhipGallery';
@@ -55,6 +56,7 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   const [collar, setCollar] = useState('None');
   const [heelLoop, setHeelLoop] = useState('Squared');
   const [modalOpen, setModalOpen] = useState(false);
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
   const TOTAL_STEPS = 8;
 
   const steps = [
@@ -100,6 +102,14 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
   };
 
   const readyForOrder = primary && secondary && whipLength && handleLength && concho;
+
+  // Calculate total for collapsed summary display
+  const bwLengthPrice = whipLength ? whipLengths.find((l) => l.name === whipLength)?.price || 0 : 0;
+  const bwHandlePrice = handleLength ? handleLengths.find((h) => h.name === handleLength)?.price || 0 : 0;
+  const bwConchoPrice = concho ? conchos.find((c) => c.name === concho)?.price || 0 : 0;
+  const bwCollarPrice = collar ? collars.find((c) => c.name === collar)?.price || 0 : 0;
+  const bwHeelLoopPrice = heelLoop ? heelLoops.find((h) => h.name === heelLoop)?.price || 0 : 0;
+  const total = bwLengthPrice + bwHandlePrice + bwConchoPrice + (waxed ? 25 : 0) + bwCollarPrice + bwHeelLoopPrice;
 
   const primarySpool = primary ? spools.find((s) => s.name === primary) : undefined;
   const secondarySpool = secondary ? spools.find((s) => s.name === secondary) : undefined;
@@ -465,77 +475,112 @@ const BullwhipDesigner = ({ location }: { location: any }) => {
         )}
       </Flex>
 
-      {/* Summary + Add to Cart — compact, always visible at bottom */}
+      {/* Collapsible summary + Add to Cart — always visible at bottom */}
       <Box borderTopWidth="1px" borderColor="gray.200" pt="2" mt="2" flexShrink={0}>
-        <Flex gap="4" alignItems="stretch">
-          <Flex flex="1" direction="column">
-            <Text fontWeight="bold" fontSize="lg" mb="1">YOUR BULLWHIP</Text>
-            <SimpleGrid columns={3} spacing="1">
-              <Text fontSize="sm"><Text as="span" color="gray.500">Primary: </Text>{primary || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Secondary: </Text>{secondary || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Handle: </Text>{handleDesign || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Waxed: </Text>{waxed ? 'Yes' : 'No'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Length: </Text>{whipLength || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Handle: </Text>{handleLength || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Concho: </Text>{concho || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Collar: </Text>{collar}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Heel Loop: </Text>{heelLoop}</Text>
-            </SimpleGrid>
-            <Button
-              isDisabled={!readyForOrder}
-              width="100%"
-              size="sm"
-              mt="auto"
-              onClick={handleAdd}
-              className="snipcart-add-item"
-              data-item-id="custom-bullwhip"
-              data-item-name="Custom Bullwhip"
-              data-item-price="204"
-              data-item-url="/design-bullwhip"
-              data-item-description="A custom-designed handmade bullwhip"
-              data-item-custom0-name="Primary Color"
-              data-item-custom0-options={colorOptions}
-              data-item-custom0-value={primary}
-              data-item-custom1-name="Secondary Color"
-              data-item-custom1-options={colorOptions}
-              data-item-custom1-value={secondary}
-              data-item-custom2-name="Handle Design"
-              data-item-custom2-options={handleDesignOptions}
-              data-item-custom2-value={handleDesign}
-              data-item-custom3-name="Length"
-              data-item-custom3-options={whipLengthOptions}
-              data-item-custom3-value={whipLength}
-              data-item-custom4-name="Handle Length"
-              data-item-custom4-options={handleLengthOptions}
-              data-item-custom4-value={handleLength}
-              data-item-custom5-name="Concho"
-              data-item-custom5-options={conchoOptions}
-              data-item-custom5-value={concho}
-              data-item-custom6-name="Waxing"
-              data-item-custom6-options="Yes[+25]|No"
-              data-item-custom6-value={waxed ? 'Yes' : 'No'}
-              data-item-custom7-name="Collar"
-              data-item-custom7-options={collarOptions}
-              data-item-custom7-value={collar}
-              data-item-custom8-name="Heel Loop"
-              data-item-custom8-options={heelLoopOptions}
-              data-item-custom8-value={heelLoop}
-              data-item-weight={900}
-              data-item-width={46}
-              data-item-height={8}
-              data-item-length={30}
+        {/* Toggle bar */}
+        <Flex
+          onClick={() => setDetailsExpanded(!detailsExpanded)}
+          cursor="pointer"
+          alignItems="center"
+          justifyContent="center"
+          py="1"
+          _hover={{ bg: 'whiteAlpha.100' }}
+          borderRadius="md"
+        >
+          <Text fontSize="sm" fontWeight="bold" mr="2">
+            {detailsExpanded ? 'Hide' : 'See'} your Bullwhip Details
+          </Text>
+          <Text fontSize="xs">{detailsExpanded ? '▲' : '▼'}</Text>
+        </Flex>
+
+        {/* Expandable details */}
+        <AnimatePresence initial={false}>
+          {detailsExpanded && (
+            <motion.div
+              key="details"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              style={{ overflow: 'hidden' }}
             >
-              Add to Cart
-            </Button>
-          </Flex>
-          <PriceBreakdown
-            handleLength={handleLength}
-            whipLength={whipLength}
-            concho={concho}
-            isWaxed={waxed}
-            collar={collar}
-            heelLoop={heelLoop}
-          />
+              <Flex gap="4" alignItems="stretch" mt="2">
+                <Flex flex="1" direction="column">
+                  <Text fontWeight="bold" fontSize="lg" mb="1">YOUR BULLWHIP</Text>
+                  <SimpleGrid columns={3} spacing="1">
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Primary: </Text>{primary || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Secondary: </Text>{secondary || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Handle: </Text>{handleDesign || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Waxed: </Text>{waxed ? 'Yes' : 'No'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Length: </Text>{whipLength || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Handle: </Text>{handleLength || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Concho: </Text>{concho || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Collar: </Text>{collar}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Heel Loop: </Text>{heelLoop}</Text>
+                  </SimpleGrid>
+                </Flex>
+                <PriceBreakdown
+                  handleLength={handleLength}
+                  whipLength={whipLength}
+                  concho={concho}
+                  isWaxed={waxed}
+                  collar={collar}
+                  heelLoop={heelLoop}
+                />
+              </Flex>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Always visible: Add to Cart + Total */}
+        <Flex alignItems="center" justifyContent="center" gap="3" mt="2">
+          <Button
+            isDisabled={!readyForOrder}
+            size="sm"
+            onClick={handleAdd}
+            className="snipcart-add-item"
+            data-item-id="custom-bullwhip"
+            data-item-name="Custom Bullwhip"
+            data-item-price="204"
+            data-item-url="/design-bullwhip"
+            data-item-description="A custom-designed handmade bullwhip"
+            data-item-custom0-name="Primary Color"
+            data-item-custom0-options={colorOptions}
+            data-item-custom0-value={primary}
+            data-item-custom1-name="Secondary Color"
+            data-item-custom1-options={colorOptions}
+            data-item-custom1-value={secondary}
+            data-item-custom2-name="Handle Design"
+            data-item-custom2-options={handleDesignOptions}
+            data-item-custom2-value={handleDesign}
+            data-item-custom3-name="Length"
+            data-item-custom3-options={whipLengthOptions}
+            data-item-custom3-value={whipLength}
+            data-item-custom4-name="Handle Length"
+            data-item-custom4-options={handleLengthOptions}
+            data-item-custom4-value={handleLength}
+            data-item-custom5-name="Concho"
+            data-item-custom5-options={conchoOptions}
+            data-item-custom5-value={concho}
+            data-item-custom6-name="Waxing"
+            data-item-custom6-options="Yes[+25]|No"
+            data-item-custom6-value={waxed ? 'Yes' : 'No'}
+            data-item-custom7-name="Collar"
+            data-item-custom7-options={collarOptions}
+            data-item-custom7-value={collar}
+            data-item-custom8-name="Heel Loop"
+            data-item-custom8-options={heelLoopOptions}
+            data-item-custom8-value={heelLoop}
+            data-item-weight={900}
+            data-item-width={46}
+            data-item-height={8}
+            data-item-length={30}
+          >
+            Add to Cart
+          </Button>
+          <Text fontWeight="bold" fontSize="sm">
+            {total > 0 ? `Total: $${total}` : 'Total: —'}
+          </Text>
         </Flex>
       </Box>
     </Flex>

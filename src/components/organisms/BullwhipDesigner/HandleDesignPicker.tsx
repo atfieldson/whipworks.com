@@ -23,14 +23,14 @@ const stockwhipHandles = handles.filter(
 // Snakewhip: Herringbone is default (free), others are +$15 upcharge
 // Excluded: Box, Vertical Strip, Egyptian Eye, Emerald, Accent
 const snakewhipExclude = ['Box', 'Vertical Strip', 'Egyptian Eye', 'Emerald', 'Accent'];
-const snakewhipBaseHandles = handles.filter(
+const snakewhipFiltered = handles.filter(
   (handle) => !snakewhipExclude.includes(handle.name)
 );
-const herringboneHandle: Handle = {
-  name: 'Herringbone',
-  img: 'https://d3ruufruf2uqog.cloudfront.net/handleDesigns/herringbone.jpg', // placeholder
-};
-const snakewhipHandles: Handle[] = [herringboneHandle, ...snakewhipBaseHandles];
+// Put Herringbone first for snakewhips (it's the default/free option)
+const snakewhipHandles = [
+  ...snakewhipFiltered.filter((h) => h.name === 'Herringbone'),
+  ...snakewhipFiltered.filter((h) => h.name !== 'Herringbone'),
+];
 
 const getHandleList = (whipType?: string): Handle[] => {
   if (whipType === 'stockwhip') return stockwhipHandles;

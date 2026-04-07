@@ -11,6 +11,7 @@ import {
   List,
   ListItem,
 } from '@chakra-ui/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import StepNav from '../../atoms/StepNav';
 import WhipColors from './WhipColors';
 import HandleDesignPicker from './HandleDesignPicker';
@@ -22,7 +23,7 @@ import { handles } from './constants/handleDesigns';
 import WhipPreview from './WhipPreview';
 import BullwhipAddedModal from '../../molecules/BullwhipAddedModal';
 import { conchos, conchoOptions } from './constants/conchos';
-import { heelLoopOptions } from './constants/heelLoops';
+import { heelLoops, heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
 import DesignerLayout from '../../templates/DesignerLayout';
 import SnakewhipGallery from './SnakewhipGallery';
@@ -66,6 +67,7 @@ const SnakewhipDesigner = ({ location }: { location: any }) => {
   const [concho, setConcho] = useState<string | undefined>(undefined);
   const [heelLoop, setHeelLoop] = useState('Squared');
   const [modalOpen, setModalOpen] = useState(false);
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
 
   const steps = [
     { label: 'Primary', navLabel: 'Primary Color', isCompleted: !!primary },
@@ -112,6 +114,12 @@ const SnakewhipDesigner = ({ location }: { location: any }) => {
 
   // Handle design upcharge: $15 for anything that isn't Herringbone
   const handleDesignUpcharge = handleDesign && handleDesign !== 'Herringbone' ? 15 : 0;
+
+  // Calculate total for collapsed summary display
+  const lengthPrice = whipLength ? snakewhipLengths.find((l) => l.name === whipLength)?.price || 0 : 0;
+  const conchoPrice = concho ? conchos.find((c) => c.name === concho)?.price || 0 : 0;
+  const heelLoopPrice = heelLoop ? heelLoops.find((h) => h.name === heelLoop)?.price || 0 : 0;
+  const total = lengthPrice + conchoPrice + (waxed ? 25 : 0) + heelLoopPrice + handleDesignUpcharge;
 
   const primarySpool = primary ? spools.find((s) => s.name === primary) : undefined;
   const secondarySpool = secondary ? spools.find((s) => s.name === secondary) : undefined;
@@ -425,72 +433,107 @@ const SnakewhipDesigner = ({ location }: { location: any }) => {
         )}
       </Flex>
 
-      {/* Summary + Add to Cart — compact, always visible at bottom */}
+      {/* Collapsible summary + Add to Cart — always visible at bottom */}
       <Box borderTopWidth="1px" borderColor="gray.200" pt="2" mt="2" flexShrink={0}>
-        <Flex gap="4" alignItems="stretch">
-          <Flex flex="1" direction="column">
-            <Text fontWeight="bold" fontSize="lg" mb="1">YOUR SNAKEWHIP</Text>
-            <SimpleGrid columns={3} spacing="1">
-              <Text fontSize="sm"><Text as="span" color="gray.500">Primary: </Text>{primary || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Secondary: </Text>{secondary || '—'}</Text>
-              <Text fontSize="sm">
-                <Text as="span" color="gray.500">Handle: </Text>
-                {handleDesign || '—'}
-                {handleDesignUpcharge > 0 && ' (+$15)'}
-              </Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Waxed: </Text>{waxed ? 'Yes' : 'No'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Length: </Text>{whipLength || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Concho: </Text>{concho || '—'}</Text>
-              <Text fontSize="sm"><Text as="span" color="gray.500">Heel Loop: </Text>{heelLoop}</Text>
-            </SimpleGrid>
-            <Button
-              isDisabled={!readyForOrder}
-              width="100%"
-              size="sm"
-              mt="auto"
-              onClick={handleAdd}
-              className="snipcart-add-item"
-              data-item-id="custom-snakewhip"
-              data-item-name="Custom Snakewhip"
-              data-item-price="149"
-              data-item-url="/design-snakewhip"
-              data-item-description="A custom-designed handmade snakewhip"
-              data-item-custom0-name="Primary Color"
-              data-item-custom0-options={colorOptions}
-              data-item-custom0-value={primary}
-              data-item-custom1-name="Secondary Color"
-              data-item-custom1-options={colorOptions}
-              data-item-custom1-value={secondary}
-              data-item-custom2-name="Handle Design"
-              data-item-custom2-options={handleDesignOptions}
-              data-item-custom2-value={handleDesign}
-              data-item-custom3-name="Length"
-              data-item-custom3-options={snakewhipLengthOptions}
-              data-item-custom3-value={whipLength}
-              data-item-custom4-name="Concho"
-              data-item-custom4-options={snakewhipConchoOptions}
-              data-item-custom4-value={concho}
-              data-item-custom5-name="Waxing"
-              data-item-custom5-options="Yes[+25]|No"
-              data-item-custom5-value={waxed ? 'Yes' : 'No'}
-              data-item-custom6-name="Heel Loop"
-              data-item-custom6-options={heelLoopOptions}
-              data-item-custom6-value={heelLoop}
-              data-item-weight={750}
-              data-item-width={46}
-              data-item-height={8}
-              data-item-length={30}
+        {/* Toggle bar */}
+        <Flex
+          onClick={() => setDetailsExpanded(!detailsExpanded)}
+          cursor="pointer"
+          alignItems="center"
+          justifyContent="center"
+          py="1"
+          _hover={{ bg: 'whiteAlpha.100' }}
+          borderRadius="md"
+        >
+          <Text fontSize="sm" fontWeight="bold" mr="2">
+            {detailsExpanded ? 'Hide' : 'See'} your Snakewhip Details
+          </Text>
+          <Text fontSize="xs">{detailsExpanded ? '▲' : '▼'}</Text>
+        </Flex>
+
+        {/* Expandable details */}
+        <AnimatePresence initial={false}>
+          {detailsExpanded && (
+            <motion.div
+              key="details"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              style={{ overflow: 'hidden' }}
             >
-              Add to Cart
-            </Button>
-          </Flex>
-          <PriceBreakdownSnakewhip
-            whipLength={whipLength}
-            concho={concho}
-            isWaxed={waxed}
-            heelLoop={heelLoop}
-            handleDesignUpcharge={handleDesignUpcharge}
-          />
+              <Flex gap="4" alignItems="stretch" mt="2">
+                <Flex flex="1" direction="column">
+                  <Text fontWeight="bold" fontSize="lg" mb="1">YOUR SNAKEWHIP</Text>
+                  <SimpleGrid columns={3} spacing="1">
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Primary: </Text>{primary || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Secondary: </Text>{secondary || '—'}</Text>
+                    <Text fontSize="sm">
+                      <Text as="span" color="gray.500">Handle: </Text>
+                      {handleDesign || '—'}
+                      {handleDesignUpcharge > 0 && ' (+$15)'}
+                    </Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Waxed: </Text>{waxed ? 'Yes' : 'No'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Length: </Text>{whipLength || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Concho: </Text>{concho || '—'}</Text>
+                    <Text fontSize="sm"><Text as="span" color="gray.500">Heel Loop: </Text>{heelLoop}</Text>
+                  </SimpleGrid>
+                </Flex>
+                <PriceBreakdownSnakewhip
+                  whipLength={whipLength}
+                  concho={concho}
+                  isWaxed={waxed}
+                  heelLoop={heelLoop}
+                  handleDesignUpcharge={handleDesignUpcharge}
+                />
+              </Flex>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Always visible: Add to Cart + Total */}
+        <Flex alignItems="center" justifyContent="center" gap="3" mt="2">
+          <Button
+            isDisabled={!readyForOrder}
+            size="sm"
+            onClick={handleAdd}
+            className="snipcart-add-item"
+            data-item-id="custom-snakewhip"
+            data-item-name="Custom Snakewhip"
+            data-item-price="149"
+            data-item-url="/design-snakewhip"
+            data-item-description="A custom-designed handmade snakewhip"
+            data-item-custom0-name="Primary Color"
+            data-item-custom0-options={colorOptions}
+            data-item-custom0-value={primary}
+            data-item-custom1-name="Secondary Color"
+            data-item-custom1-options={colorOptions}
+            data-item-custom1-value={secondary}
+            data-item-custom2-name="Handle Design"
+            data-item-custom2-options={handleDesignOptions}
+            data-item-custom2-value={handleDesign}
+            data-item-custom3-name="Length"
+            data-item-custom3-options={snakewhipLengthOptions}
+            data-item-custom3-value={whipLength}
+            data-item-custom4-name="Concho"
+            data-item-custom4-options={snakewhipConchoOptions}
+            data-item-custom4-value={concho}
+            data-item-custom5-name="Waxing"
+            data-item-custom5-options="Yes[+25]|No"
+            data-item-custom5-value={waxed ? 'Yes' : 'No'}
+            data-item-custom6-name="Heel Loop"
+            data-item-custom6-options={heelLoopOptions}
+            data-item-custom6-value={heelLoop}
+            data-item-weight={750}
+            data-item-width={46}
+            data-item-height={8}
+            data-item-length={30}
+          >
+            Add to Cart
+          </Button>
+          <Text fontWeight="bold" fontSize="sm">
+            {total > 0 ? `Total: $${total}` : 'Total: —'}
+          </Text>
         </Flex>
       </Box>
     </Flex>

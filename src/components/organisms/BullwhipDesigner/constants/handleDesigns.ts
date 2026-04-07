@@ -20,6 +20,10 @@ export const handles = [
     img: 'https://d3ruufruf2uqog.cloudfront.net/handleDesigns/emerald.jpg',
   },
   {
+    name: 'Herringbone',
+    img: 'https://d3ruufruf2uqog.cloudfront.net/handleDesigns/herringbone.jpg',
+  },
+  {
     name: 'Neo Celtic',
     img: 'https://d3ruufruf2uqog.cloudfront.net/handleDesigns/new.jpg',
   },
