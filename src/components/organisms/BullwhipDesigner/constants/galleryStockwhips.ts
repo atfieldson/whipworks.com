@@ -4,7 +4,7 @@
  * Naming convention for S3 images:
  *   SW[number](-[number])[angle].jpg  — Stockwhip
  *   The -[number] suffix (e.g. SW21-22) indicates a matching pair.
- *   Angles: Wide, Keeper, HandleMid, HandleHeel
+ *   Angles: Wide, Keeper, Heel (4:3), HandleMid, HandleHeel
  *   1x1 suffix indicates a square aspect ratio image.
  *   Example: SW21-22Wide.jpg, SW7-8Wide1x1.jpg
  *
@@ -20,6 +20,7 @@ export type StockwhipGalleryWhip = {
     wide?: string;
     wide1x1?: string;
     keeper?: string;
+    heel?: string;
     handleMid?: string;
     handleHeel?: string;
   };
@@ -93,6 +94,27 @@ export const stockwhipGalleryItems: StockwhipGalleryItem[] = [
       primaryColor: 'Black',
       secondaryColor: null,
       handleDesign: 'Herringbone',
+      waxed: true,
+      thongLength: '4 Feet 6 Inches',
+      handleLength: '18 Inches',
+      concho: 'Celtic Silver',
+      handleFinish: 'Kona',
+      heelLoop: 'Squared',
+    },
+  },
+  {
+    id: 'SW15',
+    type: 'stockwhip',
+    images: {
+      wide: `${GALLERY_BASE_URL}/SW15Wide.jpg`,
+      keeper: `${GALLERY_BASE_URL}/SW15Keeper.jpg`,
+      heel: `${GALLERY_BASE_URL}/SW15Heel.jpg`,
+      handleHeel: `${GALLERY_BASE_URL}/SW15HandleHeel.jpg`,
+    },
+    specs: {
+      primaryColor: 'Imperial Red',
+      secondaryColor: 'Black',
+      handleDesign: 'Emerald',
       waxed: true,
       thongLength: '4 Feet 6 Inches',
       handleLength: '18 Inches',
