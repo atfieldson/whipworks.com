@@ -109,10 +109,10 @@
 - [x] `minW="0"` through flex ancestor chain to enable overflow scrolling
 
 ### Apply to All Designer Pages
-- [ ] Bullwhip designer
-- [ ] Stockwhip designer
+- [x] Bullwhip designer
+- [x] Stockwhip designer
 - [ ] Flogger designer (Phase 5A — will use same layout)
-- [ ] Snakewhip designer (Phase 5B — will use same layout)
+- [x] Snakewhip designer (Phase 5B — will use same layout)
 
 ### Photography & Assets
 - [ ] Plan and shoot product photography for left-panel galleries
@@ -136,7 +136,7 @@
 ### Update 3JS
 - [x] Address over brightness issue on render (switched MeshBasicMaterial to MeshStandardMaterial)
 - [x] Add interactive rotation or slow down rotation
-- [ ] Create Herringbone pattern
+- [x] Create Herringbone pattern
 
 ## Phase 4: Whipmaking Materials Section (In Progress)
 - [x] Create materials listing page (`/whipmaking-materials`)
@@ -215,20 +215,26 @@
 - [ ] Add flogger to "Custom Whips" nav dropdown
 - [ ] Add flogger nav thumbnail image
 
-### 5B: Snakewhip
-- [ ] Build "Design a Snakewhip" page (/design-snakewhip)
-  - [ ] Primary color selection (reuse existing color picker)
-  - [ ] Secondary color selection (reuse existing color picker)
-  - [ ] Handle design selection (reuse existing HandleDesignPicker)
-  - [ ] Add Herringbone handle pattern to Three.js 3D preview
-  - [ ] Concho selection (reuse existing ConchoPicker)
-  - [ ] Heel loop (reuse HeelLoopPicker from Phase 3)
-  - [ ] Waxing yes/no (reuse existing)
-  - [ ] Length selection (3', 3'6", 4', 4'6", 5', 6', 7', 8', 10', 12')
-  - [ ] Price breakdown component
-  - [ ] Snipcart integration with all custom fields
-- [ ] Add snakewhip to "Custom Whips" nav dropdown
-- [ ] Add snakewhip nav thumbnail image
+### 5B: Snakewhip ✅
+- [x] Build "Design a Snakewhip" page (/design-snakewhip)
+  - [x] Primary color selection (reuse existing color picker)
+  - [x] Secondary color selection (reuse existing color picker)
+  - [x] Handle design selection (Herringbone default/free, others +$15 upcharge)
+  - [x] Add Herringbone handle pattern to Three.js 3D preview
+  - [x] Concho selection (reuse existing ConchoPicker)
+  - [x] Heel loop (reuse HeelLoopPicker from Phase 3)
+  - [x] Waxing yes/no (reuse existing)
+  - [x] Length selection (3'-12', base $149)
+  - [x] Price breakdown component (PriceBreakdownSnakewhip)
+  - [x] Snipcart integration with all custom fields
+- [x] Add snakewhip to "Custom Whips" nav dropdown
+- [x] Add snakewhip nav thumbnail image
+- [x] Snakewhip gallery with 3 whips (SnW1, SnW2, SnW29)
+- [x] 3D preview improvements: onLoad callbacks, 3-point lighting, ACES Filmic tone mapping, MeshPhysicalMaterial with clearcoat
+- [x] Collapsible summary sections with slide animation (framer-motion) on all 3 designers
+- [x] Sticky "Return to Top" button on all designer pages
+- [x] Previous/Next navigation buttons on all designers
+- [x] Herringbone handle design available on all 3 designers
 - [ ] Update Contact page internal links to include flogger, snakewhip, and materials pages
 
 ## Phase 6: SEO & Performance ✅
