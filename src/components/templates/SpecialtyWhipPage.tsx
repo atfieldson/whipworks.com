@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect, useRef, useCallback, ChangeEvent } from 'react';
 import { graphql, Link } from 'gatsby';
 import Layout from './Layout';
 import SEO from './SEO';
@@ -13,9 +13,13 @@ import {
   Stack,
   Image,
   Button,
+  List,
+  ListItem,
+  Collapse,
+  useDisclosure,
 } from '@chakra-ui/react';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import ProductImages from '../molecules/ProductImages';
-import SpecialtyWhipCard from '../atoms/SpecialtyWhipCard';
 import BullwhipAddedModal from '../molecules/BullwhipAddedModal';
 
 type Option = {
@@ -28,6 +32,11 @@ type Variant = {
   name: string;
   options: Option[];
   defaultValue: string;
+};
+
+type Spec = {
+  label: string;
+  value: string;
 };
 
 const resolveWeights = (length?: string) => {
@@ -54,6 +63,7 @@ const resolveWeights = (length?: string) => {
 const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
   const whip = data.markdownRemark.frontmatter;
   const { previous, next, snipcartOptions } = pageContext;
+  const specsDisclosure = useDisclosure();
 
   const [style, setStyle] = useState('');
   const [price, setPrice] = useState(whip.price);
@@ -62,6 +72,27 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
   const [selectedOptions, setSelectedOptions] = useState<any>({});
   const [images, setImages] = useState(whip.images);
   const [modalOpen, setModalOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const productInfoRef = useRef<HTMLDivElement>(null);
+
+  // Show/hide back-to-top button based on product info visibility
+  useEffect(() => {
+    if (!productInfoRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Show button when product info scrolls out of view
+        setShowBackToTop(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(productInfoRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleBackToTop = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.blur();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const styles = whip.hasStyles && whip.variants?.find((v) => v.name === 'Style');
   const variants = whip.hasStyles
@@ -85,7 +116,6 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
   }, [selectedOptions]);
 
   const handleVariantChange = (e: ChangeEvent<HTMLSelectElement>, variant: Variant) => {
-    /** assign snipcart values */
     const index = whip.variants?.findIndex((v) => v.name === variant.name) || 0;
     if (variant.name === 'Whip Length') {
       setWeight(resolveWeights(e.target.value));
@@ -95,9 +125,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
       [`data-item-custom${index + 1}-value`]: e.target.value,
     });
 
-    /** update the price if needed */
     const option = variant.options.find((v) => v.name == e.target.value);
-    // needed in case priceDiff is 0
     if (option?.priceDiff !== undefined) {
       setSelectedOptions((selectedOptions: any) => ({
         ...selectedOptions,
@@ -118,7 +146,6 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
   };
 
   const handleAdd = () => {
-    // Hide Snipcart so its cart open/close doesn't affect the page
     const snipcartEl = document.getElementById('snipcart');
     if (snipcartEl) {
       snipcartEl.style.visibility = 'hidden';
@@ -128,7 +155,6 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
 
   const handleModalClose = () => {
     setModalOpen(false);
-    // Close Snipcart's cart while still hidden, then restore visibility
     if (typeof window !== 'undefined' && (window as any).Snipcart) {
       (window as any).Snipcart.api.theme.cart.close();
     }
@@ -176,77 +202,180 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           },
         }}
       />
-      <Flex flexDirection={{ base: 'column', md: 'row' }}>
-        <ProductImages images={images} alt={whip.title} />
-        <Flex flex="1" direction="column" ml={{ base: 0, md: '6' }} mt={{ base: '6', md: 0 }}>
-          <Flex>
-            <Image src={whip.headerImage} maxH="50px" objectFit="contain" alt={`${whip.title} logo`} />
-          </Flex>
-          <Heading fontSize="3xl" letterSpacing="wider" mt="1">
+
+      {/* Mobile: hero image above product info */}
+      <Box display={{ base: 'block', md: 'none' }} mb="6">
+        {images && images[0] && (
+          <Image
+            src={images[0]}
+            alt={`${whip.title} - wide`}
+            w="100%"
+            borderRadius="md"
+            objectFit="contain"
+            bg="black"
+          />
+        )}
+      </Box>
+
+      {/* Two-column layout (desktop) / product info (mobile) */}
+      <Flex
+        direction={{ base: 'column', md: 'row' }}
+        gap={{ base: 0, md: 10 }}
+        alignItems="flex-start"
+      >
+        {/* Left column — full image gallery (desktop only) */}
+        <Box flex="3" minW="0" display={{ base: 'none', md: 'block' }}>
+          <ProductImages images={images} alt={whip.title} />
+        </Box>
+
+        {/* Right column — sticky product info */}
+        <Box
+          ref={productInfoRef}
+          flex="2"
+          position={{ base: 'relative', md: 'sticky' }}
+          top={{ base: 'auto', md: '100px' }}
+          alignSelf="flex-start"
+        >
+          {/* Header logo */}
+          {whip.headerImage && (
+            <Image
+              src={whip.headerImage}
+              maxH="55px"
+              objectFit="contain"
+              alt={`${whip.title} logo`}
+              mb="3"
+            />
+          )}
+
+          {/* Price */}
+          <Heading fontSize="3xl" letterSpacing="wider" mb="4">
             ${price}
           </Heading>
-          <Text my="6">{whip.description}</Text>
-          <Stack spacing="6" mt="4">
-            {styles && (
-              <Box>
-                <Text fontWeight="bold">Style</Text>
-                <RadioGroup value={style} onChange={handleStyleChange}>
-                  <Stack>
-                    {styles.options.map((s: Option) => (
-                      <Radio value={s.name} key={s.name}>
-                        {s.name}
-                      </Radio>
-                    ))}
-                  </Stack>
-                </RadioGroup>
-              </Box>
-            )}
-            {variants?.map((v) => (
-              <Box key={v.name}>
-                <Text fontWeight="bold" mb="1">
-                  {v.name}
-                </Text>
-                <Select
-                  defaultValue={v.defaultValue}
-                  onChange={(e) => handleVariantChange(e, v)}
-                  bg="rgba(255,255,255,0.9)"
-                  borderColor="rgba(255,255,255,0.16)"
-                  _hover={{ bg: 'rgba(255,255,255,1)' }}
-                  _active={{ bg: 'rgba(255,255,255,1)' }}
-                  color="#000000"
-                  fontWeight="bold"
-                >
-                  {v.options.map((vo: Option) => (
-                    <option value={vo.name} key={vo.name} color="000000">
-                      {vo.name}
-                    </option>
+
+          {/* Description */}
+          <Text mb="6" lineHeight="tall" fontSize="md" opacity={0.9}>
+            {whip.description}
+          </Text>
+
+          {/* Style selector */}
+          {styles && (
+            <Box mb="5">
+              <Text fontWeight="bold" mb="2" fontSize="sm" textTransform="uppercase" letterSpacing="wider">
+                Style
+              </Text>
+              <RadioGroup value={style} onChange={handleStyleChange}>
+                <Stack spacing="2">
+                  {styles.options.map((s: Option) => (
+                    <Radio
+                      value={s.name}
+                      key={s.name}
+                      size="lg"
+                      colorScheme="blue"
+                    >
+                      <Text fontSize="md">{s.name}</Text>
+                    </Radio>
                   ))}
-                </Select>
-              </Box>
-            ))}
-            <Button
-              mt="4"
-              onClick={handleAdd}
-              className="snipcart-add-item"
-              data-item-name={whip.title}
-              data-item-price={whip.price}
-              data-item-id={whip.id}
-              // Weight hardcoded to 900g — dynamic weight caused shipping issues
-              data-item-weight={900}
-              data-item-url={location.pathname}
-              data-item-description={whip.description}
-              data-item-image={whip.images && whip.images[0]}
-              data-item-width={46}
-              data-item-height={8}
-              data-item-length={30}
-              {...snipcartOptions}
-              {...options}
-            >
-              Add to Cart
-            </Button>
-          </Stack>
-        </Flex>
+                </Stack>
+              </RadioGroup>
+            </Box>
+          )}
+
+          {/* Other variant selectors */}
+          {variants?.map((v) => (
+            <Box key={v.name} mb="5">
+              <Text fontWeight="bold" mb="2" fontSize="sm" textTransform="uppercase" letterSpacing="wider">
+                {v.name}
+              </Text>
+              <Select
+                defaultValue={v.defaultValue}
+                onChange={(e) => handleVariantChange(e, v)}
+                bg="rgba(255,255,255,0.9)"
+                borderColor="rgba(255,255,255,0.16)"
+                _hover={{ bg: 'rgba(255,255,255,1)' }}
+                _active={{ bg: 'rgba(255,255,255,1)' }}
+                color="#000000"
+                fontWeight="bold"
+                size="lg"
+              >
+                {v.options.map((vo: Option) => (
+                  <option value={vo.name} key={vo.name}>
+                    {vo.name}
+                  </option>
+                ))}
+              </Select>
+            </Box>
+          ))}
+
+          {/* Add to Cart */}
+          <Button
+            w="100%"
+            mt="2"
+            mb="6"
+            onClick={handleAdd}
+            className="snipcart-add-item"
+            data-item-name={whip.title}
+            data-item-price={whip.price}
+            data-item-id={whip.id}
+            data-item-weight={900}
+            data-item-url={location.pathname}
+            data-item-description={whip.description}
+            data-item-image={whip.images && whip.images[0]}
+            data-item-width={46}
+            data-item-height={8}
+            data-item-length={30}
+            {...snipcartOptions}
+            {...options}
+          >
+            Add to Cart
+          </Button>
+
+          {/* Collapsible Specs */}
+          {whip.specs && whip.specs.length > 0 && (
+            <Box borderTopWidth="1px" borderColor="whiteAlpha.200" pt="3">
+              <Flex
+                as="button"
+                onClick={specsDisclosure.onToggle}
+                w="100%"
+                justify="space-between"
+                align="center"
+                cursor="pointer"
+                py="2"
+                _hover={{ opacity: 0.8 }}
+              >
+                <Text fontWeight="bold" fontSize="sm" textTransform="uppercase" letterSpacing="wider">
+                  Specs
+                </Text>
+                {specsDisclosure.isOpen ? (
+                  <FaChevronUp />
+                ) : (
+                  <FaChevronDown />
+                )}
+              </Flex>
+              <Collapse in={specsDisclosure.isOpen} animateOpacity>
+                <List spacing="2" pb="4" pl="1">
+                  {whip.specs.map((spec: Spec) => (
+                    <ListItem key={spec.label} fontSize="sm">
+                      <Text as="span" fontWeight="bold" opacity={0.7}>
+                        {spec.label}:
+                      </Text>{' '}
+                      {spec.value}
+                    </ListItem>
+                  ))}
+                </List>
+              </Collapse>
+            </Box>
+          )}
+        </Box>
       </Flex>
+
+      {/* Mobile: remaining images below product info */}
+      {images && images.length > 1 && (
+        <Box display={{ base: 'block', md: 'none' }} mt="8">
+          <ProductImages images={images.slice(1)} alt={whip.title} />
+        </Box>
+      )}
+
+      {/* Bottom CTAs */}
       <Box mt="70px" mb="10" textAlign="center">
         <Box mb="5">
           <Button as={Link} to="/specialty-whips" size="lg">
@@ -261,6 +390,29 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           {' '}from scratch!
         </Text>
       </Box>
+
+      {/* Mobile: sticky back-to-top button */}
+      <Button
+        onClick={handleBackToTop}
+        position="fixed"
+        bottom="24px"
+        right="24px"
+        size="md"
+        borderRadius="full"
+        opacity={showBackToTop ? 1 : 0}
+        pointerEvents={showBackToTop ? 'auto' : 'none'}
+        transition="opacity 0.3s ease"
+        zIndex={10}
+        display={{ base: 'inline-flex', md: 'none' }}
+        boxShadow="lg"
+        _hover={{ bg: 'blue.200' }}
+        _active={{ bg: 'blue.200' }}
+        _focus={{ bg: 'blue.200', boxShadow: 'lg' }}
+        _focusVisible={{ bg: 'blue.200', boxShadow: 'lg' }}
+      >
+        ↑ Back to Top
+      </Button>
+
       <BullwhipAddedModal
         isOpen={modalOpen}
         onClose={handleModalClose}
@@ -292,6 +444,7 @@ interface Props {
         headerImage: string;
         images?: string[];
         weight?: number;
+        specs?: Spec[];
       };
     };
   };
@@ -310,6 +463,10 @@ export const pageQuery = graphql`
         headerImage
         images
         weight
+        specs {
+          label
+          value
+        }
         variants {
           name
           defaultValue

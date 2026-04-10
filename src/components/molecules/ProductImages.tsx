@@ -1,43 +1,27 @@
-import React, { useState } from 'react';
-import { Flex, Stack, Image } from '@chakra-ui/react';
-import ImageButton from '../atoms/ImageButton';
+import React from 'react';
+import { Box, Image, Stack } from '@chakra-ui/react';
 
 type Props = {
-  images?: any[];
+  images?: string[];
   alt?: string;
 };
 
 const ProductImages = ({ images, alt }: Props) => {
-  const [activeImage, setActiveImage] = useState(0);
-
   return (
-    <Flex flex="1" direction="column" maxW={{ base: '450px', sm: '100%' }}>
-      <Image
-        bg="gray.800"
-        maxW="600px"
-        mr="sm"
-        borderRadius="md"
-        objectFit="contain"
-        src={images && images[activeImage]}
-        alt={alt || 'Product image'}
-      />
-      <Stack direction="row" mt="5" spacing="5" flexWrap="wrap" maxW="100%">
-        {images &&
-          images.length > 1 &&
-          images.map((image, index) => (
-            <ImageButton
-              key={index}
-              isSelected={activeImage === index}
-              onClick={() => setActiveImage(index)}
-              src={image}
-              height="100px"
-              width="100px"
-              minW="100px"
-              mb="4"
-            />
-          ))}
-      </Stack>
-    </Flex>
+    <Stack spacing="3" w="100%">
+      {images &&
+        images.map((image, index) => (
+          <Image
+            key={index}
+            src={image}
+            alt={`${alt || 'Product image'} - ${index + 1}`}
+            w="100%"
+            borderRadius="md"
+            objectFit="contain"
+            bg="black"
+          />
+        ))}
+    </Stack>
   );
 };
 
