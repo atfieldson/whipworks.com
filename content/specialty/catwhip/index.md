@@ -7,10 +7,10 @@ price: 289
 hasStyles: false
 headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/TheCatwhipHeader.png'
 images:
-  - 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/catwhip/theCatwhip.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/catwhipb.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/catwhipc.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/catwhipd.jpg'
+  - url: 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/catwhip/theCatwhip.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/catwhipb.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/catwhipc.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/catwhipd.jpg'
 weight: 880
 variants:
   - name: Whip Length

@@ -7,11 +7,11 @@ price: 289
 hasStyles: false
 headerImage: 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/pride/prideHeader.png'
 images:
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/pride/prideThumbnail.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/pride/pride1.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/pride/pride2.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/pride/pride3.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/pride/pride4.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/pride/prideThumbnail.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/pride/pride1.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/pride/pride2.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/pride/pride3.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/pride/pride4.jpg'
 weight: 900
 variants:
   - name: Whip Length

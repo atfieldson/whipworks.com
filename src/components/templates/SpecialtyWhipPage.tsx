@@ -22,10 +22,15 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import ProductImages from '../molecules/ProductImages';
 import BullwhipAddedModal from '../molecules/BullwhipAddedModal';
 
+type ImageData = {
+  url: string;
+  caption?: string;
+};
+
 type Option = {
   name: string;
   priceDiff?: string;
-  images?: string[];
+  images?: ImageData[];
 };
 
 type Variant = {
@@ -184,7 +189,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           '@type': 'Product',
           name: whip.title,
           description: whip.description,
-          image: whip.images?.[0],
+          image: whip.images?.[0]?.url || whip.images?.[0],
           brand: {
             '@type': 'Brand',
             name: 'WhipWorks',
@@ -207,7 +212,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
       <Box display={{ base: 'block', md: 'none' }} mb="6">
         {images && images[0] && (
           <Image
-            src={images[0]}
+            src={images[0].url}
             alt={`${whip.title} - wide`}
             w="100%"
             borderRadius="md"
@@ -319,7 +324,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
             data-item-weight={900}
             data-item-url={location.pathname}
             data-item-description={whip.description}
-            data-item-image={whip.images && whip.images[0]}
+            data-item-image={whip.images && (whip.images[0]?.url || whip.images[0])}
             data-item-width={46}
             data-item-height={8}
             data-item-length={30}
@@ -442,7 +447,7 @@ interface Props {
         price: number;
         variants?: any[];
         headerImage: string;
-        images?: string[];
+        images?: ImageData[];
         weight?: number;
         specs?: Spec[];
       };
@@ -461,7 +466,10 @@ export const pageQuery = graphql`
         description
         hasStyles
         headerImage
-        images
+        images {
+          url
+          caption
+        }
         weight
         specs {
           label
@@ -473,7 +481,10 @@ export const pageQuery = graphql`
           options {
             name
             priceDiff
-            images
+            images {
+              url
+              caption
+            }
           }
         }
       }

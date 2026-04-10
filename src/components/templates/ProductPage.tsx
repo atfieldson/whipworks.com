@@ -39,7 +39,7 @@ interface Props {
         description?: string;
         price: number;
         variants?: any[];
-        images?: string[];
+        images?: { url: string; caption?: string }[];
         weight?: number;
       };
     };
@@ -140,7 +140,7 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
           '@type': 'Product',
           name: product.title,
           description: product.description,
-          image: product.images?.[0],
+          image: product.images?.[0]?.url,
           brand: {
             '@type': 'Brand',
             name: 'WhipWorks',
@@ -198,7 +198,7 @@ const ProductPage = ({ data, location, pageContext }: Props) => {
             data-item-id={product.id}
             data-item-url={location.pathname}
             data-item-description={product.description}
-            data-item-image={product.images && product.images[0]}
+            data-item-image={product.images?.[0]?.url}
             data-item-weight={product.weight}
             data-item-quantity={collection === 'materials' || collection === 'accessories' ? quantity : undefined}
             {...snipcartOptions}
@@ -249,7 +249,10 @@ export const pageQuery = graphql`
         id
         price
         description
-        images
+        images {
+          url
+          caption
+        }
         weight
         variants {
           name

@@ -8,10 +8,10 @@ hasStyles: false
 headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangledHeader.png'
 weight: 880
 images:
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled1.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled2.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled3.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled4.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled1.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled2.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled3.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled4.jpg'
 variants:
   - name: Whip Length
     defaultValue: '6 Feet'

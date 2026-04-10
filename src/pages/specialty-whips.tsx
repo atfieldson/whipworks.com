@@ -17,7 +17,10 @@ export const pageQuery = graphql`
           frontmatter {
             title
             headerImage
-            images
+            images {
+              url
+              caption
+            }
             description
             price
           }
@@ -40,7 +43,7 @@ const SpecialtyWhipsPage = () => {
           '@type': 'Product',
           name: a.node.frontmatter.title,
           description: a.node.frontmatter.description,
-          image: a.node.frontmatter.images?.[0],
+          image: a.node.frontmatter.images?.[0]?.url,
           brand: {
             '@type': 'Brand',
             name: 'WhipWorks',
@@ -67,7 +70,7 @@ const SpecialtyWhipsPage = () => {
               headerImage={whip.headerImage}
               description={whip.description}
               title={whip.title}
-              image={whip.images[0]}
+              image={whip.images[0]?.url}
               slug={specialtyWhip.node.fields.slug}
               size="lg"
             />

@@ -8,11 +8,11 @@ hasStyles: false
 headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/TheZWhipHeader.png'
 weight: 880
 images:
-  - 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/zwhip/theZWhip.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/zWhipb.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/zWhipc.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/zWhipd.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/zWhipe.jpg'
+  - url: 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/zwhip/theZWhip.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/zWhipb.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/zWhipc.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/zWhipd.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/zwhip/zWhipe.jpg'
 variants:
   - name: Whip Length
     defaultValue: '6 Feet'

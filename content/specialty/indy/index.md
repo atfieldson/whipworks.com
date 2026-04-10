@@ -7,7 +7,8 @@ price: 294
 hasStyles: true
 headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/TheIndyBullwhipHeader.png'
 images:
-  - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW592Indy67RaiderWide.jpg'
+  - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW592Indy67RaiderWide.jpg'
+    caption: 'An 8 foot Raider style Indy Bullwhip'
 weight: 880
 specs:
   - label: Handle
@@ -41,23 +42,38 @@ variants:
     options:
       - name: 'The Raider'
         images:
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW592Indy67RaiderWide.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW592Indy67RaiderTransition.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW592Indy67RaiderHandle.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW524Indy56RaiderWide.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW524Indy56RaiderTransition.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW524Indy56RaiderHandle.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW524Indy56RaiderConcho.jpg'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW592Indy67RaiderWide.jpg'
+            caption: 'An 8 foot Raider style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW592Indy67RaiderTransition.jpg'
+            caption: 'The transition of an 8 foot Raider style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW592Indy67RaiderHandle.jpg'
+            caption: 'The handle of an 8 foot Raider style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW524Indy56RaiderWide.jpg'
+            caption: 'A 10 foot Raider style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW524Indy56RaiderTransition.jpg'
+            caption: 'The transition of a 10 foot Raider style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW524Indy56RaiderHandle.jpg'
+            caption: 'The handle of a 10 foot Raider style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW524Indy56RaiderConcho.jpg'
+            caption: 'The concho of a 10 foot Raider style Indy Bullwhip'
       - name: 'The Kingdom Finder'
         images:
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW310Indy34KFWide.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW310Indy34KFTransition.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW310Indy34KFThong.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW310Indy34KFConcho.jpg'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW310Indy34KFWide.jpg'
+            caption: 'An 8 foot Kingdom Finder style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW310Indy34KFTransition.jpg'
+            caption: 'The transition of an 8 foot Kingdom Finder style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW310Indy34KFThong.jpg'
+            caption: 'The thong of an 8 foot Kingdom Finder style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW310Indy34KFConcho.jpg'
+            caption: 'The concho of an 8 foot Kingdom Finder style Indy Bullwhip'
       - name: 'The Junior'
         images:
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW359Indy37JnrWide.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW359Indy37JnrTransition.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW359Indy37JnrHandle.jpg'
-          - 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW359Indy37JnrConcho.jpg'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW359Indy37JnrWide.jpg'
+            caption: 'An 8 foot Junior style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW359Indy37JnrTransition.jpg'
+            caption: 'The transition of an 8 foot Junior style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW359Indy37JnrHandle.jpg'
+            caption: 'The handle of an 8 foot Junior style Indy Bullwhip'
+          - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW359Indy37JnrConcho.jpg'
+            caption: 'The concho of an 8 foot Junior style Indy Bullwhip'
 ---

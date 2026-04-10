@@ -8,10 +8,10 @@ hasStyles: false
 headerImage: 'https://whipworks.s3.us-east-2.amazonaws.com/specialty/oneWinged/oneWingedHeader.png'
 weight: 920
 images:
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/oneWinged/oneWingedThumbnail.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/oneWinged/oneWinged1.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/oneWinged/oneWinged2.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/oneWinged/oneWinged3.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/oneWinged/oneWingedThumbnail.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/oneWinged/oneWinged1.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/oneWinged/oneWinged2.jpg'
+  - url: 'https://d3ruufruf2uqog.cloudfront.net/specialty/oneWinged/oneWinged3.jpg'
 variants:
   - name: Whip Length
     defaultValue: '8 Feet'
