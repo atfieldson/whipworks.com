@@ -308,6 +308,11 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
                   </option>
                 ))}
               </Select>
+              {v.note && (
+                <Text mt="1" fontSize="xs" fontStyle="italic" opacity={0.7}>
+                  {v.note}
+                </Text>
+              )}
             </Box>
           ))}
 
@@ -478,6 +483,7 @@ export const pageQuery = graphql`
         variants {
           name
           defaultValue
+          note
           options {
             name
             priceDiff
