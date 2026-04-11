@@ -38,7 +38,7 @@ const SpecialtyWhipCard = ({
       />
       <Box textAlign={{ base: 'left', md: isReversed ? 'right' : 'left' }}>
         <Image
-          maxH={isSmall ? '40px' : '60px'}
+          maxH={isSmall ? '40px' : '100px'}
           maxW={isSmall ? '200px' : '300px'}
           objectFit="contain"
           src={headerImage}

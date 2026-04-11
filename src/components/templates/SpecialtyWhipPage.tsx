@@ -245,8 +245,10 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           {whip.headerImage && (
             <Image
               src={whip.headerImage}
-              maxH="55px"
+              maxH="100px"
+              maxW="100%"
               objectFit="contain"
+              objectPosition="left"
               alt={`${whip.title} logo`}
               mb="3"
             />
