@@ -1,7 +1,7 @@
 ---
 title: The Catwhip
 id: catwhip
-sortOrder: 2
+sortOrder: 3
 description: "Sleek, dark, and dangerous. The Catwhip is built for the ones who prefer their bullwhips with a little noir edge — no mid knot, clean lines, and a silhouette that speaks for itself. Available in two styles for those who like to keep things classic or turn up the heat."
 price: 289
 hasStyles: true

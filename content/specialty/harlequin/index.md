@@ -1,7 +1,7 @@
 ---
 title: The Harlequin
 id: harlequin
-sortOrder: 7
+sortOrder: 9
 description: "Every collection needs a wild card. The Harlequin is a three-color showstopper built for the ones who like a little mayhem with their craft — an inverted diamond thong pattern, a pirate skull concho, and a look that says 'nice to meetcha.' Some whips play it safe. This one doesn't."
 price: 294
 hasStyles: false

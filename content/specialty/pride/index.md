@@ -1,7 +1,7 @@
 ---
 title: The Pride Whip
 id: pride
-sortOrder: 6
+sortOrder: 11
 description: This whip is ready to hit the streets and celebrate with a resounding crack! This whip is plaited in all of the colors of the rainbow and finished off with a Lady Liberty Concho, because she's fabulous of course.  Choose your whip length, handle length and heel knot color and you are good to go!    
 price: 289
 hasStyles: false
