@@ -5,7 +5,7 @@ sortOrder: 9
 description: "Every collection needs a wild card. The Harlequin is a three-color showstopper built for the ones who like a little mayhem with their craft — an inverted diamond thong pattern, a pirate skull concho, and a look that says 'nice to meetcha.' Some whips play it safe. This one doesn't."
 price: 294
 hasStyles: false
-headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/harlequin/HarlequinHeader.png'
+headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/harlequin/harlequin2.png'
 images:
   - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW600HQ1Wide.jpg'
     caption: 'A 7 foot Harlequin Bullwhip'

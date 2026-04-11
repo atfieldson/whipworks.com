@@ -5,7 +5,7 @@ sortOrder: 2
 description: "A bullwhip fit for a vampire hunter. The Belmont is built with a rivet handle design and herringbone thong that look like they belong in a moonlit castle — equal parts elegant and lethal. This whip was made for the ones who carry on the family legacy."
 price: 294
 hasStyles: false
-headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/belmont/belmontHeader.png'
+headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/belmont/belmontHeader2.png'
 images:
   - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW541Belmont1Wide.jpg'
     caption: 'An 8 foot Belmont Bullwhip'

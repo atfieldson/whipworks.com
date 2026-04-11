@@ -2,6 +2,7 @@
 title: The Nightlord
 id: nightlord
 sortOrder: 11
+isNew: true
 series: '40K Bullwhip Series'
 seriesImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/40K/40KHeader.png'
 description: "Ave Dominus Nox. The Nightlord is plaited in midnight blue and gold with neon turquoise accents — a bullwhip that hunts best in the dark. Featuring a Nostramo Skull handle design and a Brass Skull and Snakes concho, this whip was built for the ones who believe fear is the sharpest weapon."

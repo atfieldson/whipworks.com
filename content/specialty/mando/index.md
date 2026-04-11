@@ -5,7 +5,7 @@ sortOrder: 5
 description: "This is the way — to build a bullwhip. The Mando is plaited in forest and foliage green with crimson accents, featuring a Space Armor handle and a Stay on Target thong pattern that locks onto its mark. A bounty hunter's weapon of choice, forged for the ones who always collect."
 price: 349
 hasStyles: false
-headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/mando/mandoHeader.png'
+headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/mando/mandoHeader2.png'
 images:
   - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW511Mando1Wide.jpg'
     caption: 'A 7 foot Mando Bullwhip'

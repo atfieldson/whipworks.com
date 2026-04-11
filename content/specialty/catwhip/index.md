@@ -9,6 +9,8 @@ headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/catwhip/TheCatwhip
 images:
   - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW598CW35Wide.jpg'
     caption: 'An 8 foot Classic Black Catwhip'
+  - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW598CW35Transition.jpg'
+    caption: 'The transition of an 8 foot Classic Black Catwhip'
 weight: 880
 specs:
   - label: Handle

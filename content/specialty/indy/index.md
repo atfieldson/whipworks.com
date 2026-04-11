@@ -9,6 +9,8 @@ headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/indy/TheIndyBullwh
 images:
   - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW592Indy67RaiderWide.jpg'
     caption: 'An 8 foot Raider style Indy Bullwhip'
+  - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW592Indy67RaiderTransition.jpg'
+    caption: 'The transition of an 8 foot Raider style Indy Bullwhip'
 weight: 880
 specs:
   - label: Handle

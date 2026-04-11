@@ -2,12 +2,13 @@
 title: The Ultra Whip
 id: ultrawhip
 sortOrder: 12
+isNew: true
 series: '40K Bullwhip Series'
 seriesImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/40K/40KHeader.png'
 description: "Courage and honour, forged in paracord. The Ultra Whip is plaited in royal blue and gold with an Ultima Gladius handle design and Ancient Banner thong pattern — a bullwhip worthy of the Emperor's finest. Built for the ones who hold the line, no matter the odds."
 price: 349
 hasStyles: false
-headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/40K/ultraWhipHeader.png'
+headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/40K/ultraHeader2.png'
 images:
   - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW102640K2UltraWide.jpg'
     caption: 'An 8 foot Ultra Whip'

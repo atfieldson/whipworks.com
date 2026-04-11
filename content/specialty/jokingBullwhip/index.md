@@ -5,7 +5,7 @@ sortOrder: 10
 description: "Some whips play by the rules. This one rewrites them in acid purple and neon green. The Joking Bullwhip features an alternating diamond thong pattern that's equal parts chaos and craftsmanship — loud, unpredictable, and impossible to ignore. Built for the ones who know the best punchline is a crack."
 price: 349
 hasStyles: false
-headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/jokingBullwhip/jokingBullwhipHeader.png'
+headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/jokingBullwhip/jokingBullwhipHeader2.png'
 images:
   - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW602JB1Wide.jpg'
     caption: 'A 7 foot Joking Bullwhip'
