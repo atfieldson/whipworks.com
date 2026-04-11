@@ -208,8 +208,9 @@
   - [x] The Star Spangled Bullwhip (new images, description, specs)
   - [ ] The Pride Whip (awaiting new photos)
 - [ ] Update pricing for all Specialty Whip listings
-- [ ] Update /specialty-whips landing page layout (Filson-inspired grid)
+- [x] Update /specialty-whips landing page layout (image-heavy grid with hover crossfade, series grouping, New badges)
 - [x] Update individual specialty whip page layout (Filson-inspired two-column)
+- [ ] Add "Notes from Adam" section to specialty whip detail pages (personal whipmaker commentary)
 
 ## Phase 5: Flogger & Snakewhip Sections
 
