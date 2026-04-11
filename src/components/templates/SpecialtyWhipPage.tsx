@@ -241,6 +241,19 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           top={{ base: 'auto', md: '100px' }}
           alignSelf="flex-start"
         >
+          {/* Series logo */}
+          {whip.seriesImage && (
+            <Image
+              src={whip.seriesImage}
+              maxH="60px"
+              maxW="100%"
+              objectFit="contain"
+              objectPosition="left"
+              alt={`${whip.series} logo`}
+              mb="2"
+            />
+          )}
+
           {/* Header logo */}
           {whip.headerImage && (
             <Image
@@ -473,6 +486,8 @@ export const pageQuery = graphql`
         description
         hasStyles
         headerImage
+        series
+        seriesImage
         images {
           url
           caption

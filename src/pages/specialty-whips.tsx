@@ -17,6 +17,8 @@ export const pageQuery = graphql`
           frontmatter {
             title
             headerImage
+            series
+            seriesImage
             images {
               url
               caption
@@ -68,6 +70,8 @@ const SpecialtyWhipsPage = () => {
             <SpecialtyWhipCard
               key={whip.title}
               headerImage={whip.headerImage}
+              seriesImage={whip.seriesImage}
+              series={whip.series}
               description={whip.description}
               title={whip.title}
               image={whip.images[0]?.url}
