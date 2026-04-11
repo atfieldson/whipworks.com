@@ -17,7 +17,7 @@ const WhipmakingMaterialsPage = ({ data }: any) => {
           '@type': 'Product',
           name: m.node.frontmatter.title,
           description: m.node.frontmatter.description,
-          image: m.node.frontmatter.images?.[0],
+          image: m.node.frontmatter.images?.[0]?.url,
           brand: {
             '@type': 'Brand',
             name: 'WhipWorks',
@@ -47,7 +47,7 @@ const WhipmakingMaterialsPage = ({ data }: any) => {
             <AccessoryCard
               key={product.title}
               title={product.title}
-              image={product.images && product.images[0]}
+              image={product.images && product.images[0]?.url}
               price={product.price}
               slug={m.node.fields.slug}
             />
@@ -79,7 +79,10 @@ export const pageQuery = graphql`
           }
           frontmatter {
             title
-            images
+            images {
+              url
+              caption
+            }
             price
             description
           }

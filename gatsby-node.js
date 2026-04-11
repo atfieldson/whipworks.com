@@ -7,6 +7,15 @@ exports.createSchemaCustomization = ({ actions }) => {
     type MarkdownRemarkFrontmatterVariantsOptions {
       name: String
       priceDiff: Float
+      images: [MarkdownRemarkFrontmatterImage]
+    }
+    type MarkdownRemarkFrontmatterImage {
+      url: String
+      caption: String
+    }
+    type MarkdownRemarkFrontmatterSpecs {
+      label: String
+      value: String
     }
   `);
 };
@@ -48,7 +57,9 @@ exports.createPages = async ({ graphql, actions }) => {
               }
               frontmatter {
                 title
-                images
+                images {
+                  url
+                }
                 headerImage
                 description
                 customLayout

@@ -195,6 +195,23 @@
   - [x] Updated contact form Lambda: Node.js 20.x, AWS SDK v3, sender changed to inquiries@whipworks.com
   - [x] Verified inquiries@whipworks.com in SES (us-east-2)
 
+## Phase 4B: Specialty Whip Listing Updates
+- [ ] Update all specialty whip listings with new black-backdrop photography
+  - [x] The Indy Bullwhip (retire Classic style, update images for Raider/Kingdom Finder/Junior)
+  - [x] The Catwhip (update images for Black/Imperial Red variants)
+  - [x] The Belmont (NEW listing)
+  - [x] The Harlequin (NEW listing)
+  - [x] The Joking Bullwhip (NEW listing)
+  - [x] The Mando Bullwhip (NEW listing)
+  - [x] The Z Whip (new images, description, specs, added 10" handle option)
+  - [x] The One Winged Bullwhip (new images, description, specs)
+  - [x] The Star Spangled Bullwhip (new images, description, specs)
+  - [ ] The Pride Whip (awaiting new photos)
+- [ ] Update pricing for all Specialty Whip listings
+- [x] Update /specialty-whips landing page layout (image-heavy grid with hover crossfade, series grouping, New badges)
+- [x] Update individual specialty whip page layout (Filson-inspired two-column)
+- [ ] Add "Notes from Adam" section to specialty whip detail pages (personal whipmaker commentary)
+
 ## Phase 5: Flogger & Snakewhip Sections
 
 ### 5A: Flogger

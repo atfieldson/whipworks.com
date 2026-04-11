@@ -6,6 +6,8 @@ type Props = {
   isReversed?: boolean;
   size: 'sm' | 'lg';
   headerImage?: string;
+  seriesImage?: string;
+  series?: string;
   description?: string;
   slug: string;
   image?: string;
@@ -16,6 +18,8 @@ const SpecialtyWhipCard = ({
   isReversed,
   size,
   headerImage,
+  seriesImage,
+  series,
   image,
   description,
   slug,
@@ -37,9 +41,19 @@ const SpecialtyWhipCard = ({
         alt={title}
       />
       <Box textAlign={{ base: 'left', md: isReversed ? 'right' : 'left' }}>
+        {seriesImage && (
+          <Image
+            maxH={isSmall ? '20px' : '35px'}
+            maxW={isSmall ? '120px' : '200px'}
+            objectFit="contain"
+            src={seriesImage}
+            alt={`${series} logo`}
+            mb="1"
+          />
+        )}
         <Image
-          maxH={isSmall ? '40px' : '60px'}
-          maxW={isSmall ? '200px' : '300px'}
+          maxH={isSmall ? '40px' : '100px'}
+          maxW={isSmall ? '200px' : '400px'}
           objectFit="contain"
           src={headerImage}
           alt={`${title} logo`}

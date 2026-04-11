@@ -1,17 +1,32 @@
 ---
 title: The Star Spangled Bullwhip
 id: starspangled
-sortOrder: 5
-description: This is a custom made to order American Flag inspired Bullwhip! So grill up some burgers, grab a brewskie and make your own fireworks by breaking the sound barrier. You'll be the talk of the neighborhood at your fourth of July gathering! These bullwhips are Red, White and Blue (duh!). This whip is finished at the heel with an American Eagle coin concho. It screams American Pride! These whips are also waxed after completion, giving them a protective layer from moisture and a professional finish.
+sortOrder: 13
+description: "Red, white, blue, and loud. The Star Spangled Bullwhip is an American flag you can crack — herringbone plaited in patriotic colors with a stars handle design and an American Eagle concho to seal the deal. Fire up the grill, grab something cold, and make your own fireworks."
 price: 309
 hasStyles: false
 headerImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangledHeader.png'
-weight: 880
 images:
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled1.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled2.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled3.jpg'
-  - 'https://d3ruufruf2uqog.cloudfront.net/specialty/starSpangled/starSpangled4.jpg'
+  - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW309SSB1Wide.jpg'
+    caption: 'A 6 foot Star Spangled Bullwhip'
+  - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW309SSB1Transition.jpg'
+    caption: 'The transition of a 6 foot Star Spangled Bullwhip'
+  - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW309SSB1Handle.jpg'
+    caption: 'The handle of a 6 foot Star Spangled Bullwhip'
+  - url: 'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW309SSB1Concho.jpg'
+    caption: 'The concho of a 6 foot Star Spangled Bullwhip'
+weight: 880
+specs:
+  - label: Handle
+    value: Stars
+  - label: Thong
+    value: Herringbone
+  - label: Concho
+    value: American Eagle
+  - label: Heel Loop
+    value: Squared
+  - label: Finish
+    value: Waxed
 variants:
   - name: Whip Length
     defaultValue: '6 Feet'

@@ -6,9 +6,9 @@ weight: 1
 sortOrder: 4
 description: "Here is a precut to size steel rod to be used for the handle of a bullwhip. These are precut to either 8\", 10\", or 12\" lengths. They also have their edges ground to remove the burrs. They are all cold rolled steel, 1/4\" diameter."
 images:
-  - https://d3ruufruf2uqog.cloudfront.net/whipMakingMaterials/handleRod/handleRods1.jpg
-  - https://d3ruufruf2uqog.cloudfront.net/whipMakingMaterials/handleRod/handleRods2.jpg
-  - https://d3ruufruf2uqog.cloudfront.net/whipMakingMaterials/handleRod/handleRods3.jpg
+  - url: https://d3ruufruf2uqog.cloudfront.net/whipMakingMaterials/handleRod/handleRods1.jpg
+  - url: https://d3ruufruf2uqog.cloudfront.net/whipMakingMaterials/handleRod/handleRods2.jpg
+  - url: https://d3ruufruf2uqog.cloudfront.net/whipMakingMaterials/handleRod/handleRods3.jpg
 variants:
   - name: 'Length'
     options:

@@ -15,7 +15,10 @@ export const pageQuery = graphql`
           frontmatter {
             title
             headerImage
-            images
+            images {
+              url
+              caption
+            }
             description
           }
         }
@@ -38,7 +41,7 @@ const SpecialtyWhipList = () => {
             headerImage={whip.headerImage}
             description={whip.description}
             title={whip.title}
-            image={whip.images[0]}
+            image={whip.images?.[0]?.url}
             slug={specialtyWhip.node.fields.slug}
             size="lg"
           />

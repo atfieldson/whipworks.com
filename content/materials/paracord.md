@@ -6,7 +6,7 @@ description: "This is the paracord that I use for every whip I make. I used to s
 thumbnail: "https://d3ruufruf2uqog.cloudfront.net/whipMakingMaterials/paracord/paracord1.jpg"
 colorChart: "https://d3ruufruf2uqog.cloudfront.net/whipMakingMaterials/paracord/NewColorChart.jpg"
 images:
-  - https://d3ruufruf2uqog.cloudfront.net/whipMakingMaterials/paracord/paracord1.jpg
+  - url: https://d3ruufruf2uqog.cloudfront.net/whipMakingMaterials/paracord/paracord1.jpg
 sortOrder: 8
 weight: 1
 customLayout: true

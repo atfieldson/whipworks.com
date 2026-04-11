@@ -16,7 +16,10 @@ export const pageQuery = graphql`
           }
           frontmatter {
             title
-            images
+            images {
+              url
+              caption
+            }
             price
             description
           }
@@ -29,7 +32,10 @@ export const pageQuery = graphql`
       }
       frontmatter {
         title
-        images
+        images {
+          url
+          caption
+        }
         price
         description
       }
@@ -50,7 +56,7 @@ const AccessoriesPage = () => {
           '@type': 'Product',
           name: a.node.frontmatter.title,
           description: a.node.frontmatter.description,
-          image: a.node.frontmatter.images?.[0],
+          image: a.node.frontmatter.images?.[0]?.url,
           brand: {
             '@type': 'Brand',
             name: 'WhipWorks',
@@ -79,7 +85,7 @@ const AccessoriesPage = () => {
             <AccessoryCard
               key={product.title}
               title={product.title}
-              image={product.images && product.images[0]}
+              image={product.images && product.images[0]?.url}
               price={product.price}
               slug={a.node.fields.slug}
             />
@@ -90,7 +96,7 @@ const AccessoriesPage = () => {
             <AccessoryCard
               key={data.fid.frontmatter.title}
               title={data.fid.frontmatter.title}
-              image={data.fid.frontmatter.images && data.fid.frontmatter.images[0]}
+              image={data.fid.frontmatter.images && data.fid.frontmatter.images[0]?.url}
               price={data.fid.frontmatter.price}
               slug={data.fid.fields.slug}
             />
