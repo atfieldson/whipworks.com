@@ -215,7 +215,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
         {images && images[0] && (
           <Image
             src={images[0].url}
-            alt={`${whip.title} - wide`}
+            alt={images[0]?.caption || `${whip.title} - wide`}
             w="100%"
             borderRadius="md"
             objectFit="contain"

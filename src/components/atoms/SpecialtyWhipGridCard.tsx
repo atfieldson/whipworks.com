@@ -68,7 +68,7 @@ const SpecialtyWhipGridCard = ({
           <Image
             className="wide-img"
             src={wideImage}
-            alt={title}
+            alt={images?.[0]?.caption || title}
             position="absolute"
             top="0"
             left="0"
@@ -84,7 +84,7 @@ const SpecialtyWhipGridCard = ({
           <Image
             className="transition-img"
             src={transitionImage}
-            alt={`${title} detail`}
+            alt={images?.[1]?.caption || `${title} detail`}
             position="absolute"
             top="0"
             left="0"

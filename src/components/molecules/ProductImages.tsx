@@ -50,7 +50,7 @@ const ProductImages = ({ images: rawImages, alt }: Props) => {
         {/* Hero image */}
         <Image
           src={heroImage.url}
-          alt={`${alt || 'Product image'} - 1`}
+          alt={heroImage.caption || `${alt || 'Product image'} - wide view`}
           w="100%"
           borderRadius="md"
           objectFit="contain"
@@ -72,7 +72,7 @@ const ProductImages = ({ images: rawImages, alt }: Props) => {
               <Image
                 key={index}
                 src={image.url}
-                alt={`${alt || 'Product image'} - ${index + 2}`}
+                alt={image.caption || `${alt || 'Product image'} - ${index + 2}`}
                 w="100%"
                 mb="3"
                 borderRadius="md"
