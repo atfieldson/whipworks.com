@@ -146,6 +146,104 @@ exports.createPages = async ({ graphql, actions }) => {
   });
 };
 
+exports.onPostBuild = async ({ graphql }) => {
+  const fs = require(`fs`);
+
+  const result = await graphql(`
+    {
+      allMarkdownRemark {
+        edges {
+          node {
+            fields {
+              slug
+              collection
+            }
+            frontmatter {
+              title
+              images {
+                url
+                caption
+              }
+              variants {
+                options {
+                  images {
+                    url
+                    caption
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  if (result.errors) {
+    console.error('Image sitemap generation failed:', result.errors);
+    return;
+  }
+
+  const siteUrl = 'https://www.whipworks.com';
+  const pages = result.data.allMarkdownRemark.edges
+    .filter(({ node }) => {
+      const images = node.frontmatter.images;
+      return images && images.length > 0;
+    })
+    .map(({ node }) => {
+      // Collect top-level images
+      const allImages = [...(node.frontmatter.images || [])];
+
+      // Collect variant/style images
+      if (node.frontmatter.variants) {
+        for (const variant of node.frontmatter.variants) {
+          if (variant.options) {
+            for (const option of variant.options) {
+              if (option.images) {
+                allImages.push(...option.images);
+              }
+            }
+          }
+        }
+      }
+
+      return {
+        url: `${siteUrl}${node.fields.slug}`,
+        images: allImages,
+      };
+    });
+
+  const escapeXml = (str) =>
+    str ? str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;') : '';
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${pages
+  .map(
+    (page) => `  <url>
+    <loc>${escapeXml(page.url)}</loc>
+${page.images
+  .map(
+    (img) => `    <image:image>
+      <image:loc>${escapeXml(img.url)}</image:loc>${
+      img.caption
+        ? `
+      <image:title>${escapeXml(img.caption)}</image:title>`
+        : ''
+    }
+    </image:image>`
+  )
+  .join('\n')}
+  </url>`
+  )
+  .join('\n')}
+</urlset>`;
+
+  fs.writeFileSync(path.join(__dirname, 'public', 'image-sitemap.xml'), xml);
+  console.log(`Generated image-sitemap.xml with ${pages.length} pages`);
+};
+
 exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions;
 
