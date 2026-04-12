@@ -343,3 +343,65 @@
 - [x] Update social media bios to point to `www.whipworks.com/links`
 - [x] Cancel LinkTree subscription (~$100/month savings)
 - [ ] *(Optional)* Set up `links.whipworks.com` subdomain redirect to `/links`
+
+## Phase 10: Customer Reviews
+**Goal:** Showcase customer reviews across the site to build trust and social proof, starting with Etsy reviews and adding a way for customers to submit reviews directly.
+
+### Step 1: Review Data & Assets (Adam — Manual Prep)
+- [ ] Download customer review images from Etsy
+- [ ] Upload review images to S3 (`reviews/` prefix)
+- [ ] Create review data file (`src/data/reviews.ts` or `content/reviews.json`)
+  - [ ] Fields: reviewer name (first name/initial), star rating (1-5), review text, image URL(s), whip type (bullwhip/stockwhip/snakewhip/specialty), specialty whip slug (if applicable), date, source ("etsy" or "direct")
+- [ ] Populate with Etsy reviews
+
+### Step 2: Reviews Page (`/reviews`)
+- [ ] Build dedicated reviews page showing all reviews
+- [ ] Star rating display component (reusable)
+- [ ] Review card component: photo, stars, text, reviewer name, date, whip type
+- [ ] Aggregate stats header (total reviews, average rating, rating distribution bar)
+- [ ] Filter by whip type (All / Bullwhip / Stockwhip / Snakewhip / Specialty)
+- [ ] Masonry or grid layout for visual appeal
+- [ ] Add "Reviews" to site navigation
+- [ ] SEO: meta tags, OG image, page title
+
+### Step 3: Reviews on Product Pages
+- [ ] Specialty whip detail pages: review section below gallery
+  - [ ] Show only reviews tagged with that specialty whip's slug
+  - [ ] "See All Reviews" link to `/reviews`
+- [ ] Designer pages (bullwhip/stockwhip/snakewhip): review section at bottom of gallery
+  - [ ] Show reviews tagged with that whip type
+  - [ ] "See All Reviews" link to `/reviews`
+
+### Step 4: Homepage Testimonials
+- [ ] *(Moved to Phase 11 — Homepage Overhaul)*
+
+### Step 5: Structured Data & SEO
+- [ ] Add `AggregateRating` JSON-LD to product pages (star ratings in Google search results)
+- [ ] Add individual `Review` JSON-LD entries where reviews are displayed
+- [ ] Add reviews page to sitemap
+
+### Step 6: Review Submission Flow
+- [ ] Build "Leave a Review" page (`/leave-review`)
+  - [ ] Form fields: name, email, whip type (dropdown), star rating (interactive star picker), review text, photo upload (optional, max 3 images)
+  - [ ] Form submission sends email to adam@whipworks.com via Lambda/SES (same pattern as contact form)
+  - [ ] Attach uploaded photos to email or upload to S3 staging prefix
+  - [ ] Success message thanking reviewer
+- [ ] Generate QR code linking to `/leave-review`
+  - [ ] Static QR code image for printing (include in packages)
+  - [ ] Branded design with WhipWorks logo
+  - [ ] *(Optional)* Pre-fill whip type via URL parameter (e.g., `/leave-review?type=bullwhip`)
+
+### Step 7: Review Count Badges
+- [ ] Display star rating + review count on specialty whip grid cards (`/specialty-whips`)
+- [ ] Display aggregate rating on designer page headers
+
+### Step 8: Google Business Profile & Review Links
+- [ ] Set up Google Business Profile for WhipWorks
+- [ ] Add "Leave a Review on Google" link to post-purchase messaging and QR card
+- [ ] *(Optional)* Add Google review link to `/leave-review` page as an alternative option
+
+## Phase 11: Homepage Overhaul
+**Goal:** Modernize the whipworks.com landing page for better conversions and first impressions.
+
+- [ ] Featured customer reviews carousel/strip (social proof — pull from review data)
+- [ ] *(To be planned)*
