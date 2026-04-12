@@ -269,37 +269,32 @@
   - [x] Accessories page: links to Bullwhip and Stockwhip designers
   - [x] Specialty whip pages: "View all Specialty Whips" button + "Design your own" CTA
 
-## Phase 6B: Image SEO Optimization
+## Phase 6B: Image SEO Optimization ✅
 **Goal:** Maximize image discoverability in Google Images and improve social sharing previews across all product pages.
 
-### Step 1: Per-page OG images + og:url
-- [ ] Add `image` and `pathname` props to SEO component
-- [ ] Use hero product image as og:image/twitter:image (fall back to favicon)
-- [ ] Add `og:url` meta tag using pathname
-- [ ] Pass hero image and pathname from SpecialtyWhipPage to SEO
-- **Files:** `src/components/templates/SEO.tsx`, `src/components/templates/SpecialtyWhipPage.tsx`
+### Step 1: Per-page OG images + og:url ✅
+- [x] Add `image` and `pathname` props to SEO component
+- [x] Use hero product image as og:image/twitter:image (fall back to favicon)
+- [x] Add `og:url` meta tag using pathname
+- [x] Pass hero image and pathname from SpecialtyWhipPage to SEO
 
-### Step 2: Caption-based alt text
-- [ ] ProductImages: use image captions for alt text instead of generic numbered text
-- [ ] SpecialtyWhipGridCard: use captions for wide/transition image alts
-- [ ] SpecialtyWhipPage mobile hero: use caption when available
-- **Files:** `src/components/molecules/ProductImages.tsx`, `src/components/atoms/SpecialtyWhipGridCard.tsx`, `src/components/templates/SpecialtyWhipPage.tsx`
+### Step 2: Caption-based alt text ✅
+- [x] ProductImages: use image captions for alt text instead of generic numbered text
+- [x] SpecialtyWhipGridCard: use captions for wide/transition image alts
+- [x] SpecialtyWhipPage mobile hero: use caption when available
 
-### Step 3: All images in structured data
-- [ ] Change JSON-LD `image` field from single URL to array of all gallery image URLs
-- [ ] Apply to both landing page and individual detail pages
-- **Files:** `src/components/templates/SpecialtyWhipPage.tsx`, `src/pages/specialty-whips.tsx`
+### Step 3: All images in structured data ✅
+- [x] Change JSON-LD `image` field from single URL to array of all gallery image URLs
+- [x] Apply to both landing page and individual detail pages
 
-### Step 4: `loading="eager"` on hero images
-- [ ] Add `loading="eager"` to hero image in ProductImages component
-- [ ] Add `loading="eager"` to mobile hero image in SpecialtyWhipPage
-- **Files:** `src/components/molecules/ProductImages.tsx`, `src/components/templates/SpecialtyWhipPage.tsx`
+### Step 4: `loading="eager"` on hero images ✅
+- [x] Add `loading="eager"` to hero image in ProductImages component
+- [x] Add `loading="eager"` to mobile hero image in SpecialtyWhipPage
 
-### Step 5: Image sitemap generation
-- [ ] Add `onPostBuild` hook in gatsby-node.js to generate `public/image-sitemap.xml`
-- [ ] Include all product page image URLs with captions as titles
-- [ ] Note: gatsby-plugin-sitemap v6 doesn't support `<image:image>` natively
-- **Files:** `gatsby-node.js`
+### Step 5: Image sitemap generation ✅
+- [x] Add `onPostBuild` hook in gatsby-node.js to generate `public/image-sitemap.xml`
+- [x] Include all product page image URLs with captions as titles (22 pages, 123 images)
+- [ ] Submit image-sitemap.xml to Google Search Console after deploy
 
 ## Phase 7: Quality Assurance
 - [ ] End-to-end testing of all purchase flows
