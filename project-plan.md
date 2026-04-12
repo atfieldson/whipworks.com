@@ -294,7 +294,7 @@
 ### Step 5: Image sitemap generation ✅
 - [x] Add `onPostBuild` hook in gatsby-node.js to generate `public/image-sitemap.xml`
 - [x] Include all product page image URLs with captions as titles (22 pages, 123 images)
-- [ ] Submit image-sitemap.xml to Google Search Console after deploy
+- [x] Submit image-sitemap.xml to Google Search Console after deploy
 
 ## Phase 7: Quality Assurance
 - [ ] End-to-end testing of all purchase flows
@@ -333,11 +333,13 @@
 - [ ] *(Stretch goal)* Filter/sort by type, price, length
 
 ## Phase 9: LinkTree Replacement (`/links`)
-- [ ] Build link-in-bio page as Gatsby route (`www.whipworks.com/links`)
-  - [ ] WhipWorks branding (logo, colors, rustic aesthetic)
-  - [ ] Links: Shop, Instagram, YouTube, Etsy, Contact
-  - [ ] Mobile-first responsive design
-- [ ] Deploy and verify
-- [ ] Update social media bios to point to `www.whipworks.com/links`
-- [ ] Cancel LinkTree subscription (~$100/month savings)
+- [x] Build link-in-bio page as Gatsby route (`www.whipworks.com/links`)
+  - [x] WhipWorks branding (logo, colors, rustic aesthetic)
+  - [x] Links: Shop, Instagram, YouTube, Etsy, Pinterest, Contact
+  - [x] Featured shop card with hero image and description
+  - [x] UTM tracking on shop link (`utm_source=linkinbio&utm_medium=social`)
+  - [x] Mobile-first responsive design
+- [x] Deploy and verify
+- [x] Update social media bios to point to `www.whipworks.com/links`
+- [x] Cancel LinkTree subscription (~$100/month savings)
 - [ ] *(Optional)* Set up `links.whipworks.com` subdomain redirect to `/links`
