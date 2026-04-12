@@ -352,7 +352,9 @@ aws cloudfront create-invalidation --distribution-id E3JS36YMAEJ3WR --paths "/*"
 
 ### Worktree Development (Claude Code)
 
-When Claude Code runs in a git worktree, `node_modules` are not shared from the main repo. **Do not run `npm install`** in the worktree — it will fail due to missing Python/node-gyp for native modules (`@parcel/watcher`).
+> **⚠ IMPORTANT: Do NOT use git worktrees.** Edit files directly in the main repo instead. Worktrees lock branches and cause cleanup issues — the orphaned worktree directory can't be deleted while Claude Code is running in it, blocking the user from checking out the branch in VS Code. If a worktree was created by the system, commit and push changes, then the user must manually clean up with `rmdir /s /q` and `git worktree prune` before they can access the branch.
+
+If a worktree is unavoidable, `node_modules` are not shared from the main repo. **Do not run `npm install`** in the worktree — it will fail due to missing Python/node-gyp for native modules (`@parcel/watcher`).
 
 Instead:
 
