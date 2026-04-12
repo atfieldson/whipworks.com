@@ -220,6 +220,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
             borderRadius="md"
             objectFit="contain"
             bg="black"
+            loading="eager"
           />
         )}
       </Box>

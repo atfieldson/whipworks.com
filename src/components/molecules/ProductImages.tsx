@@ -56,6 +56,7 @@ const ProductImages = ({ images: rawImages, alt }: Props) => {
           objectFit="contain"
           bg="black"
           cursor="pointer"
+          loading="eager"
           onClick={() => openLightbox(0)}
         />
 
