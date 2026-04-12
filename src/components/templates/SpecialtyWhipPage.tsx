@@ -184,6 +184,8 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
       <SEO
         title={whip.title}
         description={whip.description}
+        image={whip.images?.[0]?.url}
+        pathname={location.pathname}
         structuredData={{
           '@context': 'https://schema.org',
           '@type': 'Product',

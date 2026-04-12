@@ -4,10 +4,12 @@ import React from 'react';
 type SEOProps = {
   title: string;
   description?: string;
+  image?: string;
+  pathname?: string;
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
 };
 
-const SEO = ({ title, description, structuredData }: SEOProps) => {
+const SEO = ({ title, description, image, pathname, structuredData }: SEOProps) => {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -28,6 +30,8 @@ const SEO = ({ title, description, structuredData }: SEOProps) => {
     description: description || site.description,
   };
 
+  const ogImage = image || `${seo.siteUrl}/favicon_large.png`;
+
   return (
     <>
       <title>{seo.title} | WhipWorks</title>
@@ -35,9 +39,12 @@ const SEO = ({ title, description, structuredData }: SEOProps) => {
       <meta property="og:title" content={seo.title} />
       <meta property="og:description" content={seo.description} />
       <meta property="og:type" content="website" />
-      <meta property="og:image" content={`${seo.siteUrl}/favicon_large.png`} />
+      <meta property="og:image" content={ogImage} />
+      {pathname && (
+        <meta property="og:url" content={`${seo.siteUrl}${pathname}`} />
+      )}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:image" content={`${seo.siteUrl}/favicon_large.png`} />
+      <meta name="twitter:image" content={ogImage} />
       <meta name="twitter:title" content={seo.title} />
       <meta name="twitter:description" content={seo.description} />
       {structuredData && (
