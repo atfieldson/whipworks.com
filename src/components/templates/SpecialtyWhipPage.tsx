@@ -191,7 +191,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           '@type': 'Product',
           name: whip.title,
           description: whip.description,
-          image: whip.images?.[0]?.url || whip.images?.[0],
+          image: whip.images?.map(img => img.url) || [],
           brand: {
             '@type': 'Brand',
             name: 'WhipWorks',

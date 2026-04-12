@@ -83,7 +83,7 @@ const SpecialtyWhipsPage = () => {
           '@type': 'Product',
           name: a.node.frontmatter.title,
           description: a.node.frontmatter.description,
-          image: a.node.frontmatter.images?.[0]?.url,
+          image: a.node.frontmatter.images?.map((img: any) => img.url) || [],
           brand: {
             '@type': 'Brand',
             name: 'WhipWorks',
