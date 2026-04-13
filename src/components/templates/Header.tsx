@@ -239,6 +239,9 @@ const Header = ({ bg }: { bg?: string }) => {
           <NavLink as={Link} to="/accessories">
             Accessories
           </NavLink>
+          <NavLink as={Link} to="/reviews">
+            Reviews
+          </NavLink>
           <NavLink as={Link} to="/contact">
             Contact
           </NavLink>
@@ -324,6 +327,9 @@ const Header = ({ bg }: { bg?: string }) => {
               <Stack spacing="3" mt="3" ml="4">
                 <CLink as={Link} to="/accessories" onClick={onClose}>
                   Accessories
+                </CLink>
+                <CLink as={Link} to="/reviews" onClick={onClose}>
+                  Reviews
                 </CLink>
                 <CLink as={Link} to="/contact" onClick={onClose}>
                   Contact
