@@ -34,16 +34,58 @@ const ReviewsPage = () => {
 
   const { meta, reviews } = reviewData;
 
-  // Show newest first, exclude "other" product type (no longer relevant)
-  const sortedReviews = useMemo(
-    () => [...reviews].filter((r) => r.productType !== 'other').sort((a, b) => b.id - a.id),
+  // Exclude "other" product type (no longer relevant)
+  const activeReviews = useMemo(
+    () => reviews.filter((r) => r.productType !== 'other'),
     [reviews]
   );
 
+  // Priority score: featured+photo+text > featured+text > photo+text > long text > short text > empty
+  const getScore = (r: typeof reviews[0]) => {
+    const hasText = r.text.length > 0;
+    const hasLongText = r.text.length >= 50;
+    const isFeatured = r.featured;
+    const hasPhoto = r.hasPhoto;
+
+    if (isFeatured && hasPhoto && hasText) return 6;
+    if (isFeatured && hasText) return 5;
+    if (hasPhoto && hasText) return 4;
+    if (hasLongText) return 3;
+    if (hasText) return 2;
+    return 1;
+  };
+
+  // Blended sort: first row (3 cards) = most recent, then priority-weighted
+  const blendedReviews = useMemo(() => {
+    const pool = [...activeReviews];
+    const byRecent = [...pool].sort((a, b) => b.id - a.id);
+    const recentIds = new Set(byRecent.slice(0, 3).map((r) => r.id));
+    const recentRow = byRecent.slice(0, 3);
+    const rest = pool
+      .filter((r) => !recentIds.has(r.id))
+      .sort((a, b) => {
+        const scoreDiff = getScore(b) - getScore(a);
+        if (scoreDiff !== 0) return scoreDiff;
+        return b.id - a.id; // newest first within same tier
+      });
+    return [...recentRow, ...rest];
+  }, [activeReviews]);
+
   const filteredReviews = useMemo(() => {
-    if (filter === 'all') return sortedReviews;
-    return sortedReviews.filter((r) => r.productType === filter);
-  }, [sortedReviews, filter]);
+    if (filter === 'all') return blendedReviews;
+    const pool = activeReviews.filter((r) => r.productType === filter);
+    const byRecent = [...pool].sort((a, b) => b.id - a.id);
+    const recentIds = new Set(byRecent.slice(0, 3).map((r) => r.id));
+    const recentRow = byRecent.slice(0, 3);
+    const rest = pool
+      .filter((r) => !recentIds.has(r.id))
+      .sort((a, b) => {
+        const scoreDiff = getScore(b) - getScore(a);
+        if (scoreDiff !== 0) return scoreDiff;
+        return b.id - a.id;
+      });
+    return [...recentRow, ...rest];
+  }, [blendedReviews, activeReviews, filter]);
 
   const visibleReviews = filteredReviews.slice(0, visibleCount);
   const hasMore = visibleCount < filteredReviews.length;
