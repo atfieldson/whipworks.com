@@ -26,7 +26,6 @@ const PRODUCT_TYPE_LABELS: Record<string, string> = {
   blueprint: 'Blueprints',
   material: 'Materials & Tools',
   accessory: 'Accessories',
-  other: 'Other',
 };
 
 const ReviewsPage = () => {
@@ -35,9 +34,9 @@ const ReviewsPage = () => {
 
   const { meta, reviews } = reviewData;
 
-  // Show newest first
+  // Show newest first, exclude "other" product type (no longer relevant)
   const sortedReviews = useMemo(
-    () => [...reviews].sort((a, b) => b.id - a.id),
+    () => [...reviews].filter((r) => r.productType !== 'other').sort((a, b) => b.id - a.id),
     [reviews]
   );
 
