@@ -296,36 +296,6 @@
 - [x] Include all product page image URLs with captions as titles (22 pages, 123 images)
 - [x] Submit image-sitemap.xml to Google Search Console after deploy
 
-## Phase 10: Customer Reviews ✅
-- [x] Scrape all 432 Etsy reviews into `src/data/reviews.json`
-  - [x] Fields: id, name, stars, date, product, productType, specialtySlug, text, hasPhoto, featured, adamResponse
-  - [x] IDs ordered chronologically (1 = earliest, 433 = newest)
-  - [x] 42 reviews with customer photos hosted on S3 (`reviews/review{id}.jpg`)
-  - [x] Meta: totalReviews, averageRating, totalSales, whipsCrafted, source, lastScraped
-- [x] Create ReviewCard component (`src/components/organisms/ReviewCard.tsx`)
-  - [x] Star rating, customer photo with lightbox, Adam's response section
-- [x] Create `/reviews` page (`src/pages/reviews.tsx`)
-  - [x] Hero stats (4.94 avg, 433 reviews, 1,200+ whips crafted)
-  - [x] Product type filter dropdown
-  - [x] Blended sorting: 3 most recent first, then priority-weighted (featured+photo > featured > photo > long text > short text > empty)
-  - [x] Load More pagination (24 per page)
-  - [x] AggregateRating JSON-LD structured data for Google
-  - [x] "Other" product type hidden
-- [x] Add "Reviews" link to Header navigation (desktop + mobile)
-- [x] Create TestimonialStrip component (`src/components/organisms/TestimonialStrip.tsx`)
-  - [x] Horizontal scrolling strip with product-specific reviews
-  - [x] Customer photo thumbnails (80×80) alongside truncated quotes
-  - [x] Click-to-expand modal with full review, large photo, date, product name
-  - [x] Gold accent borders + tinted background for visibility
-  - [x] Left/right scroll arrows (desktop only)
-  - [x] "Read all reviews →" link card at end
-- [x] Integrate TestimonialStrip into designer pages
-  - [x] Bullwhip: embedded mid-gallery in WhipGallery component
-  - [x] Snakewhip: after SnakewhipGallery
-  - [x] Stockwhip: after StockwhipGallery
-- [x] Fix DesignerLayout flex issue (`minW="0"` on left panel)
-- [ ] Add TestimonialStrip to individual specialty whip pages (filter by specialtySlug)
-
 ## Phase 7: Quality Assurance
 - [ ] End-to-end testing of all purchase flows
 - [ ] Mobile testing across devices
@@ -373,3 +343,33 @@
 - [x] Update social media bios to point to `www.whipworks.com/links`
 - [x] Cancel LinkTree subscription (~$100/month savings)
 - [ ] *(Optional)* Set up `links.whipworks.com` subdomain redirect to `/links`
+
+## Phase 10: Customer Reviews ✅
+- [x] Scrape all 432 Etsy reviews into `src/data/reviews.json`
+  - [x] Fields: id, name, stars, date, product, productType, specialtySlug, text, hasPhoto, featured, adamResponse
+  - [x] IDs ordered chronologically (1 = earliest, 433 = newest)
+  - [x] 42 reviews with customer photos hosted on S3 (`reviews/review{id}.jpg`)
+  - [x] Meta: totalReviews, averageRating, totalSales, whipsCrafted, source, lastScraped
+- [x] Create ReviewCard component (`src/components/organisms/ReviewCard.tsx`)
+  - [x] Star rating, customer photo with lightbox, Adam's response section
+- [x] Create `/reviews` page (`src/pages/reviews.tsx`)
+  - [x] Hero stats (4.94 avg, 433 reviews, 1,200+ whips crafted)
+  - [x] Product type filter dropdown
+  - [x] Blended sorting: 3 most recent first, then priority-weighted (featured+photo > featured > photo > long text > short text > empty)
+  - [x] Load More pagination (24 per page)
+  - [x] AggregateRating JSON-LD structured data for Google
+  - [x] "Other" product type hidden
+- [x] Add "Reviews" link to Header navigation (desktop + mobile)
+- [x] Create TestimonialStrip component (`src/components/organisms/TestimonialStrip.tsx`)
+  - [x] Horizontal scrolling strip with product-specific reviews
+  - [x] Customer photo thumbnails (80×80) alongside truncated quotes
+  - [x] Click-to-expand modal with full review, large photo, date, product name
+  - [x] Gold accent borders + tinted background for visibility
+  - [x] Left/right scroll arrows (desktop only)
+  - [x] "Read all reviews →" link card at end
+- [x] Integrate TestimonialStrip into designer pages
+  - [x] Bullwhip: embedded mid-gallery in WhipGallery component
+  - [x] Snakewhip: after SnakewhipGallery
+  - [x] Stockwhip: after StockwhipGallery
+- [x] Fix DesignerLayout flex issue (`minW="0"` on left panel)
+- [ ] Add TestimonialStrip to individual specialty whip pages (filter by specialtySlug)
