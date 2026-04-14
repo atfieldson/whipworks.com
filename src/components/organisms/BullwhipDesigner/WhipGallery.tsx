@@ -6,6 +6,7 @@ import {
   GalleryWhip,
   GalleryBreakImage,
 } from './constants/galleryWhips';
+import TestimonialStrip from '../TestimonialStrip';
 
 const ImageContainer = styled(Box)`
   position: relative;
@@ -136,7 +137,8 @@ const BreakImage = ({ item }: { item: GalleryBreakImage }) => {
 
 type GalleryBlock =
   | { kind: 'whips'; angle: 'wide' | 'transition' | 'handle'; columns: number; whips: GalleryWhip[] }
-  | { kind: 'break'; item: GalleryBreakImage };
+  | { kind: 'break'; item: GalleryBreakImage }
+  | { kind: 'testimonial' };
 
 const WhipGallery = () => {
   const whips = galleryItems.filter(
@@ -232,6 +234,9 @@ const WhipGallery = () => {
     const b3 = nextBreak();
     if (b3) result.push({ kind: 'break', item: b3 });
 
+    // Testimonial strip — midway through gallery
+    result.push({ kind: 'testimonial' });
+
     // Block 7: remaining images in mixed groups
     const remainingT = take(transitionPool, tRef, transitionPool.length);
     if (remainingT.length) result.push({ kind: 'whips', angle: 'transition', columns: 3, whips: remainingT });
@@ -248,6 +253,10 @@ const WhipGallery = () => {
   return (
     <Box mt="6">
       {blocks.map((block, blockIdx) => {
+        if (block.kind === 'testimonial') {
+          return <TestimonialStrip key="testimonial" productType="bullwhip" />;
+        }
+
         if (block.kind === 'break') {
           return (
             <Box key={block.item.id} mb="4">

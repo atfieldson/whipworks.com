@@ -27,6 +27,7 @@ import { heelLoops, heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
 import DesignerLayout from '../../templates/DesignerLayout';
 import SnakewhipGallery from './SnakewhipGallery';
+import TestimonialStrip from '../TestimonialStrip';
 
 const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
 
@@ -543,7 +544,7 @@ const SnakewhipDesigner = ({ location }: { location: any }) => {
     <>
       <DesignerLayout
         leftPanel={leftPanel}
-        leftPanelBottom={<SnakewhipGallery />}
+        leftPanelBottom={<><SnakewhipGallery /><TestimonialStrip productType="snakewhip" /></>}
         rightPanel={rightPanel}
       />
       <BullwhipAddedModal

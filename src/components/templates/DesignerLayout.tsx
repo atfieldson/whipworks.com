@@ -48,7 +48,7 @@ const DesignerLayout = ({ bannerImage, leftPanel, leftPanelBottom, rightPanel }:
         alignItems="flex-start"
       >
         {/* Left panel — scrollable: 3D preview, gallery */}
-        <Box flex="1" width="100%" position="relative">
+        <Box flex="1" width="100%" minW="0" position="relative">
           <Box ref={previewRef}>
             {leftPanel}
           </Box>

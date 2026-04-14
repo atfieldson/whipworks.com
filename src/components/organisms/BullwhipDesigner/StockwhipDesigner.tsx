@@ -7,6 +7,7 @@ import HandleDesignPicker from './HandleDesignPicker';
 import ConchoPicker from './ConchoPicker';
 import DesignerLayout from '../../templates/DesignerLayout';
 import StockwhipGallery from './StockwhipGallery';
+import TestimonialStrip from '../TestimonialStrip';
 import {
   stockwhipHandleLengths,
   stockwhipHandleLengthOptions,
@@ -585,7 +586,7 @@ const StockwhipDesigner = ({ location }: { location: any }) => {
     <>
       <DesignerLayout
         leftPanel={leftPanel}
-        leftPanelBottom={<StockwhipGallery />}
+        leftPanelBottom={<><StockwhipGallery /><TestimonialStrip productType="stockwhip" /></>}
         rightPanel={rightPanel}
       />
       <BullwhipAddedModal
