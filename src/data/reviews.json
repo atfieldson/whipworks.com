@@ -1,6 +1,6 @@
 {
   "meta": {
-    "totalReviews": 432,
+    "totalReviews": 433,
     "averageRating": 4.94,
     "totalSales": 3172,
     "source": "Etsy",
@@ -4877,6 +4877,17 @@
       "productType": "other",
       "text": "This leash is great, really nice looking and very well made. I think we'll be using it for many years!",
       "hasPhoto": false,
+      "featured": false
+    },
+    {
+      "id": 433,
+      "name": "Etsy buyer",
+      "stars": 5,
+      "date": "2026-04-13",
+      "product": "Custom SnakeWhip, Paracord SnakeWhip from 3-12 Feet Long",
+      "productType": "snakewhip",
+      "text": "Awesome. This on 3ft is perfect for anyone new to this hobby of whipcracking. It's a bit less painful, but still can sting. Is fast and great for indoor use, even on 3ft it's still great for a snakewhip, I honestly don't have any regrets for this. But I do recommend having a measure tape and then measure the desired whip length so it can be known what length to get. This was also as good as expected, and if you want specific details, don't hesitate to make the request even though my design here wasn't like listen on the page. Adam is kind enough to do what's possible with to satisfy the customer. It's also a perfect gift to wrap up or something, because of its small size, even out of the box! Most whips are too big haha.",
+      "hasPhoto": true,
       "featured": false
     }
   ]
