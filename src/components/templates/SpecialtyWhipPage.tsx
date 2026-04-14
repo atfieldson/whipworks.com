@@ -21,6 +21,7 @@ import {
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import ProductImages from '../molecules/ProductImages';
 import BullwhipAddedModal from '../molecules/BullwhipAddedModal';
+import TestimonialStrip from '../organisms/TestimonialStrip';
 
 type ImageData = {
   url: string;
@@ -403,6 +404,9 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
         </Box>
       )}
 
+      {/* Testimonial strip */}
+      <TestimonialStrip specialtyId={whip.id} series={whip.series} />
+
       {/* Bottom CTAs */}
       <Box mt="70px" mb="10" textAlign="center">
         <Box mb="5">
@@ -470,6 +474,8 @@ interface Props {
         price: number;
         variants?: any[];
         headerImage: string;
+        series?: string;
+        seriesImage?: string;
         images?: ImageData[];
         weight?: number;
         specs?: Spec[];

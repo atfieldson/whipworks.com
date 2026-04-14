@@ -21,8 +21,32 @@ const S3_BASE = 'https://whipworks.s3.us-east-2.amazonaws.com/reviews';
 type Review = typeof reviewData.reviews[0];
 
 type Props = {
-  productType: 'bullwhip' | 'stockwhip' | 'snakewhip';
+  productType?: 'bullwhip' | 'stockwhip' | 'snakewhip';
+  specialtyId?: string;
+  series?: string;
   maxReviews?: number;
+};
+
+// Map frontmatter id -> specialtySlug values in reviews.json
+// Some reviews use inconsistent slugs, so we map to arrays
+const SPECIALTY_SLUG_MAP: Record<string, string[]> = {
+  'indy-bullwhip': ['the-indy-bullwhip'],
+  'belmont': ['belmont-bullwhip', 'the-belmont-bullwhip'],
+  'catwhip': ['the-catwhip'],
+  'mando': ['the-mando-whip'],
+  'zwhip': ['the-z-bullwhip'],
+  'nightlord': ['40k-bullwhip'],
+  'harlequin': ['the-harlequin-bullwhip'],
+  'starspangled': ['the-star-spangled-bullwhip'],
+  'onewinged': ['one-winged-bullwhip'],
+  'jokingbullwhip': [],
+  'pride': [],
+  'ultrawhip': ['40k-bullwhip'],
+};
+
+// Map series name -> all specialtySlug values for whips in that series
+const SERIES_SLUG_MAP: Record<string, string[]> = {
+  '40K Bullwhip Series': ['40k-bullwhip'],
 };
 
 const Stars = ({ count, size = 'sm' }: { count: number; size?: string }) => (
@@ -31,13 +55,32 @@ const Stars = ({ count, size = 'sm' }: { count: number; size?: string }) => (
   </Text>
 );
 
-const TestimonialStrip = ({ productType, maxReviews = 10 }: Props) => {
+const TestimonialStrip = ({ productType, specialtyId, series, maxReviews = 10 }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
+  // Build specialty slug set for matching
+  // If whip belongs to a series, use the series slugs (shared reviews across series)
+  // Otherwise use the individual whip's slugs
+  const specialtySlugs = (() => {
+    if (series && SERIES_SLUG_MAP[series]) {
+      return new Set(SERIES_SLUG_MAP[series]);
+    }
+    if (specialtyId) {
+      return new Set(SPECIALTY_SLUG_MAP[specialtyId] || []);
+    }
+    return null;
+  })();
+
   // Filter reviews: must have meaningful text, sorted by quality
   const reviews = reviewData.reviews
-    .filter((r) => r.productType === productType && r.text.length >= 30)
+    .filter((r) => {
+      if (r.text.length < 30) return false;
+      if (specialtySlugs) {
+        return r.productType === 'specialty' && specialtySlugs.has(r.specialtySlug || '');
+      }
+      return r.productType === productType;
+    })
     .sort((a, b) => {
       // Featured first, then by text length, then newest
       if (a.featured !== b.featured) return a.featured ? -1 : 1;
@@ -90,7 +133,7 @@ const TestimonialStrip = ({ productType, maxReviews = 10 }: Props) => {
         </Text>
         <CLink
           as={Link}
-          to={`/reviews/?filter=${productType}`}
+          to={specialtyId ? '/reviews/?filter=specialty' : `/reviews/?filter=${productType}`}
           fontSize="sm"
           color="blue.200"
           _hover={{ color: 'blue.400' }}

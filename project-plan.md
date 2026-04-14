@@ -372,4 +372,10 @@
   - [x] Snakewhip: after SnakewhipGallery
   - [x] Stockwhip: after StockwhipGallery
 - [x] Fix DesignerLayout flex issue (`minW="0"` on left panel)
-- [ ] Add TestimonialStrip to individual specialty whip pages (filter by specialtySlug)
+- [x] Add TestimonialStrip to individual specialty whip pages (filter by specialtySlug)
+  - [x] Slug mapping from frontmatter IDs to review data slugs
+  - [x] Series support: 40K Bullwhip Series whips share reviews across the series
+  - [x] Gracefully hidden on pages with no matching reviews
+- [x] ReviewCard click-to-expand modal on `/reviews` page
+  - [x] Truncate long reviews at ~200 chars with "Read more" link
+  - [x] Full review modal with photo, stars, name, date, product, Adam's response
