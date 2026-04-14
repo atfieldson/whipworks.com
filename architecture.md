@@ -1,6 +1,6 @@
 # WhipWorks.com - Architecture Reference
 
-> **Last updated:** Phase 9 (LinkTree Replacement) - April 2026
+> **Last updated:** Phase 10 (Customer Reviews) - April 2026
 > This is a living document. Update after each phase of development.
 
 ## Site Map
@@ -15,6 +15,7 @@ graph TD
     HOME --> MATERIALS["/whipmaking-materials"]
     HOME --> BLUEPRINTS["/whip-making-blueprints"]
     HOME --> CONTACT["/contact"]
+    HOME --> REVIEWS["/reviews"]
     HOME --> LINKS["/links"]
 
     SPECIALTY --> SPEC_DETAIL["/specialty/:slug  x12"]
@@ -44,6 +45,7 @@ graph TD
 | `/materials/:slug` | gatsby-node.js | ProductPage or ParacordPage | Individual material (x8) |
 | `/whip-making-blueprints` | `src/pages/whip-making-blueprints.tsx` | Layout | Blueprint PDFs + YouTube series |
 | `/contact` | `src/pages/contact.tsx` | Layout | Contact form (react-hook-form -> Lambda) |
+| `/reviews` | `src/pages/reviews.tsx` | Layout | Customer reviews with filters, blended sorting, AggregateRating JSON-LD |
 | `/links` | `src/pages/links.tsx` | Standalone | Link-in-bio page (LinkTree replacement) |
 | `/404` | `src/pages/404.tsx` | Layout | 404 error page |
 
@@ -67,6 +69,8 @@ graph TD
         SPEC_LIST[SpecialtyWhipList]
         INSTA[InstagramFeed]
         CONTACT_FORM[ContactForm]
+        REVIEW_CARD[ReviewCard]
+        TESTIMONIAL[TestimonialStrip]
 
         subgraph BullwhipDesigner Suite
             BW[BullwhipDesigner]
@@ -130,6 +134,11 @@ graph TD
     SN --> PRICE_SN
     SN --> GALLERY_SN
 
+    GALLERY_BW --> TESTIMONIAL
+    BW --> GALLERY_BW
+    SN --> TESTIMONIAL
+    SW --> TESTIMONIAL
+
     SPEC_LIST --> GRID_CARD
     SPECIALTY_PAGE --> PROD_IMAGES
     PRODUCT_PAGE --> PROD_IMAGES
@@ -143,7 +152,7 @@ graph TD
 |-------|-------|----------|
 | Atoms | 10 | `src/components/atoms/` |
 | Molecules | 4 | `src/components/molecules/` |
-| Organisms | 4 top-level + 16 designer | `src/components/organisms/` |
+| Organisms | 6 top-level + 16 designer | `src/components/organisms/` |
 | Templates | 8 | `src/components/templates/` |
 | Constants | 15 | `src/components/organisms/BullwhipDesigner/constants/` |
 | Hooks | 1 | `src/hooks/useStockLevel.ts` |
@@ -234,6 +243,32 @@ graph TD
     BP --> BP_MD[".md per product"]
 ```
 
+### Reviews Data (`src/data/reviews.json`)
+
+```yaml
+meta:
+  totalReviews: 433
+  averageRating: 4.94
+  totalSales: 3172
+  whipsCrafted: 1200
+  source: "Etsy"
+  lastScraped: "2026-04-12"
+  photoNamingConvention: "reviews/review-{id}-{1,2,3}.jpg on S3"
+
+reviews[]:
+  id: Number            # Chronological (1 = earliest, 433 = newest)
+  name: String
+  stars: Number         # 1-5
+  date: String          # YYYY-MM-DD
+  product: String       # Product purchased
+  productType: String   # bullwhip | stockwhip | snakewhip | specialty | flogger | blueprint | material | accessory | other
+  specialtySlug: String # Only for specialty type — matches content slug
+  text: String          # Review text (may be empty)
+  hasPhoto: Boolean     # Customer photo on S3
+  featured: Boolean     # Prioritized in sorting
+  adamResponse: String  # Optional seller response
+```
+
 ### Frontmatter Schema
 
 Defined in `gatsby-node.js` via `createSchemaCustomization`:
@@ -276,6 +311,7 @@ variants:
 | `d3ruufruf2uqog.cloudfront.net/paracordImages/` | Paracord color textures | `unwaxed/redLeft.jpg` |
 | `d3ruufruf2uqog.cloudfront.net/specialty/` | Header/series logos | `40K/40KHeader.png` |
 | `d3ruufruf2uqog.cloudfront.net/bannerImages/` | Hero/banner images | `heroImages/comoSunset800.jpg` |
+| `whipworks.s3.us-east-2.amazonaws.com/reviews/` | Customer review photos | `review433.jpg` |
 | `whipworks.s3.us-east-2.amazonaws.com/bannerImages/` | Social banners | `FB+Banner.jpg` |
 
 ### Shot Type Naming Convention (Gallery Images)
@@ -414,6 +450,9 @@ Theme file: `src/@chakra-ui/gatsby-plugin/theme.ts`
 | `src/components/organisms/BullwhipDesigner/constants/drawBullwhipPreviews.ts` | Canvas 2D pattern rendering |
 | `src/components/organisms/BullwhipDesigner/constants/spoolColors.ts` | Paracord color definitions |
 | `src/components/molecules/ProductImages.tsx` | Image gallery with lightbox |
+| `src/data/reviews.json` | 433 Etsy reviews with meta stats (4.94 avg, productType, specialtySlug) |
+| `src/components/organisms/TestimonialStrip.tsx` | Horizontal review strip with photos, click-to-expand modal |
+| `src/components/organisms/ReviewCard.tsx` | Review card with stars, photo lightbox, Adam's response |
 | `src/components/atoms/SpecialtyWhipGridCard.tsx` | Grid cards with hover crossfade |
 | `src/@chakra-ui/gatsby-plugin/theme.ts` | Chakra UI theme overrides |
 | `src/hooks/useStockLevel.ts` | Snipcart Products API stock lookup |
