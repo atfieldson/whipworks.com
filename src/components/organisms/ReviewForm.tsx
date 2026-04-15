@@ -281,7 +281,7 @@ const ReviewForm = ({ ...props }) => {
             please consider leaving a review there as well.
           </Text>
           <ChakraLink
-            href="https://g.page/r/YOUR_GOOGLE_REVIEW_LINK/review"
+            href="https://g.page/r/CduBUpnbWf_JEBM/review"
             isExternal
             _hover={{ textDecoration: 'none' }}
           >
