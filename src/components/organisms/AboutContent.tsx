@@ -94,8 +94,8 @@ const AboutContent = () => {
             alignSelf="center"
           >
             <Image
-              src={`${CLOUDFRONT_BASE}/adamPortrait4.jpg`}
-              alt="Adam holding a coiled bullwhip"
+              src={`${CLOUDFRONT_BASE}/adamPortrait7.jpg`}
+              alt="Young Adam in full Indiana Jones gear holding a whip"
               borderRadius="md"
               w="100%"
             />

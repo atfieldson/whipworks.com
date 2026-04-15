@@ -157,6 +157,10 @@ const Header = ({ bg }: { bg?: string }) => {
                 />
                 <span>Design a Snakewhip</span>
               </MenuItem>
+              <MenuDivider />
+              <MenuItem as={Link} to="/accessories" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                Accessories
+              </MenuItem>
             </MenuList>
           </Menu>
 
@@ -202,6 +206,10 @@ const Header = ({ bg }: { bg?: string }) => {
                   {edge.node.frontmatter.title}
                 </MenuItem>
               ))}
+              <MenuDivider />
+              <MenuItem as={Link} to="/accessories" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                Accessories
+              </MenuItem>
             </MenuList>
           </Menu>
 
@@ -235,16 +243,35 @@ const Header = ({ bg }: { bg?: string }) => {
             </MenuList>
           </Menu>
 
-          {/* Flat Links */}
-          <NavLink as={Link} to="/accessories">
-            Accessories
-          </NavLink>
-          <NavLink as={Link} to="/reviews">
-            Reviews
-          </NavLink>
-          <NavLink as={Link} to="/contact">
-            Contact
-          </NavLink>
+          {/* More Dropdown */}
+          <Menu>
+            <MenuButton
+              as={Box}
+              cursor="pointer"
+              role="button"
+              aria-label="More menu"
+              _hover={{ opacity: 0.7 }}
+              transition="opacity 0.2s"
+            >
+              <HStack spacing="1">
+                <Text fontSize="1.35rem" fontWeight="600" letterSpacing="0.05em">
+                  More
+                </Text>
+                <FaChevronDown size={10} />
+              </HStack>
+            </MenuButton>
+            <MenuList>
+              <MenuItem as={Link} to="/about" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                About the Whipmaker
+              </MenuItem>
+              <MenuItem as={Link} to="/reviews" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                Reviews
+              </MenuItem>
+              <MenuItem as={Link} to="/contact" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                Contact
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </HStack>
 
         {/* Right: Mobile hamburger + Cart */}
@@ -285,6 +312,9 @@ const Header = ({ bg }: { bg?: string }) => {
                 <CLink as={Link} to="/design-snakewhip" onClick={onClose}>
                   Design a Snakewhip
                 </CLink>
+                <CLink as={Link} to="/accessories" onClick={onClose}>
+                  Accessories
+                </CLink>
               </Stack>
 
               <Heading fontSize="md" letterSpacing="wider" mt="6">
@@ -304,6 +334,9 @@ const Header = ({ bg }: { bg?: string }) => {
                     {edge.node.frontmatter.title}
                   </CLink>
                 ))}
+                <CLink as={Link} to="/accessories" onClick={onClose}>
+                  Accessories
+                </CLink>
               </Stack>
 
               <Heading fontSize="md" letterSpacing="wider" mt="6">
@@ -325,8 +358,8 @@ const Header = ({ bg }: { bg?: string }) => {
                 More
               </Heading>
               <Stack spacing="3" mt="3" ml="4">
-                <CLink as={Link} to="/accessories" onClick={onClose}>
-                  Accessories
+                <CLink as={Link} to="/about" onClick={onClose}>
+                  About the Whipmaker
                 </CLink>
                 <CLink as={Link} to="/reviews" onClick={onClose}>
                   Reviews
