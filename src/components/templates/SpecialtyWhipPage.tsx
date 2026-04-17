@@ -38,6 +38,7 @@ type Variant = {
   name: string;
   options: Option[];
   defaultValue: string;
+  chart?: string;
 };
 
 type Spec = {
@@ -277,9 +278,20 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           </Heading>
 
           {/* Description */}
-          <Text mb="6" lineHeight="tall" fontSize="md" opacity={0.9}>
-            {whip.description}
-          </Text>
+          {data.markdownRemark.html ? (
+            <Box
+              mb="6"
+              lineHeight="tall"
+              fontSize="md"
+              opacity={0.9}
+              dangerouslySetInnerHTML={{ __html: data.markdownRemark.html }}
+              sx={{ a: { textDecoration: 'underline', _hover: { opacity: 0.8 } } }}
+            />
+          ) : (
+            <Text mb="6" lineHeight="tall" fontSize="md" opacity={0.9}>
+              {whip.description}
+            </Text>
+          )}
 
           {/* Style selector */}
           {styles && (
@@ -307,6 +319,14 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           {/* Other variant selectors */}
           {variants?.map((v) => (
             <Box key={v.name} mb="5">
+              {v.chart && (
+                <Box mb="3">
+                  <ProductImages
+                    images={[{ url: v.chart, caption: "Choose from the above Runes for me to plait into your Blacksmith's Bullwhip" }]}
+                    alt={`${v.name} chart`}
+                  />
+                </Box>
+              )}
               <Text fontWeight="bold" mb="2" fontSize="sm" textTransform="uppercase" letterSpacing="wider">
                 {v.name}
               </Text>
@@ -466,6 +486,7 @@ interface Props {
   };
   data: {
     markdownRemark: {
+      html?: string;
       frontmatter: {
         id: string;
         title: string;
@@ -488,6 +509,7 @@ export const pageQuery = graphql`
   query ($slug: String!) {
     markdownRemark(fields: { slug: { eq: $slug } }) {
       id
+      html
       frontmatter {
         title
         id
@@ -510,6 +532,7 @@ export const pageQuery = graphql`
           name
           defaultValue
           note
+          chart
           options {
             name
             priceDiff

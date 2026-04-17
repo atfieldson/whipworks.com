@@ -65,7 +65,7 @@ const AboutContent = () => {
               the '90s. But it went from fascination to obsession when my
               family moved to Melbourne, Australia for a few years. My mom
               picked up a cheap 4-plait stockwhip with a cane handle at a
-              local tac shop, and I spent hours in the backyard learning to
+              local tack shop, and I spent hours in the backyard learning to
               crack it, guided by nothing but a Mick Denigan instructional VHS
               and sheer stubbornness.
             </Text>

@@ -31,7 +31,12 @@ const resolveSnipcartFields = (variants) => {
     let index = i + 1;
     fields[`data-item-custom${index}-name`] = variant.name;
     const options = variant.options
-      .map((o) => `${o.name}${o.priceDiff ? `[${o.priceDiff}]` : ''}`)
+      .map((o) => {
+        const diff = Number(o.priceDiff);
+        if (!diff) return o.name;
+        const sign = diff > 0 ? '+' : '';
+        return `${o.name}[${sign}${diff}]`;
+      })
       .join('|');
     fields[`data-item-custom${index}-options`] = options;
     fields[`data-item-custom${index}-value`] = variant.defaultValue;
@@ -65,6 +70,7 @@ exports.createPages = async ({ graphql, actions }) => {
                 customLayout
                 variants {
                   name
+                  defaultValue
                   options {
                     name
                     priceDiff

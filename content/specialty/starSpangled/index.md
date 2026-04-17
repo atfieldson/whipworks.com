@@ -1,7 +1,7 @@
 ---
 title: The Star Spangled Bullwhip
 id: starspangled
-sortOrder: 13
+sortOrder: 14
 description: "Red, white, blue, and loud. The Star Spangled Bullwhip is an American flag you can crack — herringbone plaited in patriotic colors with a stars handle design and an American Eagle concho to seal the deal. Fire up the grill, grab something cold, and make your own fireworks."
 price: 309
 hasStyles: false

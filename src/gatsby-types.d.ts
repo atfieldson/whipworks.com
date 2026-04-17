@@ -1649,6 +1649,7 @@ type MarkdownRemarkFrontmatterSpecsSortInput = {
 };
 
 type MarkdownRemarkFrontmatterVariants = {
+  readonly chart: Maybe<Scalars['String']>;
   readonly defaultValue: Maybe<Scalars['String']>;
   readonly name: Maybe<Scalars['String']>;
   readonly note: Maybe<Scalars['String']>;
@@ -1656,6 +1657,7 @@ type MarkdownRemarkFrontmatterVariants = {
 };
 
 type MarkdownRemarkFrontmatterVariantsFieldSelector = {
+  readonly chart: InputMaybe<FieldSelectorEnum>;
   readonly defaultValue: InputMaybe<FieldSelectorEnum>;
   readonly name: InputMaybe<FieldSelectorEnum>;
   readonly note: InputMaybe<FieldSelectorEnum>;
@@ -1663,6 +1665,7 @@ type MarkdownRemarkFrontmatterVariantsFieldSelector = {
 };
 
 type MarkdownRemarkFrontmatterVariantsFilterInput = {
+  readonly chart: InputMaybe<StringQueryOperatorInput>;
   readonly defaultValue: InputMaybe<StringQueryOperatorInput>;
   readonly name: InputMaybe<StringQueryOperatorInput>;
   readonly note: InputMaybe<StringQueryOperatorInput>;
@@ -1702,6 +1705,7 @@ type MarkdownRemarkFrontmatterVariantsOptionsSortInput = {
 };
 
 type MarkdownRemarkFrontmatterVariantsSortInput = {
+  readonly chart: InputMaybe<SortOrderEnum>;
   readonly defaultValue: InputMaybe<SortOrderEnum>;
   readonly name: InputMaybe<SortOrderEnum>;
   readonly note: InputMaybe<SortOrderEnum>;

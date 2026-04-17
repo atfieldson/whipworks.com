@@ -1,7 +1,7 @@
 ---
 title: The Nightlord
 id: nightlord
-sortOrder: 11
+sortOrder: 12
 isNew: true
 series: '40K Bullwhip Series'
 seriesImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/40K/40KHeader.png'

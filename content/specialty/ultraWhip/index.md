@@ -1,7 +1,7 @@
 ---
 title: The Ultra Whip
 id: ultrawhip
-sortOrder: 12
+sortOrder: 13
 isNew: true
 series: '40K Bullwhip Series'
 seriesImage: 'https://d3ruufruf2uqog.cloudfront.net/specialty/40K/40KHeader.png'
