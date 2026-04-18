@@ -4,7 +4,7 @@ import { Box, Heading, Text, Stack, Flex, Image, Button } from '@chakra-ui/react
 import Layout from '../components/templates/Layout';
 import SEO from '../components/templates/SEO';
 import SpecialtyWhipList from '../components/organisms/SpecialtyWhipList';
-import HeroCarousel from '../components/organisms/HeroCarousel';
+import Hero from '../components/organisms/Hero';
 import InstagramFeed from '../components/organisms/InstagramFeed';
 import useDocumentScrollThrottled, { ScrollData } from '../../useDocumentScroll';
 import FullWidthImage from '../components/atoms/FullWidthImage';
@@ -45,7 +45,7 @@ const Index = () => {
           ],
         }}
       />
-      <HeroCarousel />
+      <Hero />
       <SpecialtyWhipList />
       <Box mt="32">
         <FullWidthImage
