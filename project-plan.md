@@ -416,13 +416,13 @@ Each commit is reviewed and approved before moving on.
   - [x] Shortened to 62vh desktop / 55vh mobile so next section peeks below the fold
   - [x] Tagline: *"The crack of a whip — faster than sound, slow to forget."*
   - [x] Fix: add viewport meta tag to `gatsby-ssr.js` (Gatsby doesn't include one by default — was breaking `100vw` on narrow viewports)
-- [ ] **Commit 2: 4-tile category row** — full-bleed, directly below hero
-  - [ ] Specialty Whips → `/specialty-whips`
-  - [ ] Design a Bullwhip → `/design-a-bullwhip`
-  - [ ] Design a Stockwhip → `/design-a-stockwhip`
-  - [ ] Design a Snakewhip → `/design-a-snakewhip`
-  - [ ] Desktop: 4-across; Tablet: 2x2; Mobile: stacked
-  - [ ] Reuse existing site imagery (one strong photo per category)
+- [x] **Commit 2: 4-tile category row** — full-bleed, directly below hero
+  - [x] Design a Bullwhip → `/design-bullwhip`
+  - [x] Design a Stockwhip → `/design-stockwhip`
+  - [x] Specialty Whips → `/specialty-whips`
+  - [x] Design a Snakewhip → `/design-snakewhip`
+  - [x] Desktop/Tablet: square tiles (4-across / 2x2); Mobile: 4:3 stacked
+  - [x] Reuse existing site imagery (gallery photos per category)
 - [ ] **Commit 3: 2-wide featured pair** — About the Whipmaker + Blacksmith's Bullwhip
 - [ ] **Commit 4: 2x3 Specialty Whips grid** — Indy, Catwhip, Zwhip, Nightlord, Mando, Harlequin (hover image-swap)
 - [ ] **Commit 5: Full-bleed cinematic band** — a single oversized image or video with a short headline
