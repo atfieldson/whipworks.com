@@ -207,6 +207,14 @@
   - [x] The One Winged Bullwhip (new images, description, specs)
   - [x] The Star Spangled Bullwhip (new images, description, specs)
   - [ ] The Pride Whip (awaiting new photos)
+  - [x] The Blacksmith's Bullwhip (NEW listing — Saul Forged collaboration with customer-selectable Elder Futhark runes)
+    - [x] Three rune variants (Handle, Thong 1, Thong 2) with all 16 Elder Futhark options
+    - [x] Expandable rune selection chart (reuses ProductImages lightbox)
+    - [x] Optional `chart` field added to variant schema
+    - [x] Markdown body HTML rendered as description (supports inline links like Saul Forged Instagram)
+- [x] Fix two latent Snipcart bugs affecting all products with variants:
+  - [x] `defaultValue` was missing from `createPages` query → cart defaulted to first-listed option
+  - [x] `+` sign stripped from positive `priceDiff` values (schema was `Float`) → Snipcart rejected positive modifiers
 - [ ] Update pricing for all Specialty Whip listings
 - [x] Update /specialty-whips landing page layout (image-heavy grid with hover crossfade, series grouping, New badges)
 - [x] Update individual specialty whip page layout (Filson-inspired two-column)

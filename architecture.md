@@ -1,6 +1,6 @@
 # WhipWorks.com - Architecture Reference
 
-> **Last updated:** Phase 10 (Customer Reviews) - April 2026
+> **Last updated:** Phase 4B (Blacksmith's Bullwhip + rune customization) - April 2026
 > This is a living document. Update after each phase of development.
 
 ## Site Map
@@ -14,11 +14,12 @@ graph TD
     HOME --> ACCESSORIES["/accessories"]
     HOME --> MATERIALS["/whipmaking-materials"]
     HOME --> BLUEPRINTS["/whip-making-blueprints"]
+    HOME --> ABOUT["/about"]
     HOME --> CONTACT["/contact"]
     HOME --> REVIEWS["/reviews"]
     HOME --> LINKS["/links"]
 
-    SPECIALTY --> SPEC_DETAIL["/specialty/:slug  x12"]
+    SPECIALTY --> SPEC_DETAIL["/specialty/:slug  x13"]
     ACCESSORIES --> ACC_DETAIL["/accessories/:slug  x2"]
     MATERIALS --> MAT_DETAIL["/materials/:slug  x8"]
 
@@ -38,12 +39,13 @@ graph TD
 | `/design-stockwhip` | `src/pages/design-stockwhip.tsx` | DesignerLayout | 3D stockwhip customizer |
 | `/design-snakewhip` | `src/pages/design-snakewhip.tsx` | DesignerLayout | 3D snakewhip customizer |
 | `/specialty-whips` | `src/pages/specialty-whips.tsx` | Layout | Specialty whips grid with hover crossfade |
-| `/specialty/:slug` | gatsby-node.js | SpecialtyWhipPage | Individual specialty whip (x12) |
+| `/specialty/:slug` | gatsby-node.js | SpecialtyWhipPage | Individual specialty whip (x13) |
 | `/accessories` | `src/pages/accessories.tsx` | Layout | Accessories listing |
 | `/accessories/:slug` | gatsby-node.js | ProductPage | Individual accessory (x2) |
 | `/whipmaking-materials` | `src/pages/whipmaking-materials.tsx` | Layout | Tools & materials listing |
 | `/materials/:slug` | gatsby-node.js | ProductPage or ParacordPage | Individual material (x8) |
 | `/whip-making-blueprints` | `src/pages/whip-making-blueprints.tsx` | Layout | Blueprint PDFs + YouTube series |
+| `/about` | `src/pages/about.tsx` | Layout | About the Whipmaker — Adam's story, craft, YouTube embed |
 | `/contact` | `src/pages/contact.tsx` | Layout | Contact form (react-hook-form -> Lambda) |
 | `/reviews` | `src/pages/reviews.tsx` | Layout | Customer reviews with filters, blended sorting, AggregateRating JSON-LD |
 | `/links` | `src/pages/links.tsx` | Standalone | Link-in-bio page (LinkTree replacement) |
@@ -198,10 +200,15 @@ flowchart LR
 Product variants defined in markdown frontmatter are converted to Snipcart custom field attributes by `resolveSnipcartFields()` in gatsby-node.js:
 
 ```
-frontmatter.variants → data-item-custom1-name, data-item-custom1-options, etc.
+frontmatter.variants → data-item-custom1-name, data-item-custom1-options, data-item-custom1-value, etc.
 ```
 
 These are embedded in the page context and rendered as button attributes by ProductPage/SpecialtyWhipPage.
+
+**Gotchas (fixed during Blacksmith rollout):**
+- The `createPages` GraphQL query **must select `variants.defaultValue`** — if missing, Snipcart falls back to the first-listed option as the cart default.
+- `priceDiff` is coerced to `Number` at runtime; `resolveSnipcartFields` prepends `+` for positive values so Snipcart's `[+5]` / `[-5]` format stays valid.
+- `priceDiff: '+0'` is treated as zero and omitted from the options string (a literal `[+0]` confuses Snipcart's option matcher).
 
 ## Three.js 3D Preview Pipeline
 
@@ -234,7 +241,7 @@ https://d3ruufruf2uqog.cloudfront.net/paracordImages/{waxed|unwaxed}/{color}{Lef
 
 ```mermaid
 graph TD
-    CONTENT["content/"] --> SPEC["specialty/ (12 whips)"]
+    CONTENT["content/"] --> SPEC["specialty/ (13 whips)"]
     CONTENT --> ACC["accessories/ (2 products)"]
     CONTENT --> MAT["materials/ (8 products)"]
     CONTENT --> BP["blueprints/ (17 products)"]
@@ -299,11 +306,15 @@ specs:
 variants:
   - name: String
     defaultValue: String
+    note: String          # Optional helper text shown below the dropdown
+    chart: String         # Optional reference chart image URL (opens in ProductImages lightbox)
     options:
       - name: String
         priceDiff: Number
         images: [{ url, caption }]  # Per-variant images
 ```
+
+**Description rendering:** `SpecialtyWhipPage` renders the markdown body HTML as the on-page description when present (allowing inline `<a>` tags, multiple paragraphs, etc.), and falls back to the plain-text `frontmatter.description` otherwise. The frontmatter `description` is still used for SEO/meta tags and Snipcart's `data-item-description`.
 
 ### Image Storage
 
