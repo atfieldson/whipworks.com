@@ -404,3 +404,37 @@
 - [ ] Consider upgrading Gatsby itself if several vulns stem from old Gatsby plugins (stretch — validate Three.js, gatsby-plugin-s3, and gatsby-transformer-remark compatibility first)
 - [ ] Enable Dependabot auto-PRs for security updates going forward (Settings → Security → Dependabot alerts)
 - [ ] Document any deps that are intentionally pinned (with reason) in a `DEPENDENCIES.md` or in architecture.md
+
+## Phase 12: Homepage Revamp (Filson-Inspired)
+**Goal:** Transform the homepage from a sparse landing page into a cinematic, scroll-driven showcase that surfaces the newer content (specialty whips, reviews, materials, blueprints, About page, Blacksmith's Bullwhip) and feels handcrafted/warm. Primary inspiration: Filson. Secondary: Benchmade, artisan portfolios. Tech stack unchanged (Gatsby 5 + TypeScript + Chakra UI + Emotion + framer-motion + dark theme #1a140f).
+
+Each commit is reviewed and approved before moving on.
+
+- [x] **Commit 1: Hero** — full-bleed Hero component replaces HeroCarousel
+  - [x] Static FB-Banner image; `videoSrc` prop ready for future B-roll swap
+  - [x] Scroll-driven parallax (~0.2x factor over 900px) via framer-motion
+  - [x] Shortened to 62vh desktop / 55vh mobile so next section peeks below the fold
+  - [x] Tagline: *"The crack of a whip — faster than sound, slow to forget."*
+  - [x] Fix: add viewport meta tag to `gatsby-ssr.js` (Gatsby doesn't include one by default — was breaking `100vw` on narrow viewports)
+- [ ] **Commit 2: 4-tile category row** — full-bleed, directly below hero
+  - [ ] Specialty Whips → `/specialty-whips`
+  - [ ] Design a Bullwhip → `/design-a-bullwhip`
+  - [ ] Design a Stockwhip → `/design-a-stockwhip`
+  - [ ] Design a Snakewhip → `/design-a-snakewhip`
+  - [ ] Desktop: 4-across; Tablet: 2x2; Mobile: stacked
+  - [ ] Reuse existing site imagery (one strong photo per category)
+- [ ] **Commit 3: 2-wide featured pair** — About the Whipmaker + Blacksmith's Bullwhip
+- [ ] **Commit 4: 2x3 Specialty Whips grid** — Indy, Catwhip, Zwhip, Nightlord, Mando, Harlequin (hover image-swap)
+- [ ] **Commit 5: Full-bleed cinematic band** — a single oversized image or video with a short headline
+- [ ] **Commit 6: "Want to make your own?" tri-CTA** — Blueprints / YouTube / Materials (Coreless Paracord, Hardware, and other Whipmaking specifics)
+- [ ] **Commit 7: Reviews rotator** — single card at a time, 15s auto-rotate, swipe animation, links to `/reviews`
+- [ ] **Commit 8: Contact CTA band + Instagram relocate + polish**
+  - [ ] Contact CTA band at bottom (above Instagram)
+  - [ ] Move Instagram Feed to just above the footer
+  - [ ] Scroll-triggered fade-in animations via framer-motion throughout
+  - [ ] Mobile responsive pass + final design polish
+
+**Cross-cutting notes:**
+- Atomic design respected: new components live in `organisms/` (tiles, grids, rotators) and `molecules/` (individual cards) under `src/components/`.
+- Every section uses the same full-bleed breakout pattern as Hero (`width: 100vw; margin-left: calc((100% - 100vw) / 2)`) to escape the 1080px Content container when needed.
+- Copy is warm and human, not corporate — matches Adam's voice on the rest of the site.
