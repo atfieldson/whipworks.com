@@ -387,3 +387,20 @@
 - [x] ReviewCard click-to-expand modal on `/reviews` page
   - [x] Truncate long reviews at ~200 chars with "Read more" link
   - [x] Full review modal with photo, stars, name, date, product, Adam's response
+
+## Phase 11: Dependency & Security Maintenance
+**Goal:** Resolve the 84 Dependabot vulnerabilities flagged on `atfieldson/whipworks.com` (2 critical, 38 high, 31 moderate, 13 low) without breaking the Gatsby 5 build or S3 deploy pipeline.
+
+- [ ] Review Dependabot alerts on GitHub (`/security/dependabot`) and categorize by severity and by whether each vuln is reachable (runtime vs build-only vs dev-only)
+- [ ] Group fixes into logical batches (likely many are transitive deps from Gatsby 5's ecosystem and can be resolved together)
+- [ ] Triage critical vulnerabilities (2) first — patch or pin as needed
+- [ ] Triage high-severity vulnerabilities (38) in small batches
+- [ ] Triage moderate (31) and low (13) severity issues
+- [ ] Run `npm audit fix` cautiously; avoid `--force` unless verified safe
+- [ ] After each batch:
+  - [ ] Run `yarn build` and verify no build errors
+  - [ ] Smoke-test locally (homepage, designer, specialty whip, cart flow)
+  - [ ] Commit with clear message (`chore(deps): bump X from A to B`)
+- [ ] Consider upgrading Gatsby itself if several vulns stem from old Gatsby plugins (stretch — validate Three.js, gatsby-plugin-s3, and gatsby-transformer-remark compatibility first)
+- [ ] Enable Dependabot auto-PRs for security updates going forward (Settings → Security → Dependabot alerts)
+- [ ] Document any deps that are intentionally pinned (with reason) in a `DEPENDENCIES.md` or in architecture.md
