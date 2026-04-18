@@ -5,6 +5,7 @@ import Layout from '../components/templates/Layout';
 import SEO from '../components/templates/SEO';
 import SpecialtyWhipList from '../components/organisms/SpecialtyWhipList';
 import Hero from '../components/organisms/Hero';
+import CategoryTileRow from '../components/organisms/CategoryTileRow';
 import InstagramFeed from '../components/organisms/InstagramFeed';
 import useDocumentScrollThrottled, { ScrollData } from '../../useDocumentScroll';
 import FullWidthImage from '../components/atoms/FullWidthImage';
@@ -46,6 +47,7 @@ const Index = () => {
         }}
       />
       <Hero />
+      <CategoryTileRow />
       <SpecialtyWhipList />
       <Box mt="32">
         <FullWidthImage
