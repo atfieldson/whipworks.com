@@ -8,6 +8,7 @@ import Hero from '../components/organisms/Hero';
 import CategoryTileRow from '../components/organisms/CategoryTileRow';
 import FeaturedPair from '../components/organisms/FeaturedPair';
 import FeaturedSpecialtyGrid from '../components/organisms/FeaturedSpecialtyGrid';
+import CinematicBand from '../components/organisms/CinematicBand';
 import InstagramFeed from '../components/organisms/InstagramFeed';
 import useDocumentScrollThrottled, { ScrollData } from '../../useDocumentScroll';
 import FullWidthImage from '../components/atoms/FullWidthImage';
@@ -52,6 +53,7 @@ const Index = () => {
       <CategoryTileRow />
       <FeaturedPair />
       <FeaturedSpecialtyGrid />
+      <CinematicBand />
       <SpecialtyWhipList />
       <Box mt="32">
         <FullWidthImage
