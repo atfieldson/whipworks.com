@@ -9,6 +9,7 @@ import CategoryTileRow from '../components/organisms/CategoryTileRow';
 import FeaturedPair from '../components/organisms/FeaturedPair';
 import FeaturedSpecialtyGrid from '../components/organisms/FeaturedSpecialtyGrid';
 import CinematicBand from '../components/organisms/CinematicBand';
+import MakeYourOwnCTA from '../components/organisms/MakeYourOwnCTA';
 import InstagramFeed from '../components/organisms/InstagramFeed';
 import useDocumentScrollThrottled, { ScrollData } from '../../useDocumentScroll';
 import FullWidthImage from '../components/atoms/FullWidthImage';
@@ -54,6 +55,7 @@ const Index = () => {
       <FeaturedPair />
       <FeaturedSpecialtyGrid />
       <CinematicBand />
+      <MakeYourOwnCTA />
       <SpecialtyWhipList />
       <Box mt="32">
         <FullWidthImage

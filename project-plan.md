@@ -426,7 +426,7 @@ Each commit is reviewed and approved before moving on.
 - [x] **Commit 3: 2-wide featured pair** — About the Whipmaker + Blacksmith's Bullwhip
 - [x] **Commit 4: 2x3 Specialty Whips grid** — Indy, Catwhip, Zwhip, Nightlord, Mando, Harlequin (hover image-swap)
 - [x] **Commit 5: Full-bleed cinematic band** — a single oversized image or video with a short headline
-- [ ] **Commit 6: "Want to make your own?" tri-CTA** — Blueprints / YouTube / Materials (Coreless Paracord, Hardware, and other Whipmaking specifics)
+- [x] **Commit 6: "Want to make your own?" tri-CTA** — Blueprints / YouTube / Materials (Coreless Paracord, Hardware, and other Whipmaking specifics)
 - [ ] **Commit 7: Reviews rotator** — single card at a time, 15s auto-rotate, swipe animation, links to `/reviews`
 - [ ] **Commit 8: Contact CTA band + Instagram relocate + polish**
   - [ ] Contact CTA band at bottom (above Instagram)
