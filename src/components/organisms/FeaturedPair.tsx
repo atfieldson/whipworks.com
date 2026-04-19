@@ -235,11 +235,10 @@ const FEATURES: Feature[] = [
     blurb:
       "Hi, I'm Adam. I started WhipWorks in 2015 and have made over 1,000 whips since.",
     cta: 'See how I got here',
+    /* Custom 1x1 crop composed specifically for this card — no positioning
+       override needed; plain 'cover' + 'center' just works. */
     image:
-      'https://d3ruufruf2uqog.cloudfront.net/adam/adamPortrait1.jpg',
-    /* Portrait image, head at the top — anchor top so face is visible when
-       the 3:2 landscape crop kicks in. */
-    imagePosition: 'center top',
+      'https://whipworks.s3.us-east-2.amazonaws.com/adam/adam1x1.jpg',
     href: '/about',
   },
   {
