@@ -423,7 +423,7 @@ Each commit is reviewed and approved before moving on.
   - [x] Design a Snakewhip → `/design-snakewhip`
   - [x] Desktop/Tablet: square tiles (4-across / 2x2); Mobile: 4:3 stacked
   - [x] Reuse existing site imagery (gallery photos per category)
-- [ ] **Commit 3: 2-wide featured pair** — About the Whipmaker + Blacksmith's Bullwhip
+- [x] **Commit 3: 2-wide featured pair** — About the Whipmaker + Blacksmith's Bullwhip
 - [ ] **Commit 4: 2x3 Specialty Whips grid** — Indy, Catwhip, Zwhip, Nightlord, Mando, Harlequin (hover image-swap)
 - [ ] **Commit 5: Full-bleed cinematic band** — a single oversized image or video with a short headline
 - [ ] **Commit 6: "Want to make your own?" tri-CTA** — Blueprints / YouTube / Materials (Coreless Paracord, Hardware, and other Whipmaking specifics)
