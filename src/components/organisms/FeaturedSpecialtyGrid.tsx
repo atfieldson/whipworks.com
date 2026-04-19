@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'gatsby';
 import styled from '@emotion/styled';
+import { motion, useReducedMotion } from 'framer-motion';
 
 /**
  * FeaturedSpecialtyGrid
@@ -277,15 +278,76 @@ const WHIPS: SpecialtyWhip[] = [
   },
 ];
 
+/**
+ * Tiles animate in from alternating sides as the user scrolls them
+ * into view — row by row, not all at once. Left column tiles slide
+ * in from the left (x: -40 → 0), right column tiles from the right
+ * (x: +40 → 0). Each tile owns its own viewport trigger, so the
+ * animation fires when that specific tile enters the viewport, not
+ * when the whole grid does. Both tiles within a row share a Y
+ * position, so they fire together naturally as that row scrolls
+ * into view — no explicit row coordination needed.
+ *
+ * This is the one section on the homepage that deviates from the
+ * generic `FadeInOnScroll` pattern used everywhere else: the
+ * alternating-direction + per-row-scroll reveal only works with
+ * per-tile Intersection Observers, which `FadeInOnScroll`'s single
+ * wrapper can't express.
+ *
+ * Implemented via `motion(Tile)`: wrapping the existing styled
+ * Link rather than restructuring. Emotion's styled() forwards refs,
+ * as does Gatsby's Link, so framer-motion can attach its internal
+ * ref for viewport detection without a layout shim.
+ *
+ * `viewport.amount: 0.3` fires when 30% of the tile has crossed into
+ * the viewport — late enough that the trigger doesn't feel
+ * premature (animating before the tile is visibly there), early
+ * enough that the user sees the motion happen as they scroll toward
+ * it, not after the tile is already fully on-screen.
+ */
+const MotionTile = motion(Tile);
+
+/* Per-tile variant factory: picks the slide-in x direction based on
+   column (index % 2 — left col slides from left, right col slides
+   from right). No delay here: each tile's own whileInView handles
+   the trigger timing as the user scrolls. */
+const getTileVariants = (index: number) => {
+  const fromLeft = index % 2 === 0;
+  return {
+    hidden: { opacity: 0, x: fromLeft ? -40 : 40 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: 'easeOut' },
+    },
+  };
+};
+
 const FeaturedSpecialtyGrid = () => {
+  /* Honor the user's OS-level reduced-motion preference. When set,
+     render the grid with no motion at all — still functional, just
+     no animated reveal. */
+  const shouldReduceMotion = useReducedMotion();
+
+  const tileMotionProps = (i: number) =>
+    shouldReduceMotion
+      ? {}
+      : {
+          initial: 'hidden',
+          whileInView: 'visible',
+          viewport: { once: true, amount: 0.3 },
+          variants: getTileVariants(i),
+        };
+
   return (
     <SectionContainer aria-label="Featured specialty bullwhips">
       <Grid>
-        {WHIPS.map((w) => (
-          <Tile
+        {WHIPS.map((w, i) => (
+          <MotionTile
             key={w.slug}
             to={w.slug}
             aria-label={`${w.title}: ${w.blurb}`}
+            {...tileMotionProps(i)}
           >
             <PrimaryImage
               className="tile-primary"
@@ -312,7 +374,7 @@ const FeaturedSpecialtyGrid = () => {
             <CTA className="tile-cta" aria-hidden>
               View the {w.shortName} →
             </CTA>
-          </Tile>
+          </MotionTile>
         ))}
       </Grid>
     </SectionContainer>

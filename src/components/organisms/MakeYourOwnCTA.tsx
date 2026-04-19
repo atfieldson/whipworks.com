@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'gatsby';
 import styled from '@emotion/styled';
+import { motion, useReducedMotion } from 'framer-motion';
 
 /**
  * MakeYourOwnCTA
@@ -30,6 +31,14 @@ import styled from '@emotion/styled';
  * Hover/focus interactions use class-name selectors (`.card-image`,
  * `.card-cta`, `.card-cta-arrow`) — same pattern as FeaturedPair and the
  * other homepage organisms, avoiding the need for @emotion/babel-plugin.
+ *
+ * Scroll-triggered animation is managed internally rather than via the
+ * generic `FadeInOnScroll` wrapper used elsewhere on the homepage — the
+ * Blueprints and Materials cards slide in from alternating sides (same
+ * alternating treatment as FeaturedSpecialtyGrid's tiles) while the
+ * Heading/Subhead block fades up and the wide YouTube card fades up.
+ * That mix only works with per-element viewport triggers, which a
+ * single outer wrapper can't express.
  */
 
 const SectionContainer = styled.section`
@@ -308,6 +317,57 @@ const PATHS: Path[] = [
    mailto:, etc.) becomes a plain anchor with target="_blank". */
 const isExternalHref = (href: string) => !href.startsWith('/');
 
+/**
+ * Motion-wrapped variants of the two card shells. Both emotion's
+ * styled() and Gatsby's Link forward refs, and a plain <a> is a
+ * native element — so framer-motion can attach its own ref on either
+ * without a layout shim. The returned components accept all the same
+ * props as the originals plus motion's initial/whileInView/variants/
+ * viewport, which is exactly what we need.
+ */
+const MotionInternalCard = motion(InternalCard);
+const MotionExternalCard = motion(ExternalCard);
+
+/* Heading + Subhead fade up as the section enters the viewport —
+   same resting-to-settled pattern used by the generic FadeInOnScroll
+   wrapper, just inlined here so the section can orchestrate its own
+   cascade instead of relying on an outer wrapper. */
+const headerBlockVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: 'easeOut' },
+  },
+};
+
+/* Blueprints (left column) slides in from the left, Materials (right
+   column) slides in from the right — same alternating-direction
+   treatment FeaturedSpecialtyGrid uses for its 2-wide tile rows. Each
+   card owns its own `whileInView` trigger, so they fire together as
+   that row scrolls into view (both share a Y position in the grid). */
+const slideInVariants = (fromLeft: boolean) => ({
+  hidden: { opacity: 0, x: fromLeft ? -40 : 40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.8, ease: 'easeOut' },
+  },
+});
+
+/* The wide YouTube card on row 2 spans the full grid width, so a
+   horizontal slide would feel lopsided on a full-width element.
+   Fade-up instead — reads as a natural "next beat" arriving after
+   the two cards above slide in from the sides. */
+const wideCardVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: 'easeOut' },
+  },
+};
+
 type CardInnerProps = {
   path: Path;
 };
@@ -332,40 +392,83 @@ const CardInner = ({ path }: CardInnerProps) => (
 );
 
 const MakeYourOwnCTA = () => {
+  /* Respect OS-level reduced-motion preference. When set, skip all
+     the scroll-triggered motion and render everything in its settled
+     state — the section is fully functional without animation. */
+  const shouldReduceMotion = useReducedMotion();
+
+  const headerMotionProps = shouldReduceMotion
+    ? {}
+    : {
+        initial: 'hidden' as const,
+        whileInView: 'visible' as const,
+        viewport: { once: true, amount: 0.3 },
+        variants: headerBlockVariants,
+      };
+
+  /* Per-card motion props: wide card fades up, others slide in from
+     alternating sides based on their column (index 0 = left column,
+     index 1 = right column). `amount: 0.3` fires when 30% of the
+     card has crossed into the viewport — late enough that the
+     trigger doesn't feel premature, early enough that the motion
+     happens as the user scrolls toward it. */
+  const cardMotionProps = (path: Path, index: number) => {
+    if (shouldReduceMotion) return {};
+    if (path.wide) {
+      return {
+        initial: 'hidden' as const,
+        whileInView: 'visible' as const,
+        viewport: { once: true, amount: 0.3 },
+        variants: wideCardVariants,
+      };
+    }
+    return {
+      initial: 'hidden' as const,
+      whileInView: 'visible' as const,
+      viewport: { once: true, amount: 0.3 },
+      variants: slideInVariants(index % 2 === 0),
+    };
+  };
+
   return (
     <SectionContainer aria-label="Make your own whip">
-      <Heading>Want to make your own?</Heading>
-      <Subhead>
-        Start from a blueprint, learn from the tutorials, or stock up on materials.
-      </Subhead>
+      <motion.div {...headerMotionProps}>
+        <Heading>Want to make your own?</Heading>
+        <Subhead>
+          Start from a blueprint, learn from the tutorials, or stock up on materials.
+        </Subhead>
+      </motion.div>
       <Grid>
-        {PATHS.map((p) => {
+        {PATHS.map((p, i) => {
           const external = p.external ?? isExternalHref(p.href);
           const ariaLabel = `${p.title}: ${p.blurb}`;
           /* className="wide" is the trigger for the full-width horizontal
              card layout — the `&.wide` selectors in cardCSS handle the
              grid-column span and flex-direction swap. */
           const classNames = p.wide ? 'wide' : undefined;
+          const motionProps = cardMotionProps(p, i);
           return external ? (
-            <ExternalCard
+            <MotionExternalCard
               key={p.href}
               href={p.href}
               target="_blank"
               rel="noopener noreferrer"
               className={classNames}
               aria-label={ariaLabel}
+              {...motionProps}
             >
               <CardInner path={p} />
-            </ExternalCard>
+            </MotionExternalCard>
           ) : (
-            <InternalCard
+            <MotionInternalCard
               key={p.href}
               to={p.href}
               className={classNames}
               aria-label={ariaLabel}
+              {...motionProps}
             >
               <CardInner path={p} />
-            </InternalCard>
+            </MotionInternalCard>
           );
         })}
       </Grid>

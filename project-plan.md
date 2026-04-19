@@ -434,7 +434,10 @@ Each commit is reviewed and approved before moving on.
   - [x] BullwhipAnatomy organism matching revamp typography (Domine heading, gold eyebrow, hairline-framed diagram, centered caption)
   - [x] Trim old homepage content: removed SpecialtyWhipList, "What goes into a bullwhip" educational block, length/waxing panels, duplicate design buttons, unused `FullWidthImage` + `react-responsive-carousel` imports
 - [ ] **Commit 9: Scroll animations + mobile polish**
-  - [ ] Scroll-triggered fade-in animations via framer-motion throughout
+  - [x] Generic `FadeInOnScroll` atom (framer-motion `whileInView` + `useReducedMotion`, `once: true`, 20% viewport amount, 0.8s easeOut, y:40 → 0)
+  - [x] Wire `FadeInOnScroll` around FeaturedPair, ReviewsRotator, BullwhipAnatomy, InstagramFeed, ContactCTA (Hero, CategoryTileRow, CinematicBand skipped — own parallax or above-the-fold pop-in risk)
+  - [x] FeaturedSpecialtyGrid custom per-tile scroll reveal: alternating left/right slide based on column index, per-tile `whileInView` at 30% so tiles fire row-by-row as they scroll in
+  - [x] MakeYourOwnCTA custom per-card scroll reveal: Heading/Subhead fade-up, Blueprints slides from left, Materials slides from right, wide YouTube card fades up
   - [ ] Mobile responsive pass + final design polish
 
 **Cross-cutting notes:**
