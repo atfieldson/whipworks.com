@@ -64,6 +64,10 @@ const SectionContainer = styled.section`
     height: auto;
     min-height: 0;
     padding: 64px 24px 72px;
+    /* Phone-width trim — matches the 48px vertical rhythm used across
+       the constrained sections. Margin-bottom stays at 0 so the band
+       still butts against the footer as the final page moment. */
+    margin-top: 48px;
   }
 `;
 

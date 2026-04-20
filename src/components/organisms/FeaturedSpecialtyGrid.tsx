@@ -45,6 +45,14 @@ const SectionContainer = styled.section`
   width: 100%;
   margin-top: 96px;
   margin-bottom: 96px;
+
+  /* Phone-width trim — matches the tighter 48px vertical rhythm used
+     across every homepage section at this breakpoint, so the page
+     doesn't feel like endless empty scrolling on a small viewport. */
+  @media (max-width: 560px) {
+    margin-top: 48px;
+    margin-bottom: 48px;
+  }
 `;
 
 const Grid = styled.div`
@@ -167,6 +175,21 @@ const Gradient = styled.div`
   pointer-events: none;
 `;
 
+/**
+ * CTA label ("View the [name] →") starts hidden and fades in on hover/focus
+ * on desktop — part of the "peek below the craftsmanship" reward for
+ * pausing on a tile.
+ *
+ * On touch devices there's no hover, so without an override the CTA would
+ * stay permanently invisible and phone users would never see the label.
+ * The `@media (hover: none)` query targets hardware without hover capability
+ * specifically (iOS/Android touch, not just narrow viewports — a desktop
+ * at a narrow width should still get the fade-in behavior). On those
+ * devices the CTA is shown persistently in its settled state. The CTA's
+ * built-in text-shadow + the resting gradient's bottom-heavy darkening
+ * (0.65 alpha at the bottom) are already enough contrast against any
+ * whip photo, so no gradient tweak needed on the touch path.
+ */
 const CTA = styled.span`
   position: absolute;
   left: 0;
@@ -185,6 +208,11 @@ const CTA = styled.span`
   z-index: 2;
   pointer-events: none;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+
+  @media (hover: none) {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 type SpecialtyWhip = {

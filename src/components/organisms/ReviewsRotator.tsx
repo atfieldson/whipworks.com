@@ -90,6 +90,13 @@ const SectionContainer = styled.section`
   @media (max-width: 560px) {
     min-height: 300px;
     padding: 36px 24px 28px;
+    /* Phone-width trim — matches the 48px vertical rhythm used by the
+       constrained sections above and below. The band still reads as a
+       distinct "page-breaker" zone thanks to its background color shift
+       and hairline gold top/bottom borders, so we don't need 96px of
+       pre-roll to announce it. */
+    margin-top: 48px;
+    margin-bottom: 48px;
   }
 `;
 

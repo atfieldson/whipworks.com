@@ -47,6 +47,13 @@ const SectionContainer = styled.section`
   width: 100%;
   margin-top: 96px;
   margin-bottom: 96px;
+
+  /* Phone-width trim — consistent with the tightened mobile vertical
+     rhythm used across every homepage section. */
+  @media (max-width: 560px) {
+    margin-top: 48px;
+    margin-bottom: 48px;
+  }
 `;
 
 const Heading = styled.h2`
@@ -61,6 +68,13 @@ const Heading = styled.h2`
 
   @media (max-width: 900px) {
     font-size: 1.75rem;
+  }
+
+  /* Further reduction at phone widths — 1.75rem crowds against the
+     viewport edges on smaller devices (<400px wide). 1.5rem keeps
+     the heading on a single line with comfortable side gutters. */
+  @media (max-width: 560px) {
+    font-size: 1.5rem;
   }
 `;
 
@@ -77,6 +91,14 @@ const Subhead = styled.p`
 
   @media (max-width: 900px) {
     margin-bottom: 28px;
+  }
+
+  /* Tighter gap under subhead at phone widths — the stacked card column
+     below is already visually distinct, so we don't need as much
+     breathing room before it. */
+  @media (max-width: 560px) {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
   }
 `;
 

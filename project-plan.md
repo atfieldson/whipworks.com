@@ -433,12 +433,12 @@ Each commit is reviewed and approved before moving on.
   - [x] Instagram revamp: 2×2 grid of 9:16 reel/post tiles (2 reels + 2 posts), play-icon overlay on reels, "Follow along on [IG icon]" heading, quiet gold-underline "See more on Instagram" link
   - [x] BullwhipAnatomy organism matching revamp typography (Domine heading, gold eyebrow, hairline-framed diagram, centered caption)
   - [x] Trim old homepage content: removed SpecialtyWhipList, "What goes into a bullwhip" educational block, length/waxing panels, duplicate design buttons, unused `FullWidthImage` + `react-responsive-carousel` imports
-- [ ] **Commit 9: Scroll animations + mobile polish**
+- [x] **Commit 9: Scroll animations + mobile polish**
   - [x] Generic `FadeInOnScroll` atom (framer-motion `whileInView` + `useReducedMotion`, `once: true`, 20% viewport amount, 0.8s easeOut, y:40 → 0)
   - [x] Wire `FadeInOnScroll` around FeaturedPair, ReviewsRotator, BullwhipAnatomy, InstagramFeed, ContactCTA (Hero, CategoryTileRow, CinematicBand skipped — own parallax or above-the-fold pop-in risk)
   - [x] FeaturedSpecialtyGrid custom per-tile scroll reveal: alternating left/right slide based on column index, per-tile `whileInView` at 30% so tiles fire row-by-row as they scroll in
   - [x] MakeYourOwnCTA custom per-card scroll reveal: Heading/Subhead fade-up, Blueprints slides from left, Materials slides from right, wide YouTube card fades up
-  - [ ] Mobile responsive pass + final design polish
+  - [x] Mobile polish pass: FeaturedSpecialtyGrid CTA persistent on touch devices via `@media (hover: none)`; 560px breakpoints added to FeaturedPair (title 1.4rem, padding 24/20/32) and MakeYourOwnCTA (heading 1.5rem, subhead 0.95rem); section top/bottom margins halved from 96px → 48px at ≤560px across every homepage section to kill mobile negative-space sprawl
 
 **Cross-cutting notes:**
 - Atomic design respected: new components live in `organisms/` (tiles, grids, rotators) and `molecules/` (individual cards) under `src/components/`.

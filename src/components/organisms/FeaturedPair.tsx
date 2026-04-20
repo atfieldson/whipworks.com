@@ -34,6 +34,16 @@ const SectionContainer = styled.section`
   width: 100%;
   margin-top: 96px;
   margin-bottom: 96px;
+
+  /* Phone-width trim — 96px + 96px between every homepage section
+     adds up to a lot of negative space on a small viewport. Halving
+     to 48px keeps the editorial rhythm ("these are distinct
+     sections") without eating half the scroll. Applied consistently
+     across every homepage organism at this breakpoint. */
+  @media (max-width: 560px) {
+    margin-top: 48px;
+    margin-bottom: 48px;
+  }
 `;
 
 const Grid = styled.div`
@@ -150,6 +160,13 @@ const CardBody = styled.div`
   @media (max-width: 900px) {
     padding: 32px 24px 40px;
   }
+
+  /* Phone-width trim: 24px horizontal padding holds up, but the vertical
+     breathing room tightens a bit so the stacked cards don't eat as much
+     of the viewport at narrow widths. */
+  @media (max-width: 560px) {
+    padding: 24px 20px 32px;
+  }
 `;
 
 const Eyebrow = styled.p`
@@ -171,6 +188,13 @@ const CardTitle = styled.h3`
 
   @media (max-width: 900px) {
     font-size: 1.6rem;
+  }
+
+  /* Further reduction on narrow phones so a long title ("The Blacksmith's
+     Bullwhip") stays on two lines instead of wrapping to three. */
+  @media (max-width: 560px) {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
   }
 `;
 

@@ -32,6 +32,13 @@ const SectionContainer = styled.section`
   width: 100%;
   margin-top: 96px;
   margin-bottom: 96px;
+
+  /* Phone-width trim — consistent with the tightened mobile vertical
+     rhythm used across every homepage section. */
+  @media (max-width: 560px) {
+    margin-top: 48px;
+    margin-bottom: 48px;
+  }
 `;
 
 const Eyebrow = styled.p`
