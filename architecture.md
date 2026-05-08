@@ -1,6 +1,6 @@
 # WhipWorks.com - Architecture Reference
 
-> **Last updated:** Phase 4B (Blacksmith's Bullwhip + rune customization) - April 2026
+> **Last updated:** Phase 13.3 (Gallery Page — whip-catalog.xlsx populated) - May 2026
 > This is a living document. Update after each phase of development.
 
 ## Site Map
@@ -335,6 +335,58 @@ BW[number][WhipCode][Shot].jpg
 
 Shot types: `Wide`, `Wide2`, `Transition`, `Thong`, `Handle`, `Handle2`, `Concho`, `Heel`
 
+## Working Reference Documents
+
+### `whip-catalog.xlsx` (Adam's planning/reference workbook)
+
+> **Status:** Reference-only — NOT canonical site data. The site itself reads from the TypeScript gallery files and specialty markdown, never from Excel.
+
+A working spreadsheet at the repo root that catalogs every whip Adam has photographed, plus master tables for shared concepts (currently conchos w/ diameter). Used for:
+- Cross-whip filtering and analysis (e.g. "show all 1.5\" concho whips", "show every Indy I've built")
+- Planning new customization options before adding them to the design pages
+- Recording metadata that doesn't fit cleanly into the existing TS/MD structures (e.g. concho diameter)
+
+**Initial population sourced from:**
+- `src/components/organisms/BullwhipDesigner/constants/galleryWhips.ts` → Bullwhips sheet (16 custom + 3 break entries)
+- `src/components/organisms/BullwhipDesigner/constants/galleryStockwhips.ts` → Stockwhips sheet (5)
+- `src/components/organisms/BullwhipDesigner/constants/gallerySnakewhips.ts` → Snakewhips sheet (3)
+- `content/specialty/*/index.md` (13 files) → Specialty Whips sheet (18 BW-numbered builds + 1 Pride placeholder)
+
+**Sheet layout (display order):**
+
+| Sheet | Purpose | Key columns |
+|---|---|---|
+| **Specialty Whips** | One row per BW-numbered specialty build, tagged with shorthand (Indy / CW / ZW / NL / etc.) | Whip ID `BW####(buildId)`, Specialty Tag, Series (40K), Slug, Variant, all standard bullwhip specs, 8 per-shot photo URLs, Specialty Notes |
+| **Bullwhips** | Custom (non-specialty) bullwhips + fantasy whips + concho group-shot break entries | Whip ID, Type (`bullwhip` / `fantasy` / `break`), full bullwhip spec set, 8 per-shot photos |
+| **Stockwhips** | Custom stockwhips | Thong Length, Handle Length (16/18/20"), Handle Finish, 6 per-shot photos |
+| **Snakewhips** | Custom snakewhips | Whip Length, Concho, Heel Loop, 3 per-shot photos (no handle column — snakewhips are handle-less) |
+| **Floggers** | Placeholder until Phase 5A flogger section ships | Whip ID, Notes (column structure TBD) |
+| **Conchos** | Master concho table — name, diameter (in), notes | One row per concho. Adam fills in diameter once here; every whip sheet pulls it via VLOOKUP automatically |
+| **_Lookups** | Dropdown source ranges for data validation | One column per enum-like field (Colors, Handle Designs, Conchos, Lengths, Specialty Tags, etc.) |
+
+**Concho diameter modeling:** Each whip sheet has a `Concho Diameter (in)` column right after `Concho`, populated by `=IFERROR(VLOOKUP(<concho-cell>, Conchos!$A$2:$B$100, 2, FALSE), "")`. This means concho diameter is recorded ONCE on the Conchos sheet and resolves automatically on every whip row that uses that concho. Diameter cells use a soft cream fill + italic gray font to signal "computed, don't hand-type here."
+
+**Whip ID conventions:**
+- Custom non-specialty: `BW543`, `SW7-8`, `SnW1`, `FW33` — verbatim from gallery TS `id` field
+- Specialty: `BW####(<buildId>)` — Adam's labeling. `<buildId>` matches the existing filename code (`Indy67`, `CW35`, `OWB1`, `Belmont1`, etc.)
+- Specialty + series: `BW####(<series><seriesPos><Model><modelPos>)` — e.g. `BW1015(40K1NL1)` (1st 40K, 1st Nightlord), `BW1026(40K2Ultra1)` (2nd 40K, 1st Ultra)
+
+**Dropdown validation:** Every enum-bound column on every whip sheet has a list-validation dropdown sourced from `_Lookups`. Validation `errorStyle` is `warning` (not `stop`) so Adam can keep custom values like new colors or non-standard handle designs (Nostramo Skull, Space Armor, Ultima Gladius, etc. — common on specialty whips) with a single Yes click. The dropdown is a guide, not a cage.
+
+**Heel-loop value normalization:** The gallery TS files use older heel-loop names (`'No Heel Loop'`, `'Heel Loop Rounded'`, `'None'`, `'Rounded with Loop'`) that don't match the current `BullwhipDesigner` option list. The build script normalizes on ingest:
+- `'No Heel Loop'` → `'Squared'`
+- `'Heel Loop Rounded'` → `'Rounded with Heel Loop'`
+- `'Rounded with Loop'` → `'Rounded with Heel Loop'`
+- `'None'` (fantasy whips with pommels) → blank
+
+This will need to be applied in the inverse direction when wiring click-to-prefill in Phase 13.7 (the gallery TS files themselves still have the older names).
+
+**Generator script:** Located at `~/.tmp/xlsx-build/build.js` (outside the repo). Single canonical source — re-running it regenerates the entire workbook deterministically from the inline data. Schema changes (new columns, new lookup options, new specialty rows) go in this script. Uses Node + ExcelJS 4.4.0 installed in that scratch directory.
+
+**Sync direction Excel → TS is manual:** Excel is Adam's working source-of-truth for planning, but the TS/MD files remain canonical for what the site renders. When Adam adds a new whip he wants live, the TS/MD files get the entry; the Excel can be regenerated or hand-updated. We may automate this sync later.
+
+**Caveat — manual edits + regeneration:** If the build script is re-run while Adam has manual edits in the workbook (e.g. populated concho diameters, color cells filled in, custom Whip ID names), those edits will be overwritten. To preserve them, the inline data in `build.js` must be updated to match before regenerating. Series-whip ID format (`BW1015(40K1NL1)` vs the original `BW1015(NL1)`) is an example of an edit that's been pulled back into the script source.
+
 ## External Services
 
 ```mermaid
@@ -464,6 +516,7 @@ Theme file: `src/@chakra-ui/gatsby-plugin/theme.ts`
 | `src/components/organisms/BullwhipDesigner/constants/spoolColors.ts` | Paracord color definitions |
 | `src/components/molecules/ProductImages.tsx` | Image gallery with lightbox |
 | `src/data/reviews.json` | 433 Etsy reviews with meta stats (4.94 avg, productType, specialtySlug) |
+| `whip-catalog.xlsx` | Adam's planning/reference workbook — 7 sheets cataloging every photographed whip (Specialty / Bullwhips / Stockwhips / Snakewhips / Floggers + Conchos master + _Lookups). Reference-only; site reads from gallery TS and specialty MD. Generator script at `~/.tmp/xlsx-build/build.js`. |
 | `src/components/organisms/TestimonialStrip.tsx` | Horizontal review strip with photos, click-to-expand modal |
 | `src/components/organisms/ReviewCard.tsx` | Review card with stars, photo lightbox, Adam's response |
 | `src/components/atoms/SpecialtyWhipGridCard.tsx` | Grid cards with hover crossfade |
