@@ -486,15 +486,22 @@ Phased so each step has a clear stopping point — pause between sessions withou
 
 - [x] **Phase 13.4: Gallery page UI shell** *(no filtering yet — feature/gallery-page branch)*
   - [x] Created `src/pages/gallery.tsx` (`/gallery` route)
-  - [x] Filson-meets-Vorrath editorial layout: gold "The archive" eyebrow + Domine "Every whip, all in one place" heading + "1,200+ whips made by hand since 2015" counter + heritage subhead + hairline divider
-  - [x] 3-col / 2-col / 1-col responsive card grid (1080 / 900 / 560 breakpoints) with 20/16/14px gaps respectively
-  - [x] Card-per-whip, image-first 1:1 aspect with metadata strip below the photo (Filson "magazine card" style — NOT hover-overlay): gold eyebrow with type tag, Domine title, single metadata line (length · handle · primary color)
-  - [x] Subtle hover effect: photo scale + brightness lift, title shifts to gold (works as both desktop hover and keyboard focus-visible)
-  - [x] Data sources: imported `galleryWhips.ts` / `galleryStockwhips.ts` / `gallerySnakewhips.ts` directly + GraphQL query against specialty markdown collection. Custom whips skip `type: 'break'` entries (concho group shots — Adam wants finished whips only). Specialty cards use `images[0]` as lead photo (one card per specialty for now; per-physical-build expansion comes with the lightbox in 13.6).
-  - [x] Linking: specialty cards link to `/specialty/:slug` (Gatsby Link, prefetched). Custom whips render as static placeholder cards awaiting lightbox in 13.6 — Adam can preview the full visual treatment now.
-  - [x] Pure Emotion styled components — no Chakra — matching the homepage revamp's design-language convention.
+  - [x] Filson-meets-Vorrath editorial layout: gold "The archive" eyebrow + Domine `<h1>` "1,200+ whips made by hand since 2015" (the counter promoted to heading; previous "Every whip, all in one place" removed per Adam's feedback as self-referential — the page is the gallery, no need to title it that) + heritage subhead + hairline gold divider
+  - [x] 3-col / 2-col / 1-col responsive **CSS-columns** layout (Pinterest-style). Photos render at native aspect ratio via `<img>` with `width: 100%; height: auto;` — no 1:1 cover-crop, edges aren't cut off. Trade-off: column reading order is top-to-bottom-of-col-1 then col-2 (fine for visual scanning).
+  - [x] **WhipGallery-style hover overlay** (matches the Design-a-Bullwhip page's gallery — Adam's reference): dark transparent→opaque gradient anchored at the bottom of each photo with eyebrow + Domine title + 2-col label/value spec grid. On `@media (hover: none)` (touch devices) the overlay is shown persistently so phone users see the metadata too.
+  - [x] **Whip catalog IDs (BW543, SW7-8, etc.) NOT shown** in customer-facing cards — sales-focused decision. Custom-whip titles compose from color specs ("Neon Pink + Black"); specialty whips show their marketing name. IDs remain canonical in code/data/Excel.
+  - [x] **Black-background curation heuristic**: only photos under a `/gallery/` path are eligible. Studio product shots live there; lifestyle / portrait / banner photos live at other S3 paths and get auto-excluded. Pride is naturally excluded because its photos live at `/specialty/pride/`. `EXCLUDED_WHIP_IDS` set provides a manual escape hatch.
+  - [x] Data sources: imported `galleryWhips.ts` / `galleryStockwhips.ts` / `gallerySnakewhips.ts` directly + GraphQL query against specialty markdown (extended to also pull `specs` and `variants` for the overlay's spec grid).
+  - [x] Linking: specialty cards link to `/specialty/:slug` (Gatsby Link). Custom whips render as static placeholder cards awaiting lightbox in 13.6.
+  - [x] Pure Emotion styled components — no Chakra.
   - [x] TypeScript clean (zero new errors).
-  - [ ] Adam reacts to look/feel before any interactivity
+  - [ ] Adam reacts to look/feel; iterate as needed before moving on
+
+**Phase 13.5+ design decisions captured during 13.4 review (Adam's input):**
+- **Mix of shot types in the gallery** — not just Wide shots. Currently each whip contributes ONE Wide photo to the grid; future iterations should mix in Transition / Handle / Concho / Heel shots so the gallery shows more variety. Likely lands with the lightbox work in 13.6 (where additional shots are surfaced anyway), or could be its own pre-13.6 step.
+- **Per-whip grouping decision (deferred)** — Adam undecided between "rows of same-whip images grouped together" (e.g., a row of all BW1023's shots, then a row of all BW456's shots) vs. "spread out / mixed across the grid" (current behavior). Decision lands when we add multi-shot support — TBD.
+- **Scroll-triggered slide-in animations** — match the per-tile reveal from FeaturedSpecialtyGrid on the homepage: even-index slides from left (x: -40 → 0), odd-index from right (x: +40 → 0), each card with its own `whileInView` viewport trigger so they fire row-by-row as the user scrolls. Add in **Phase 13.8 (polish)** after the lightbox + filter work is in.
+- **Black-background curation** — current heuristic (`/gallery/` paths only) is a first-pass approximation. May need explicit per-whip curation later (Adam to provide list of any specific gallery photos that aren't black-bg, populate `EXCLUDED_WHIP_IDS`).
 - [ ] **Phase 13.5: Filtering** *(filter chips + URL state)*
   - [ ] Filter chips above the grid: Type (bullwhip/stockwhip/snakewhip/specialty), Length, Primary Color, Handle Pattern, Concho
   - [ ] Multi-select; smooth filter transitions
@@ -513,10 +520,11 @@ Phased so each step has a clear stopping point — pause between sessions withou
   - [ ] Adam runs the full happy path: see whip in gallery → click → land on design page with everything preset → ready to add to cart
 - [ ] **Phase 13.8: Polish + mobile + a11y**
   - [ ] Mobile responsive pass on gallery + lightbox + filter chips
-  - [ ] Reduced-motion support across new motion
+  - [ ] **Scroll-triggered slide-in animations** on gallery cards — per-card framer-motion `whileInView` reveal, alternating left/right slide based on column index (matching FeaturedSpecialtyGrid's pattern from Phase 12 Commit 9). Subtle, row-by-row as the user scrolls.
+  - [ ] Reduced-motion support across new motion (`useReducedMotion` honored)
   - [ ] Keyboard nav verification end-to-end
   - [ ] SEO/structured data on `/gallery` (ItemList schema)
-  - [ ] Image lazy-loading verification
+  - [ ] Image lazy-loading verification (CLS audit — images load with native aspect ratio so some shift is expected; consider `aspect-ratio` hints if CLS scores poorly)
   - [ ] Adam does final review, then commit + push
 
 **Cross-cutting notes:**

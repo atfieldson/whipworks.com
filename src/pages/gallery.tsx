@@ -11,43 +11,92 @@ import { snakewhipGalleryItems } from '../components/organisms/BullwhipDesigner/
 /**
  * Gallery — `/gallery`
  *
- * Editorial showcase of every photographed whip Adam has built. The job
- * is "see all the possibilities for ordering a custom whip from me" —
- * a catalog of inspiration that funnels users to the right place to
- * buy: specialty pages for tagged whips, designer pages for custom
- * builds (the click-to-prefill hookup is Phase 13.7).
+ * Editorial showcase of every photographed whip Adam has built. The
+ * job is "see all the possibilities for ordering a custom whip from
+ * me" — a catalog of inspiration that funnels users to the right
+ * place to buy: specialty pages for tagged whips, designer pages for
+ * custom builds (the click-to-prefill hookup is Phase 13.7).
  *
- * Phase 13.4 (this commit): UI shell only — no filtering, no lightbox.
+ * Phase 13.4 (this iteration): UI shell only.
  * Subsequent phases:
  *   13.5 Filter chips above the grid (type/length/color/handle/concho)
  *   13.6 Click any card → in-page lightbox with all the whip's photos
+ *        (this iteration also brings in mix-of-shot-types — currently
+ *        we show one Wide shot per whip; lightbox shows the rest).
+ *        Per-whip grouping decision will be made when the lightbox
+ *        lands (rows of same-whip images in the gallery vs. spread
+ *        out, Adam to decide.)
  *   13.7 "Build this exact whip" CTA in the lightbox prefills the
  *        Design-a-Whip form for custom builds; specialty cards keep
- *        linking directly to their `/specialty/:slug` page (those are
- *        already pre-configured products)
+ *        linking directly to their `/specialty/:slug` page.
+ *   13.8 Polish + scroll-triggered slide-in animations (matching the
+ *        per-tile reveal pattern from FeaturedSpecialtyGrid on the
+ *        homepage — even-index slides from left, odd-index from right,
+ *        per-card viewport trigger so they fire row-by-row as the user
+ *        scrolls down).
  *
- * Design language: Filson editorial heritage (eyebrow + serif heading +
- * counter) meets Vorrath dark image-first portfolio (square photo
- * tiles, metadata below the image rather than overlaid). Pure Emotion
- * styled components — same convention as the recent homepage revamp.
+ * Design language: Filson editorial heritage + WhipGallery-style hover
+ * reveal (hovering a card surfaces a dark-gradient overlay with the
+ * whip's specs at the bottom of the photo — same pattern Adam already
+ * uses on the Design-a-Bullwhip page's WhipGallery).
+ *
+ * Layout: CSS columns for native-aspect-ratio cards. Photos display in
+ * their original ratio (no 1:1 cover-crop) so edges aren't cut off and
+ * each whip is shown in the way it was photographed. Trade-off: column
+ * reading order is top-to-bottom-of-col-1 then top-to-bottom-of-col-2
+ * (Pinterest-style), which is fine for a gallery — users scan visually,
+ * not in reading order.
+ *
+ * Background filter: only photos under a `/gallery/` path are included.
+ * Studio product shots live there (typically black backdrop), while
+ * lifestyle / banner / portrait photos live elsewhere on S3. This is
+ * the heuristic for Adam's "for now, only show black-background images"
+ * curation — Pride is auto-excluded because its photos live at
+ * `/specialty/pride/`, not `/gallery/specialty/`. EXCLUDED_WHIP_IDS
+ * below is the manual escape hatch if a specific gallery photo needs
+ * to come out.
+ *
+ * Whip ID display: catalog numbers (BW543, SW7-8, etc.) are NOT shown
+ * in the customer-facing UI. The reasoning is sales-focused — buyers
+ * shop visually and by specs, not by SKU. Custom-whip titles are
+ * composed from specs ("Neon Pink + Black"); specialty whips show
+ * their marketing name. The IDs are still the canonical key in
+ * data/code/Excel, just not surfaced here.
  *
  * Data sources (canonical):
  *   - Custom bullwhips/stockwhips/snakewhips: imported directly from
  *     the BullwhipDesigner constants — same data the designer pages'
- *     hover-preview uses, so the gallery and the customizer always
- *     show the same whips.
+ *     hover-preview uses.
  *   - Specialty whips: GraphQL query against allMarkdownRemark
- *     filtered by collection=specialty — same pattern as
- *     specialty-whips.tsx. One card per specialty for now (using the
- *     lead images[0] photo); the per-physical-build expansion lives
- *     in the lightbox in Phase 13.6.
+ *     filtered by collection=specialty.
  *
  * `whip-catalog.xlsx` is Adam's reference workbook only — the page
  * never reads from Excel. Architecture.md "Working Reference Documents"
  * has the full distinction.
  */
 
+// ─── Curation: which photos are eligible for the gallery ───────────────
+
+/**
+ * Studio product shots live under `/gallery/` paths on S3/CloudFront.
+ * Anything else (Pride flat-lays, Adam portraits, banner photography)
+ * is excluded for now to keep the gallery visually consistent on
+ * black backgrounds. Adam can lift this restriction later when there's
+ * an explicit "lifestyle" or "in-use" tag.
+ */
+const isGalleryPhoto = (url: string) => url.includes('/gallery/');
+
+/**
+ * Manual exclusion escape hatch. Add specific whip IDs here to remove
+ * them from the gallery without touching the underlying data sources.
+ * Default empty.
+ */
+const EXCLUDED_WHIP_IDS = new Set<string>([
+  // e.g. 'BW543', 'SW15', '/specialty/pride'
+]);
+
 // ─── GraphQL: pull all specialty markdown ────────────────────────────────
+
 export const pageQuery = graphql`
   query {
     allMarkdownRemark(
@@ -67,6 +116,14 @@ export const pageQuery = graphql`
               url
               caption
             }
+            specs {
+              label
+              value
+            }
+            variants {
+              name
+              defaultValue
+            }
           }
         }
       }
@@ -76,31 +133,49 @@ export const pageQuery = graphql`
 
 // ─── Unified card data model ─────────────────────────────────────────────
 
+type SpecPair = { label: string; value: string };
+
 type GalleryCard = {
-  /** Stable React key + the user-visible whip ID. */
+  /** Stable React key. */
   id: string;
   /** Bucket the card into a category for chip-filtering in 13.5. */
   type: 'bullwhip' | 'fantasy' | 'stockwhip' | 'snakewhip' | 'specialty';
-  /** Eyebrow text shown above the title in small caps. */
+  /** Eyebrow text shown in the hover overlay (small caps gold). */
   eyebrow: string;
-  /** Main display name. For custom whips this is the whip ID; for
-      specialties it's the marketing title. */
+  /** Main display name shown in the hover overlay. For custom whips
+      this is composed from specs ("Neon Pink + Black"); for specialty
+      it's the marketing title. */
   title: string;
-  /** One-line metadata under the title (length · handle · primary color). */
-  metadata: string;
-  /** Lead photo for the card. */
+  /** Spec pairs shown in the hover overlay's 2-col grid (cap ~6 to
+      keep the overlay visually balanced on shorter cards). */
+  specs: SpecPair[];
+  /** Lead photo for the card (rendered at native aspect ratio). */
   image: string;
   /** Where the card links to. `null` = non-interactive placeholder
-      (custom cards in this phase; lightbox flow lands them in Phase 13.6). */
+      (custom cards in this phase; lightbox flow lands them in 13.6). */
   href: string | null;
   /** Used as alt text and aria-label. */
   alt: string;
 };
 
-// Compose a "5 Feet · Celtic · Neon Pink" style metadata line, dropping
-// any pieces that are blank/null so we don't end up with stray separators.
-const composeMeta = (...parts: (string | null | undefined)[]) =>
-  parts.filter((p) => p && p.trim().length > 0).join(' · ');
+/** Compose a custom whip's title from its color specs. Single-color
+    whips read as just the color ("Coyote Brown"); two-tone whips use
+    " + " to separate ("Neon Pink + Black"). */
+const composeColorTitle = (
+  primary: string,
+  secondary: string | null,
+): string => (secondary ? `${primary} + ${secondary}` : primary);
+
+/** Build the spec pairs shown in the overlay. Filtered to skip empty
+    or default values that don't add information (e.g. Collar = None). */
+const buildSpecs = (
+  pairs: { label: string; value: string | null | undefined; skipIf?: string[] }[],
+): SpecPair[] =>
+  pairs
+    .filter(({ value, skipIf = [] }) =>
+      value && value.length > 0 && !skipIf.includes(value),
+    )
+    .map(({ label, value }) => ({ label, value: value as string }));
 
 // ─── Build the unified card list from all four data sources ─────────────
 
@@ -112,6 +187,8 @@ type SpecialtyEdge = {
       series: string | null;
       isNew: boolean | null;
       images: { url: string; caption: string }[] | null;
+      specs: { label: string; value: string }[] | null;
+      variants: { name: string; defaultValue: string }[] | null;
     };
   };
 };
@@ -119,88 +196,111 @@ type SpecialtyEdge = {
 const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
   const cards: GalleryCard[] = [];
 
-  // ── Custom bullwhips + fantasy whips (skip break entries — those are
-  //    decorative concho group shots, not whips per Adam's "finished
-  //    whips only" requirement).
+  // ── Custom bullwhips + fantasy whips
   for (const item of bullwhipGallery) {
     if (item.type === 'break') continue;
-    const whip = item; // narrowed: bullwhip | fantasy
-    const photo = whip.images.wide || whip.images.transition || whip.images.handle;
-    if (!photo) continue; // shouldn't happen with current data but guard anyway
+    if (EXCLUDED_WHIP_IDS.has(item.id)) continue;
+    const w = item;
+    const photo = w.images.wide || w.images.transition || w.images.handle;
+    if (!photo || !isGalleryPhoto(photo)) continue;
+    const isFantasy = w.type === 'fantasy';
     cards.push({
-      id: whip.id,
-      type: whip.type === 'fantasy' ? 'fantasy' : 'bullwhip',
-      eyebrow: whip.type === 'fantasy' ? 'Fantasy' : 'Bullwhip',
-      title: whip.id,
-      metadata: composeMeta(
-        whip.specs.whipLength,
-        whip.specs.handleDesign,
-        whip.specs.primaryColor,
-      ),
+      id: w.id,
+      type: isFantasy ? 'fantasy' : 'bullwhip',
+      eyebrow: isFantasy ? 'Fantasy Whip' : 'Bullwhip',
+      title: composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor),
+      specs: buildSpecs([
+        { label: 'Length', value: w.specs.whipLength },
+        { label: 'Handle', value: w.specs.handleLength },
+        { label: 'Pattern', value: w.specs.handleDesign },
+        { label: 'Concho', value: w.specs.concho },
+        { label: 'Collar', value: w.specs.collar, skipIf: ['None'] },
+        { label: 'Heel Loop', value: w.specs.heelLoop, skipIf: ['Squared', 'None'] },
+      ]),
       image: photo,
       href: null,
-      alt: `${whip.id} — ${whip.specs.primaryColor} ${whip.specs.handleDesign} ${whip.specs.whipLength} bullwhip`,
+      alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.whipLength} bullwhip`,
     });
   }
 
   // ── Custom stockwhips
   for (const item of stockwhipGalleryItems) {
     if (item.type === 'break') continue;
-    const whip = item;
-    const photo = whip.images.wide || whip.images.wide1x1 || whip.images.keeper;
-    if (!photo) continue;
+    if (EXCLUDED_WHIP_IDS.has(item.id)) continue;
+    const w = item;
+    const photo = w.images.wide || w.images.wide1x1 || w.images.keeper;
+    if (!photo || !isGalleryPhoto(photo)) continue;
     cards.push({
-      id: whip.id,
+      id: w.id,
       type: 'stockwhip',
       eyebrow: 'Stockwhip',
-      title: whip.id,
-      metadata: composeMeta(
-        whip.specs.thongLength,
-        whip.specs.handleDesign,
-        whip.specs.primaryColor,
-      ),
+      title: composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor),
+      specs: buildSpecs([
+        { label: 'Thong', value: w.specs.thongLength },
+        { label: 'Handle', value: w.specs.handleLength },
+        { label: 'Pattern', value: w.specs.handleDesign },
+        { label: 'Finish', value: w.specs.handleFinish },
+        { label: 'Concho', value: w.specs.concho },
+      ]),
       image: photo,
       href: null,
-      alt: `${whip.id} — ${whip.specs.primaryColor} ${whip.specs.handleDesign} ${whip.specs.thongLength} stockwhip`,
+      alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.thongLength} stockwhip`,
     });
   }
 
   // ── Custom snakewhips
   for (const item of snakewhipGalleryItems) {
     if (item.type === 'break') continue;
-    const whip = item;
-    const photo = whip.images.wide || whip.images.concho;
-    if (!photo) continue;
+    if (EXCLUDED_WHIP_IDS.has(item.id)) continue;
+    const w = item;
+    const photo = w.images.wide || w.images.concho;
+    if (!photo || !isGalleryPhoto(photo)) continue;
     cards.push({
-      id: whip.id,
+      id: w.id,
       type: 'snakewhip',
       eyebrow: 'Snakewhip',
-      title: whip.id,
-      metadata: composeMeta(
-        whip.specs.whipLength,
-        whip.specs.handleDesign,
-        whip.specs.primaryColor,
-      ),
+      title: composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor),
+      specs: buildSpecs([
+        { label: 'Length', value: w.specs.whipLength },
+        { label: 'Pattern', value: w.specs.handleDesign },
+        { label: 'Concho', value: w.specs.concho },
+      ]),
       image: photo,
       href: null,
-      alt: `${whip.id} — ${whip.specs.primaryColor} ${whip.specs.handleDesign} ${whip.specs.whipLength} snakewhip`,
+      alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.whipLength} snakewhip`,
     });
   }
 
-  // ── Specialty whips (one card per markdown file — uses the first image
-  //    as the lead photo, which is typically the marketing Wide shot).
-  //    Per-physical-build expansion happens in the lightbox in 13.6.
+  // ── Specialty whips (one card per markdown — uses the lead /gallery/
+  //    photo so non-/gallery/ specialties like Pride auto-excluded).
   for (const edge of specialtyEdges) {
     const fm = edge.node.frontmatter;
-    const photo = fm.images?.[0]?.url;
-    if (!photo) continue; // no photos = nothing to show in the grid
+    if (EXCLUDED_WHIP_IDS.has(edge.node.fields.slug)) continue;
+    const galleryPhoto = fm.images?.find((img) => isGalleryPhoto(img.url));
+    if (!galleryPhoto) continue;
+
+    /* Pull a default whip-length from the variants' defaultValue when
+       available — gives the spec grid something concrete even when
+       the page query returns no top-level specs. */
+    const lengthVariant = fm.variants?.find((v) => v.name === 'Whip Length');
+    const lengthSpec = lengthVariant
+      ? { label: 'Length', value: lengthVariant.defaultValue }
+      : null;
+
+    /* Map markdown specs (label/value pairs from frontmatter) into the
+       overlay grid. Cap to ~5 for visual balance. */
+    const fmSpecs = (fm.specs || []).slice(0, 5).map((s) => ({
+      label: s.label,
+      value: s.value,
+    }));
+
     cards.push({
       id: edge.node.fields.slug,
       type: 'specialty',
       eyebrow: fm.series ? `Specialty · ${fm.series.replace(' Bullwhip Series', '')}` : 'Specialty',
       title: fm.title,
-      metadata: fm.isNew ? 'New' : '',
-      image: photo,
+      specs: [...(lengthSpec ? [lengthSpec] : []), ...fmSpecs],
+      image: galleryPhoto.url,
       href: edge.node.fields.slug, // e.g. /specialty/indy
       alt: `${fm.title} — specialty bullwhip`,
     });
@@ -223,7 +323,11 @@ const SectionContainer = styled.section`
   }
 `;
 
-/** Editorial header — gold eyebrow, Domine heading, heritage line, subhead. */
+/** Editorial header: gold eyebrow + the counter promoted to h1
+    (replaces the previous "Every whip, all in one place" — Adam felt
+    that read as self-referential, the page being a gallery already
+    speaks for itself). The counter ("1,200+ whips made by hand since
+    2015") is now the page heading, getting Domine serif treatment. */
 const HeaderBlock = styled.div`
   text-align: center;
   margin-bottom: 56px;
@@ -248,29 +352,19 @@ const Eyebrow = styled.p`
 const Heading = styled.h1`
   font-family: 'Domine Variable', Domine, serif;
   font-weight: 500;
-  font-size: 3rem;
-  line-height: 1.15;
+  font-size: 2.6rem;
+  line-height: 1.18;
   letter-spacing: 0.005em;
   color: #f5ebe0;
   margin: 0 0 18px;
 
   @media (max-width: 900px) {
-    font-size: 2.4rem;
+    font-size: 2.1rem;
   }
 
   @media (max-width: 560px) {
-    font-size: 1.85rem;
+    font-size: 1.65rem;
   }
-`;
-
-const Counter = styled.p`
-  font-family: 'Josefin Sans Variable', 'Josefin Sans', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #d6a85f;
-  margin: 0 0 22px;
 `;
 
 const Subhead = styled.p`
@@ -288,8 +382,6 @@ const Subhead = styled.p`
   }
 `;
 
-/** Hairline divider beneath the editorial header — gives the grid a
-    "page break" cue without using a heavy line. */
 const Divider = styled.hr`
   border: 0;
   height: 1px;
@@ -302,52 +394,63 @@ const Divider = styled.hr`
   }
 `;
 
+/**
+ * CSS multi-column layout for native-aspect-ratio cards. Cards keep
+ * their original photo proportions and pack into columns Pinterest-
+ * style. Trade-off: reading order is top-to-bottom-of-col-1, then
+ * top-to-bottom-of-col-2 — fine for visual scanning, not for sequential
+ * reading. The grid is the right shape for an archive/gallery view
+ * where users hunt visually rather than read top-to-bottom.
+ */
 const Grid = styled.div`
-  display: grid;
-  /* 3 columns at the 1080px content width. Gap is moderate (20px) —
-     tighter than FeaturedPair's editorial 24px but looser than
-     FeaturedSpecialtyGrid's curated-showcase 12px. Reads as "archive
-     density" without feeling cramped. */
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  column-count: 3;
+  column-gap: 20px;
 
   @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    column-count: 2;
+    column-gap: 16px;
   }
 
   @media (max-width: 560px) {
-    grid-template-columns: 1fr;
-    gap: 14px;
+    column-count: 1;
   }
 `;
 
-/* Shared card body styles used by both the link variant (specialty
-   whips) and the static variant (custom whips, awaiting lightbox in
-   Phase 13.6). Composed into both styled() definitions so they stay
-   visually identical regardless of whether the wrapping element is
-   <a>, <Link>, or <div>. */
+/* Shared CSS for both the Link-card variant (specialty, has href) and
+   the static-card variant (custom whips, no href until the lightbox in
+   13.6). Composed into both styled() definitions so they stay
+   visually identical regardless of the wrapping element. */
 const cardCSS = `
   position: relative;
   display: block;
+  margin-bottom: 20px;
+  /* break-inside on the Card itself keeps cards intact in CSS columns;
+     a card never splits across two columns. */
+  break-inside: avoid;
   text-decoration: none;
   color: inherit;
   background-color: #1a140f;
+  overflow: hidden;
 
   &:focus-visible {
     outline: 2px solid #d6a85f;
     outline-offset: -3px;
   }
 
-  &:hover .gallery-card-image,
-  &:focus-visible .gallery-card-image {
+  /* Hover: scale the photo slightly + reveal the spec overlay.
+     Matches the WhipGallery treatment Adam wanted. */
+  &:hover .gallery-photo,
+  &:focus-visible .gallery-photo {
     transform: scale(1.04);
-    filter: brightness(1.05);
   }
 
-  &:hover .gallery-card-title,
-  &:focus-visible .gallery-card-title {
-    color: #d6a85f;
+  &:hover .gallery-overlay,
+  &:focus-visible .gallery-overlay {
+    opacity: 1;
+  }
+
+  @media (max-width: 900px) {
+    margin-bottom: 16px;
   }
 `;
 
@@ -360,38 +463,64 @@ const LinkCard = styled(Link)`
   cursor: pointer;
 `;
 
-const CardImageFrame = styled.div`
+const PhotoFrame = styled.div`
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
+  /* No fixed aspect-ratio — let the <img> dictate the card's height
+     based on its natural dimensions. */
+  display: block;
   background-color: #0f0b08;
+  overflow: hidden;
 `;
 
-/** Background-image div rather than <img> so we can compose transform
-    + filter without juggling pseudo-elements. The cover-crop happens
-    inside the 1:1 frame so any photo aspect resolves cleanly. */
-const CardImage = styled.div<{ src: string }>`
-  position: absolute;
-  inset: 0;
-  background-image: url(${(p) => p.src});
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.6s ease, filter 0.4s ease;
+/** Native <img> rather than background-image so the browser computes
+    height from the image's natural dimensions and the card sizes itself.
+    Eager-loading the first ~6 images would help LCP, but for now lazy
+    on everything is fine — the gallery is below-the-fold by definition. */
+const Photo = styled.img`
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.6s ease;
   will-change: transform;
 `;
 
-/** Metadata strip below the image. Three rows, top to bottom: type
-    eyebrow (gold caps), whip title (Domine), one-line metadata. */
-const CardMeta = styled.div`
-  padding: 14px 4px 4px;
+/**
+ * Hover overlay — same pattern as WhipGallery on the Design-a-Bullwhip
+ * page. Anchored to the bottom of the photo with a transparent→dark
+ * gradient so the metadata reads cleanly against any photo background
+ * while leaving most of the photo visible.
+ *
+ * On touch devices (`@media (hover: none)`) the overlay is shown
+ * persistently in its settled state — touch users can't trigger
+ * hover, so without this they'd never see the metadata. Same pattern
+ * as FeaturedSpecialtyGrid's CTA on the homepage.
+ */
+const HoverOverlay = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.78) 55%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  padding: 64px 18px 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+
+  @media (hover: none) {
+    opacity: 1;
+  }
 
   @media (max-width: 560px) {
-    padding: 12px 2px 4px;
+    padding: 48px 14px 14px;
   }
 `;
 
-const CardEyebrow = styled.p`
+const OverlayEyebrow = styled.p`
   font-family: 'Josefin Sans Variable', 'Josefin Sans', sans-serif;
   font-size: 0.7rem;
   font-weight: 500;
@@ -399,28 +528,50 @@ const CardEyebrow = styled.p`
   text-transform: uppercase;
   color: #d6a85f;
   margin: 0 0 6px;
-  opacity: 0.92;
 `;
 
-const CardTitle = styled.h3`
+const OverlayTitle = styled.h3`
   font-family: 'Domine Variable', Domine, serif;
   font-weight: 500;
-  font-size: 1.05rem;
-  line-height: 1.25;
+  font-size: 1.15rem;
+  line-height: 1.2;
   letter-spacing: 0.005em;
   color: #f5ebe0;
-  margin: 0 0 4px;
-  transition: color 0.3s ease;
+  margin: 0 0 12px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+
+  @media (max-width: 560px) {
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+  }
 `;
 
-const CardMetaLine = styled.p`
+/** 2-col label/value grid — the WhipGallery pattern. Compact spec
+    rendering that fits in a small overlay area without crowding. */
+const SpecGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 14px;
+`;
+
+const SpecLabel = styled.span`
+  font-family: 'Josefin Sans Variable', 'Josefin Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(245, 235, 224, 0.55);
+  display: block;
+  margin-bottom: 1px;
+`;
+
+const SpecValue = styled.span`
   font-family: 'Josefin Sans Variable', 'Josefin Sans', sans-serif;
   font-size: 0.85rem;
-  line-height: 1.4;
-  letter-spacing: 0.02em;
+  font-weight: 600;
   color: #f5ebe0;
-  opacity: 0.7;
-  margin: 0;
+  display: block;
+  line-height: 1.25;
 `;
 
 // ─── Component ──────────────────────────────────────────────────────────
@@ -429,11 +580,10 @@ const GalleryPage = () => {
   const data = useStaticQuery(pageQuery);
   const cards = buildCards(data.allMarkdownRemark.edges);
 
-  /* Heritage counter: pulled from the same total that reviews.json
-     records (whipsCrafted: 1200). When that number bumps up, the
-     reviews JSON gets re-scraped — keeping these in sync is a
-     follow-up nice-to-have, but for now hand-aligning to the same
-     1,200+ figure is fine since both are public-facing. */
+  /* Heritage counter mirrors reviews.json's `meta.whipsCrafted: 1200`.
+     When that number bumps up, the reviews JSON gets re-scraped — keeping
+     these in sync is a follow-up nice-to-have, but for now hand-aligning
+     to the same 1,200+ figure is fine since both are public-facing. */
   const counter = '1,200+ whips made by hand since 2015';
 
   return (
@@ -445,8 +595,7 @@ const GalleryPage = () => {
       <SectionContainer aria-label="Whip gallery">
         <HeaderBlock>
           <Eyebrow>The archive</Eyebrow>
-          <Heading>Every whip, all in one place</Heading>
-          <Counter>{counter}</Counter>
+          <Heading>{counter}</Heading>
           <Subhead>
             Browse the archive to see what&rsquo;s possible. Click any
             specialty whip to see its full story, or design your own
@@ -457,40 +606,41 @@ const GalleryPage = () => {
         <Grid>
           {cards.map((card) => {
             const inner = (
-              <>
-                <CardImageFrame>
-                  <CardImage
-                    className="gallery-card-image"
-                    src={card.image}
-                    aria-hidden
-                  />
-                </CardImageFrame>
-                <CardMeta>
-                  <CardEyebrow>{card.eyebrow}</CardEyebrow>
-                  <CardTitle className="gallery-card-title">
-                    {card.title}
-                  </CardTitle>
-                  {card.metadata && (
-                    <CardMetaLine>{card.metadata}</CardMetaLine>
+              <PhotoFrame>
+                <Photo
+                  className="gallery-photo"
+                  src={card.image}
+                  alt={card.alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <HoverOverlay className="gallery-overlay" aria-hidden>
+                  <OverlayEyebrow>{card.eyebrow}</OverlayEyebrow>
+                  <OverlayTitle>{card.title}</OverlayTitle>
+                  {card.specs.length > 0 && (
+                    <SpecGrid>
+                      {card.specs.map((s) => (
+                        <div key={s.label}>
+                          <SpecLabel>{s.label}</SpecLabel>
+                          <SpecValue>{s.value}</SpecValue>
+                        </div>
+                      ))}
+                    </SpecGrid>
                   )}
-                </CardMeta>
-              </>
+                </HoverOverlay>
+              </PhotoFrame>
             );
 
             if (card.href) {
               return (
-                <LinkCard
-                  key={card.id}
-                  to={card.href}
-                  aria-label={card.alt}
-                >
+                <LinkCard key={card.id} to={card.href} aria-label={card.alt}>
                   {inner}
                 </LinkCard>
               );
             }
             // Custom whip: non-interactive placeholder until Phase 13.6
-            // wires the lightbox flow. Still gets the visual hover so
-            // Adam can preview the look on this branch.
+            // wires the lightbox flow. Visual hover still works so the
+            // overlay can be reviewed on this branch.
             return (
               <StaticCard key={card.id} aria-label={card.alt}>
                 {inner}
