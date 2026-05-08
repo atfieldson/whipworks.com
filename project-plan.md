@@ -471,11 +471,15 @@ Phased so each step has a clear stopping point — pause between sessions withou
   - [x] Added `'Shield'` to `Conchos_BW` and `Conchos_Other` lookups (used on SnW29, a 12-foot snakewhip with wider heel needing a 1.5" concho). Note for Phase 13.7: `src/components/organisms/BullwhipDesigner/constants/conchos.ts` will also need Shield added when we wire click-to-prefill.
   - [x] All build logic consolidated into a single canonical `build.js` script (in `~/.tmp/xlsx-build/`) so any future schema change is one regeneration away.
   - [ ] Adam spot-checks rows against his records
-- [ ] **Phase 13.3: Auto-populate Specialty Whips** *(complex — variants and styles)*
-  - [ ] Parse all 13 specialty markdown files
-  - [ ] Each whip's `images:` array → photo URLs; `specs:` array → handle/thong/concho columns; `variants:` array → handle Style explosions (Indy has 3 styles × multiple photos each)
-  - [ ] Tag each row with its specialty shorthand
-  - [ ] Populate specialty-detail columns (Style, Runes, Flag, Color Trio) where applicable
+- [x] **Phase 13.3: Auto-populate Specialty Whips** *(19 rows of physical-whip data)*
+  - [x] Read all 13 specialty markdown files; identified 18 unique BW-numbered physical whips + 1 Pride placeholder (no BW number in markdown)
+  - [x] One row per physical whip: Whip ID in Adam's `BW####(buildId)` format (e.g. `BW592(Indy67)`, `BW524(Indy56)`, `BW310(Indy34)`, `BW359(Indy37)` for Indy; `BW1015(NL1)` and `BW1026(Ultra1)` for the 40K series)
+  - [x] Tag, Slug (folder name), Specialty Variant (Raider/Kingdom Finder/Junior/Classic Black/Red Devil), Series (40K for Nightlord + Ultra), Handle Design, Handle Length, Whip Length, Concho, Collar, Heel Loop, Waxed populated from markdown specs and photo captions
+  - [x] Heel-loop normalization: `'Rounded with Loop'` (Indy specs) → `'Rounded with Heel Loop'`
+  - [x] Photo URLs mapped to per-shot columns (Wide / Wide 2 / Transition / Thong / Handle / Handle 2 / Concho / Heel) — Nightlord has all 8, most others 3-5
+  - [x] Specialty Notes column populated with: thong design (since spreadsheet has no dedicated thong column), description-derived color hints (e.g. "midnight blue + gold + neon turquoise accents"), notes about non-standard handle designs (Nostramo Skull, Space Armor, Ultima Gladius, Runic, Stars, Z Vertical Strip, Rivet, Joking Bullwhip, Harlequin) and conchos (Brass Skull and Snakes, Celtic Pirate Skull) — the dropdown's `errorStyle: warning` lets these custom values save without blocking
+  - [x] **Primary Color and Secondary Color left blank for all specialty rows** — markdown describes colors in prose only, not as structured spec values; Adam fills based on actual builds (specialty whips won't show in color filters until then)
+  - [x] Pride placeholder: no BW-numbered photos in markdown; one row created with `(Pride template)` Whip ID + the 5 generic `pride*.jpg` photos. Adam replaces the ID when he photographs a real Pride build.
   - [ ] Adam reviews specialty-vs-physical-whip distinction (his BW1038(Indy35) labeling is per-physical-build, not per-template — may need to iterate on how the spreadsheet records that relationship)
 
 🟢 *End of "Excel doc" deliverable. Phases 13.4 onward are the gallery page itself.*
