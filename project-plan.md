@@ -444,3 +444,71 @@ Each commit is reviewed and approved before moving on.
 - Atomic design respected: new components live in `organisms/` (tiles, grids, rotators) and `molecules/` (individual cards) under `src/components/`.
 - Every section uses the same full-bleed breakout pattern as Hero (`width: 100vw; margin-left: calc((100% - 100vw) / 2)`) to escape the 1080px Content container when needed.
 - Copy is warm and human, not corporate — matches Adam's voice on the rest of the site.
+
+## Phase 13: Gallery Page (Filson + Vorrath Inspired)
+**Goal:** Build a `/gallery` page that compellingly showcases every finished-whip photo as a catalog of "what's possible if you order from me." Editorial card-based layout (Filson's heritage feel + Vorrath's dark image-first portfolio structure). Filterable by type/length/color/handle/concho. Click a card → opens a lightbox with all photos of that whip + specs + narrative + a "Build this exact whip" CTA that prefills the Design-a-Whip form. Workshop / process / customer-with-whip photos stay on Homepage and articles — Gallery is finished-whip portraits only.
+
+**Data foundation:** A separate `whip-catalog.xlsx` workbook lives in the repo as Adam's planning/reference source-of-truth document — generated initially from the existing TypeScript gallery files (`galleryWhips.ts`, `galleryStockwhips.ts`, `gallerySnakewhips.ts`) and the 13 specialty markdown files (`content/specialty/*/index.md`). Excel is for Adam's working notes; the **TypeScript/Markdown remain canonical** for what the site actually renders. Sync direction Excel → TS is manual today; we may automate later.
+
+Phased so each step has a clear stopping point — pause between sessions without losing place. Each phase ends with Adam's review.
+
+- [ ] **Phase 13.0: Schema lock-in** *(no code; column-list document only)*
+  - [ ] Audit `BullwhipDesigner.tsx` / `StockwhipDesigner.tsx` / `SnakewhipDesigner.tsx` and their pickers/constants for every form field
+  - [ ] Cross-reference against `galleryWhips.ts` / `galleryStockwhips.ts` / `gallerySnakewhips.ts` schemas
+  - [ ] Confirm 13 specialty shorthand → folder mapping (Indy/Catwhip/ZWhip/Nightlord/Mando/Harlequin/Belmont/Blacksmith/Joking/OneWinged/Pride/StarSpangled/Ultra)
+  - [ ] Propose final column list for all 5 sheets (Specialty, Bullwhips, Stockwhips, Snakewhips, Floggers) — universal + type-specific + specialty-detail columns
+  - [ ] Adam signs off on the schema before any file is created
+- [ ] **Phase 13.1: Build the Excel scaffold** *(empty workbook)*
+  - [ ] Create `whip-catalog.xlsx` at repo root with 5 empty sheets and agreed column headers
+  - [ ] Dropdown validation on enum-like fields (colors, plait counts, lengths, conchos, etc.) so future hand-entry stays consistent
+  - [ ] Adam opens it in Excel and sanity-checks the structure
+- [ ] **Phase 13.2: Auto-populate Bullwhips, Stockwhips, Snakewhips** *(24 rows of real data)*
+  - [ ] Translate `galleryWhips.ts` (16 rows) → Bullwhips sheet
+  - [ ] Translate `galleryStockwhips.ts` (5 rows) → Stockwhips sheet
+  - [ ] Translate `gallerySnakewhips.ts` (3 rows) → Snakewhips sheet
+  - [ ] Adam spot-checks rows against his records
+- [ ] **Phase 13.3: Auto-populate Specialty Whips** *(complex — variants and styles)*
+  - [ ] Parse all 13 specialty markdown files
+  - [ ] Each whip's `images:` array → photo URLs; `specs:` array → handle/thong/concho columns; `variants:` array → handle Style explosions (Indy has 3 styles × multiple photos each)
+  - [ ] Tag each row with its specialty shorthand
+  - [ ] Populate specialty-detail columns (Style, Runes, Flag, Color Trio) where applicable
+  - [ ] Adam reviews specialty-vs-physical-whip distinction (his BW1038(Indy35) labeling is per-physical-build, not per-template — may need to iterate on how the spreadsheet records that relationship)
+
+🟢 *End of "Excel doc" deliverable. Phases 13.4 onward are the gallery page itself.*
+
+- [ ] **Phase 13.4: Gallery page UI shell** *(no filtering yet)*
+  - [ ] Create `/gallery` route + page
+  - [ ] Filson-meets-Vorrath editorial layout: eyebrow + heritage line + heading + card grid
+  - [ ] Card per whip, image-first, name + length + colors as caption metadata
+  - [ ] Pull data from existing TS / MD files (Excel is reference-only — site reads canonical sources as today)
+  - [ ] Mobile-responsive
+  - [ ] Adam reacts to look/feel before any interactivity
+- [ ] **Phase 13.5: Filtering** *(filter chips + URL state)*
+  - [ ] Filter chips above the grid: Type (bullwhip/stockwhip/snakewhip/specialty), Length, Primary Color, Handle Pattern, Concho
+  - [ ] Multi-select; smooth filter transitions
+  - [ ] Filter state persists in URL query params (shareable filtered views)
+  - [ ] Adam plays with filters on desktop + phone, reacts to UX
+- [ ] **Phase 13.6: Lightbox detail + narrative**
+  - [ ] Click card → in-page lightbox with thumbnail strip of all whip photos
+  - [ ] Name + full specs + optional narrative paragraph
+  - [ ] "Build this exact whip →" CTA button (wired in next phase)
+  - [ ] Keyboard nav (arrows, esc), full a11y
+  - [ ] Adam goes through experience and reacts
+- [ ] **Phase 13.7: Click-to-prefill** *(the killer feature)*
+  - [ ] Custom whip CTA → navigates to `/design-bullwhip?primaryColor=Rust&secondaryColor=Black&length=7ft&handle=Box&...`
+  - [ ] BullwhipDesigner / StockwhipDesigner / SnakewhipDesigner parse incoming query params on mount and pre-select form options
+  - [ ] Specialty whip CTA → links to `/specialty/:slug` instead (those are pre-configured)
+  - [ ] Adam runs the full happy path: see whip in gallery → click → land on design page with everything preset → ready to add to cart
+- [ ] **Phase 13.8: Polish + mobile + a11y**
+  - [ ] Mobile responsive pass on gallery + lightbox + filter chips
+  - [ ] Reduced-motion support across new motion
+  - [ ] Keyboard nav verification end-to-end
+  - [ ] SEO/structured data on `/gallery` (ItemList schema)
+  - [ ] Image lazy-loading verification
+  - [ ] Adam does final review, then commit + push
+
+**Cross-cutting notes:**
+- Each phase = one commit, reviewed before proceeding (per Adam's standing review rule).
+- Phases 13.0–13.3 are independent of 13.4–13.8 — Excel could ship and gallery work could pause.
+- No worktrees — all edits in main repo.
+- Follow homepage revamp design language: Domine + Josefin Sans, gold (#d6a85f) accents, cream (#f5ebe0) on dark (#1a140f), full-bleed for "event" sections only, Gallery itself is constrained.
