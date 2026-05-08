@@ -462,10 +462,12 @@ Phased so each step has a clear stopping point — pause between sessions withou
   - [x] Bold cream-on-dark header row, 32px row height, frozen first row, auto-filter on every sheet
   - [x] Dropdown validation on every enum-like column with `errorStyle: warning` (Adam can keep custom values like new colors with one click), source ranges live in `_Lookups` sheet so additions there propagate to dropdowns automatically
   - [x] Validation spot-check confirmed: e.g. Specialty!B2 → `_Lookups!$O$2:$O$14` (13 specialty tags)
-- [ ] **Phase 13.2: Auto-populate Bullwhips, Stockwhips, Snakewhips** *(24 rows of real data)*
-  - [ ] Translate `galleryWhips.ts` (16 rows) → Bullwhips sheet
-  - [ ] Translate `galleryStockwhips.ts` (5 rows) → Stockwhips sheet
-  - [ ] Translate `gallerySnakewhips.ts` (3 rows) → Snakewhips sheet
+- [x] **Phase 13.2: Auto-populate Bullwhips, Stockwhips, Snakewhips** *(26 rows of real data)*
+  - [x] Translated `galleryWhips.ts` → Bullwhips sheet (18 rows: 14 bullwhips + 1 fantasy + 3 break-image entries)
+  - [x] Translated `galleryStockwhips.ts` → Stockwhips sheet (5 rows)
+  - [x] Translated `gallerySnakewhips.ts` → Snakewhips sheet (3 rows)
+  - [x] Heel-loop value normalization applied: `'No Heel Loop'` → `'Squared'`, `'Heel Loop Rounded'` → `'Rounded with Heel Loop'`, `'None'` (fantasy whips) → blank
+  - [x] Flagged in Notes: SnW29 uses concho `'Shield'` which is not in the current concho list — needs verification
   - [ ] Adam spot-checks rows against his records
 - [ ] **Phase 13.3: Auto-populate Specialty Whips** *(complex — variants and styles)*
   - [ ] Parse all 13 specialty markdown files
