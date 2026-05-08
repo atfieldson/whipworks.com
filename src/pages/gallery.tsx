@@ -56,6 +56,15 @@ import { snakewhipGalleryItems } from '../components/organisms/BullwhipDesigner/
  * below is the manual escape hatch if a specific gallery photo needs
  * to come out.
  *
+ * Wide-only rule: per Adam's gallery vision, only proper "Wide" shots
+ * appear in the grid (one per whip). Detail shots — Transition, Handle,
+ * Concho, Heel, Wide1x1 square crops, etc. — are reserved for the
+ * lightbox in Phase 13.6 ("when I click on an image, it pulls up an
+ * overlay with all of the images of that whip"). Whips that don't
+ * have a proper Wide shot get auto-excluded from the gallery: this
+ * naturally drops SW7-8 / SW9-10 / SW11-12 (only have `wide1x1`, no
+ * `wide`) without needing them in EXCLUDED_WHIP_IDS.
+ *
  * Whip ID display: catalog numbers (BW543, SW7-8, etc.) are NOT shown
  * in the customer-facing UI. The reasoning is sales-focused — buyers
  * shop visually and by specs, not by SKU. Custom-whip titles are
@@ -85,6 +94,22 @@ import { snakewhipGalleryItems } from '../components/organisms/BullwhipDesigner/
  * an explicit "lifestyle" or "in-use" tag.
  */
 const isGalleryPhoto = (url: string) => url.includes('/gallery/');
+
+/**
+ * "Wide" filename pattern — matches `…Wide.jpg` or `…Wide2.jpg` at the
+ * end of a URL. Used to filter specialty markdown `images[]` arrays
+ * (which are an undifferentiated list) down to just the Wide shots.
+ *
+ * Excludes `…Wide1x1.jpg` (square crops — not the same as a true Wide),
+ * `…Transition.jpg`, `…Handle.jpg`, `…Concho.jpg`, etc. — those are
+ * detail shots reserved for the lightbox in Phase 13.6.
+ *
+ * Custom-whip TS data has named keys (`wide`, `wide2`, `transition`,
+ * `handle`, etc.) so the same filter for those is just `w.images.wide`
+ * — the type of the URL doesn't need to be inferred from the filename
+ * because the data is already structured by shot type.
+ */
+const isWideShot = (url: string) => /Wide2?\.jpg$/i.test(url);
 
 /**
  * Manual exclusion escape hatch. Add specific whip IDs here to remove
@@ -201,7 +226,9 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
     if (item.type === 'break') continue;
     if (EXCLUDED_WHIP_IDS.has(item.id)) continue;
     const w = item;
-    const photo = w.images.wide || w.images.transition || w.images.handle;
+    // Wide-only rule: skip whips that lack a proper Wide shot (detail
+    // shots are for the lightbox, not the grid).
+    const photo = w.images.wide;
     if (!photo || !isGalleryPhoto(photo)) continue;
     const isFantasy = w.type === 'fantasy';
     cards.push({
@@ -228,7 +255,10 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
     if (item.type === 'break') continue;
     if (EXCLUDED_WHIP_IDS.has(item.id)) continue;
     const w = item;
-    const photo = w.images.wide || w.images.wide1x1 || w.images.keeper;
+    // Wide-only rule: skip whips with no proper Wide shot. Auto-excludes
+    // SW7-8 / SW9-10 / SW11-12 (those have only `wide1x1` square crops,
+    // which aren't true Wide shots — they're alternate-aspect renders).
+    const photo = w.images.wide;
     if (!photo || !isGalleryPhoto(photo)) continue;
     cards.push({
       id: w.id,
@@ -253,7 +283,8 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
     if (item.type === 'break') continue;
     if (EXCLUDED_WHIP_IDS.has(item.id)) continue;
     const w = item;
-    const photo = w.images.wide || w.images.concho;
+    // Wide-only rule.
+    const photo = w.images.wide;
     if (!photo || !isGalleryPhoto(photo)) continue;
     cards.push({
       id: w.id,
@@ -276,7 +307,10 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
   for (const edge of specialtyEdges) {
     const fm = edge.node.frontmatter;
     if (EXCLUDED_WHIP_IDS.has(edge.node.fields.slug)) continue;
-    const galleryPhoto = fm.images?.find((img) => isGalleryPhoto(img.url));
+    // Wide-only rule + /gallery/ path — find the lead Wide shot.
+    const galleryPhoto = fm.images?.find(
+      (img) => isGalleryPhoto(img.url) && isWideShot(img.url),
+    );
     if (!galleryPhoto) continue;
 
     /* Pull a default whip-length from the variants' defaultValue when
