@@ -499,7 +499,7 @@ Phased so each step has a clear stopping point — pause between sessions withou
 
 **Phase 13.5+ design decisions captured during 13.4 review (Adam's input):**
 - **Mix of shot types in the gallery** — not just Wide shots. Currently each whip contributes ONE Wide photo to the grid; future iterations should mix in Transition / Handle / Concho / Heel shots so the gallery shows more variety. Likely lands with the lightbox work in 13.6 (where additional shots are surfaced anyway), or could be its own pre-13.6 step.
-- **Per-whip grouping decision (deferred)** — Adam undecided between "rows of same-whip images grouped together" (e.g., a row of all BW1023's shots, then a row of all BW456's shots) vs. "spread out / mixed across the grid" (current behavior). Decision lands when we add multi-shot support — TBD.
+- **Per-whip grouping decision (RESOLVED post-13.4 review):** Adam chose **per-physical-whip cards** — each unique build (e.g., 7-foot Indy, 10-foot Indy) gets its own card in the gallery. Rationale: as the gallery grows and filtering lands in 13.5, filtering by length ("7-foot bullwhips") should naturally surface specialty whips of that length too — because specialty whips are *also* bullwhips. Specialty markdowns are walked at build time to extract per-physical-whip groups (variants[Style].options[].images grouped by filename prefix). Each group becomes one card.
 - **Scroll-triggered slide-in animations** — match the per-tile reveal from FeaturedSpecialtyGrid on the homepage: even-index slides from left (x: -40 → 0), odd-index from right (x: +40 → 0), each card with its own `whileInView` viewport trigger so they fire row-by-row as the user scrolls. Add in **Phase 13.8 (polish)** after the lightbox + filter work is in.
 - **Black-background curation** — current heuristic (`/gallery/` paths only) is a first-pass approximation. May need explicit per-whip curation later (Adam to provide list of any specific gallery photos that aren't black-bg, populate `EXCLUDED_WHIP_IDS`).
 - [ ] **Phase 13.5: Filtering** *(filter chips + URL state)*
@@ -508,10 +508,16 @@ Phased so each step has a clear stopping point — pause between sessions withou
   - [ ] Filter state persists in URL query params (shareable filtered views)
   - [ ] Adam plays with filters on desktop + phone, reacts to UX
 - [ ] **Phase 13.6: Lightbox detail + narrative**
-  - [ ] Click card → in-page lightbox with thumbnail strip of all whip photos
-  - [ ] Name + full specs + optional narrative paragraph
-  - [ ] "Build this exact whip →" CTA button (wired in next phase)
-  - [ ] Keyboard nav (arrows, esc), full a11y
+  - [ ] Click card → in-page lightbox with all photos of THAT specific physical whip
+  - [ ] Photo presentation (Adam's call):
+    - Desktop: hero image + thumbnail strip below (Etsy-style)
+    - Mobile: vertical scroll of all photos at full width (magazine-feel)
+  - [ ] Info panel: specs only (no price — listing page sells, gallery inspires). Specialty whips also get marketing description from markdown body. Custom whips get spec grid only.
+  - [ ] CTA button copy:
+    - Specialty: "View The Indy →" / "View The Belmont →" etc. (uses marketing short name)
+    - Custom: "Build this Bullwhip →" / "Build this Stockwhip →" / "Build this Snakewhip →" (Phase 13.7 wires the prefill — until then, links to design page without prefill)
+  - [ ] Dismiss UX: Esc key + click backdrop + × button in upper right (all three for max accessibility)
+  - [ ] Keyboard nav across photos (arrows), full a11y
   - [ ] Adam goes through experience and reacts
 - [ ] **Phase 13.7: Click-to-prefill** *(the killer feature)*
   - [ ] Custom whip CTA → navigates to `/design-bullwhip?primaryColor=Rust&secondaryColor=Black&length=7ft&handle=Box&...`

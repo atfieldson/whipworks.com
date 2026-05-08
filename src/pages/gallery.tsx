@@ -112,6 +112,63 @@ const isGalleryPhoto = (url: string) => url.includes('/gallery/');
 const isWideShot = (url: string) => /Wide2?\.jpg$/i.test(url);
 
 /**
+ * Strip a known shot-type suffix from a filename to derive the unique
+ * "physical whip" prefix. All photos of the same physical whip share
+ * this prefix — e.g., `BW592Indy67RaiderWide.jpg`,
+ * `BW592Indy67RaiderTransition.jpg`, and `BW592Indy67RaiderHandle.jpg`
+ * all reduce to `BW592Indy67Raider`.
+ *
+ * Order matters: longest suffixes are checked first (HandleHeel before
+ * Handle, Wide1x1 before Wide) so we don't accidentally match a shorter
+ * prefix when the filename contains a compound shot name.
+ */
+const SHOT_SUFFIXES_LONGEST_FIRST = [
+  'Wide1x1',
+  'Wide2',
+  'Wide',
+  'Transition',
+  'Thong2',
+  'Thong',
+  'HandleMid',
+  'HandleHeel',
+  'Handle2',
+  'Handle',
+  'Concho',
+  'Heel',
+  'Keeper',
+];
+
+const stripShotSuffix = (url: string): string => {
+  const filename = url.split('/').pop() || '';
+  for (const suffix of SHOT_SUFFIXES_LONGEST_FIRST) {
+    const pattern = `${suffix}.jpg`;
+    if (filename.endsWith(pattern)) return filename.slice(0, -pattern.length);
+  }
+  return filename; // unrecognized — fall back to whole filename so we don't crash
+};
+
+/**
+ * Pull a length string ("8 Feet") out of a photo caption like
+ * "An 8 foot Raider style Indy Bullwhip". Used to populate the per-
+ * physical-whip Length spec on specialty cards — markdown captions
+ * are the only place each photographed build's actual length is
+ * recorded (frontmatter `variants` defaultValue is the *marketing*
+ * default, not the photographed build).
+ */
+const extractLengthFromCaption = (
+  caption: string | null | undefined,
+): string | null => {
+  if (!caption) return null;
+  const m = caption.match(/(\d+)\s*foot/i);
+  return m ? `${m[1]} Feet` : null;
+};
+
+/** Drop a leading "The " from variant names for cleaner eyebrow text:
+    "The Raider" → "Raider", "The Kingdom Finder" → "Kingdom Finder". */
+const dropLeadingThe = (s: string | null | undefined): string | null =>
+  s ? s.replace(/^The /i, '') : null;
+
+/**
  * Manual exclusion escape hatch. Add specific whip IDs here to remove
  * them from the gallery without touching the underlying data sources.
  * Default empty.
@@ -148,6 +205,13 @@ export const pageQuery = graphql`
             variants {
               name
               defaultValue
+              options {
+                name
+                images {
+                  url
+                  caption
+                }
+              }
             }
           }
         }
@@ -161,10 +225,26 @@ export const pageQuery = graphql`
 type SpecPair = { label: string; value: string };
 
 type GalleryCard = {
-  /** Stable React key. */
+  /** Stable React key. For custom whips this is the gallery TS id
+      (BW543, SW7-8, FW33, etc.); for specialty whips it's the unique
+      filename prefix (BW592Indy67Raider, BW101540K1Nightlord, etc.). */
   id: string;
-  /** Bucket the card into a category for chip-filtering in 13.5. */
+  /** Bucket the card into a category for chip-filtering in 13.5.
+      Note: specialty whips are *also* bullwhips per Adam's design
+      (all current specialties are bullwhips), so the 13.5 type filter
+      will need to match `type === 'bullwhip' || type === 'specialty'`
+      when the user picks "Bullwhip". */
   type: 'bullwhip' | 'fantasy' | 'stockwhip' | 'snakewhip' | 'specialty';
+  /** Specialty shorthand tag (Indy / CW / ZW / NL / etc.) — only set
+      for type=specialty. Used by 13.5 filtering ("show all Indys"). */
+  specialtyTag?: string;
+  /** Specialty style/variant ("The Raider", "Classic Black", etc.)
+      when present in the markdown — null otherwise. */
+  variant?: string | null;
+  /** "8 Feet", "10 Feet", etc. — pulled from gallery TS specs for
+      custom whips, parsed from photo caption for specialty whips.
+      Used by 13.5 filtering ("7-foot bullwhips"). */
+  length?: string;
   /** Eyebrow text shown in the hover overlay (small caps gold). */
   eyebrow: string;
   /** Main display name shown in the hover overlay. For custom whips
@@ -176,6 +256,10 @@ type GalleryCard = {
   specs: SpecPair[];
   /** Lead photo for the card (rendered at native aspect ratio). */
   image: string;
+  /** All photos of this physical whip — fed to the 13.6 lightbox.
+      For custom whips, this is the gallery TS images map flattened.
+      For specialty whips, this is the per-prefix grouped photo set. */
+  allPhotos: { url: string; caption: string }[];
   /** Where the card links to. `null` = non-interactive placeholder
       (custom cards in this phase; lightbox flow lands them in 13.6). */
   href: string | null;
@@ -204,6 +288,16 @@ const buildSpecs = (
 
 // ─── Build the unified card list from all four data sources ─────────────
 
+type SpecialtyImage = { url: string; caption: string };
+type SpecialtyVariantOption = {
+  name: string;
+  images: SpecialtyImage[] | null;
+};
+type SpecialtyVariant = {
+  name: string;
+  defaultValue: string;
+  options: SpecialtyVariantOption[] | null;
+};
 type SpecialtyEdge = {
   node: {
     fields: { slug: string };
@@ -211,11 +305,99 @@ type SpecialtyEdge = {
       title: string;
       series: string | null;
       isNew: boolean | null;
-      images: { url: string; caption: string }[] | null;
+      images: SpecialtyImage[] | null;
       specs: { label: string; value: string }[] | null;
-      variants: { name: string; defaultValue: string }[] | null;
+      variants: SpecialtyVariant[] | null;
     };
   };
+};
+
+/**
+ * Group a flat list of specialty photos by their unique physical-whip
+ * prefix (everything in the filename before the shot-type suffix).
+ * Returns a Map preserving insertion order — so for-each iteration
+ * yields cards in the order they appear in the markdown.
+ *
+ * Each group also tracks which variant/style its photos came from
+ * (e.g., "The Raider" for Indy Raider photos), and pulls a length
+ * value out of the first photo's caption that has one.
+ */
+type PhotoGroup = {
+  prefix: string;
+  widePhoto: SpecialtyImage | null;
+  allPhotos: SpecialtyImage[];
+  length: string | null;
+  variant: string | null;
+};
+
+const groupSpecialtyPhotos = (
+  fm: SpecialtyEdge['node']['frontmatter'],
+): PhotoGroup[] => {
+  const groups = new Map<string, PhotoGroup>();
+
+  const ingest = (images: SpecialtyImage[], variant: string | null) => {
+    for (const img of images) {
+      if (!isGalleryPhoto(img.url)) continue;
+      const prefix = stripShotSuffix(img.url);
+      let g = groups.get(prefix);
+      if (!g) {
+        g = { prefix, widePhoto: null, allPhotos: [], length: null, variant };
+        groups.set(prefix, g);
+      }
+      g.allPhotos.push(img);
+      if (isWideShot(img.url) && !g.widePhoto) g.widePhoto = img;
+      if (!g.length) g.length = extractLengthFromCaption(img.caption);
+    }
+  };
+
+  /* When the markdown has a "Style" variant (Indy with Raider /
+     Kingdom Finder / Junior, Catwhip with Classic Black / Red Devil),
+     the per-style options[].images is the canonical per-variant photo
+     set. Use that and skip top-level images[] (which are typically a
+     duplicate subset of the first style's photos). When there's no
+     Style variant, the top-level images[] holds all the photos for
+     all builds — group those without a variant tag. */
+  const styleVariant = fm.variants?.find((v) => v.name === 'Style');
+  if (styleVariant?.options && styleVariant.options.length > 0) {
+    for (const opt of styleVariant.options) {
+      if (opt.images) ingest(opt.images, opt.name);
+    }
+  } else if (fm.images) {
+    ingest(fm.images, null);
+  }
+
+  // Drop groups without a Wide shot — they can't be cards (Wide-only rule).
+  return [...groups.values()].filter((g) => g.widePhoto !== null);
+};
+
+/** Specialty folder name → Adam's specialty shorthand (matches the
+    Specialty Tag column in whip-catalog.xlsx and SPECIALTY_TAGS in
+    the build script). Used for filtering in 13.5 ("show all Indys").
+    Keyed by lowercased basename so the lookup works regardless of
+    whether gatsby emits slugs as `/specialty/indy` or
+    `/specialty/indy/` or just `indy`. */
+const SLUG_BASENAME_TO_TAG: Record<string, string> = {
+  indy: 'Indy',
+  belmont: 'Belmont',
+  catwhip: 'CW',
+  zwhip: 'ZW',
+  mando: 'Mando',
+  onewinged: 'OWB',
+  harlequin: 'HQ',
+  jokingbullwhip: 'JB',
+  blacksmith: 'BS',
+  starspangled: 'SS',
+  nightlord: 'NL',
+  ultrawhip: 'Ultra',
+  pride: 'Pride',
+};
+
+/** Extract the basename of a slug regardless of leading/trailing
+    slashes: '/specialty/indy/' → 'indy', '/specialty/indy' → 'indy',
+    'indy' → 'indy'. */
+const slugBasename = (slug: string): string => {
+  const cleaned = slug.replace(/^\/+|\/+$/g, '');
+  return cleaned.split('/').pop()?.toLowerCase() || cleaned.toLowerCase();
 };
 
 const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
@@ -231,9 +413,17 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
     const photo = w.images.wide;
     if (!photo || !isGalleryPhoto(photo)) continue;
     const isFantasy = w.type === 'fantasy';
+    /* Flatten the gallery TS images map into the all-photos array for
+       the lightbox in 13.6 — captions are constructed from specs since
+       the TS data doesn't have per-shot captions. */
+    const allPhotos: { url: string; caption: string }[] = [];
+    for (const [shot, url] of Object.entries(w.images)) {
+      if (url) allPhotos.push({ url, caption: `${w.id} ${shot}` });
+    }
     cards.push({
       id: w.id,
       type: isFantasy ? 'fantasy' : 'bullwhip',
+      length: w.specs.whipLength,
       eyebrow: isFantasy ? 'Fantasy Whip' : 'Bullwhip',
       title: composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor),
       specs: buildSpecs([
@@ -245,6 +435,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
         { label: 'Heel Loop', value: w.specs.heelLoop, skipIf: ['Squared', 'None'] },
       ]),
       image: photo,
+      allPhotos,
       href: null,
       alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.whipLength} bullwhip`,
     });
@@ -260,9 +451,14 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
     // which aren't true Wide shots — they're alternate-aspect renders).
     const photo = w.images.wide;
     if (!photo || !isGalleryPhoto(photo)) continue;
+    const allPhotos: { url: string; caption: string }[] = [];
+    for (const [shot, url] of Object.entries(w.images)) {
+      if (url) allPhotos.push({ url, caption: `${w.id} ${shot}` });
+    }
     cards.push({
       id: w.id,
       type: 'stockwhip',
+      length: w.specs.thongLength,
       eyebrow: 'Stockwhip',
       title: composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor),
       specs: buildSpecs([
@@ -273,6 +469,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
         { label: 'Concho', value: w.specs.concho },
       ]),
       image: photo,
+      allPhotos,
       href: null,
       alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.thongLength} stockwhip`,
     });
@@ -286,9 +483,14 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
     // Wide-only rule.
     const photo = w.images.wide;
     if (!photo || !isGalleryPhoto(photo)) continue;
+    const allPhotos: { url: string; caption: string }[] = [];
+    for (const [shot, url] of Object.entries(w.images)) {
+      if (url) allPhotos.push({ url, caption: `${w.id} ${shot}` });
+    }
     cards.push({
       id: w.id,
       type: 'snakewhip',
+      length: w.specs.whipLength,
       eyebrow: 'Snakewhip',
       title: composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor),
       specs: buildSpecs([
@@ -297,47 +499,82 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
         { label: 'Concho', value: w.specs.concho },
       ]),
       image: photo,
+      allPhotos,
       href: null,
       alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.whipLength} snakewhip`,
     });
   }
 
-  // ── Specialty whips (one card per markdown — uses the lead /gallery/
-  //    photo so non-/gallery/ specialties like Pride auto-excluded).
+  // ── Specialty whips — one card per *physical* build (Adam's Q1
+  //    decision after 13.4 review). Each unique filename prefix in
+  //    the markdown's photo set becomes one card. Indy's 4 builds
+  //    (Raider 8ft, Raider 10ft, Kingdom Finder, Junior) each get
+  //    their own card; Belmont's 2 builds each get one; Mando's
+  //    single photographed build gets one; etc.
   for (const edge of specialtyEdges) {
     const fm = edge.node.frontmatter;
     if (EXCLUDED_WHIP_IDS.has(edge.node.fields.slug)) continue;
-    // Wide-only rule + /gallery/ path — find the lead Wide shot.
-    const galleryPhoto = fm.images?.find(
-      (img) => isGalleryPhoto(img.url) && isWideShot(img.url),
-    );
-    if (!galleryPhoto) continue;
 
-    /* Pull a default whip-length from the variants' defaultValue when
-       available — gives the spec grid something concrete even when
-       the page query returns no top-level specs. */
-    const lengthVariant = fm.variants?.find((v) => v.name === 'Whip Length');
-    const lengthSpec = lengthVariant
-      ? { label: 'Length', value: lengthVariant.defaultValue }
+    /* Pull marketing-design specs from the markdown's specs[] block.
+       These are SHARED across all physical builds of the specialty
+       (they describe the design, not any individual build). Cap to a
+       handful of entries for overlay readability — drop "Finish" since
+       it's always Waxed and not informative on a per-card basis. */
+    const sharedSpecs = (fm.specs || [])
+      .filter((s) => s.label !== 'Finish')
+      .slice(0, 5)
+      .map((s) => ({ label: s.label, value: s.value }));
+
+    /* Series tag — e.g. "40K" for Nightlord/Ultra. Used in the eyebrow. */
+    const seriesTag = fm.series
+      ? fm.series.replace(' Bullwhip Series', '')
       : null;
 
-    /* Map markdown specs (label/value pairs from frontmatter) into the
-       overlay grid. Cap to ~5 for visual balance. */
-    const fmSpecs = (fm.specs || []).slice(0, 5).map((s) => ({
-      label: s.label,
-      value: s.value,
-    }));
+    /* Walk the markdown's photo structure and group by physical-whip
+       prefix. Each group with a Wide shot becomes one card. */
+    const groups = groupSpecialtyPhotos(fm);
+    for (const g of groups) {
+      // EXCLUDED_WHIP_IDS can also list a specific physical-whip prefix
+      // (e.g. 'BW524Indy56Raider') if Adam wants one specific build out.
+      if (EXCLUDED_WHIP_IDS.has(g.prefix)) continue;
 
-    cards.push({
-      id: edge.node.fields.slug,
-      type: 'specialty',
-      eyebrow: fm.series ? `Specialty · ${fm.series.replace(' Bullwhip Series', '')}` : 'Specialty',
-      title: fm.title,
-      specs: [...(lengthSpec ? [lengthSpec] : []), ...fmSpecs],
-      image: galleryPhoto.url,
-      href: edge.node.fields.slug, // e.g. /specialty/indy
-      alt: `${fm.title} — specialty bullwhip`,
-    });
+      /* Eyebrow composition: "Specialty" + (series if any) + (variant
+         if any), joined with " · ". Variant has the leading "The "
+         dropped for cleaner display ("Raider", not "The Raider"). */
+      const variantShort = dropLeadingThe(g.variant);
+      const eyebrowParts = ['Specialty', seriesTag, variantShort].filter(Boolean) as string[];
+      const eyebrow = eyebrowParts.join(' · ');
+
+      /* Length pulled from the photo caption parses cleanly for every
+         specialty in the current dataset. Falls back to the marketing
+         default-length variant if caption parsing somehow fails. */
+      const captionLength = g.length;
+      const fallbackLength = fm.variants?.find((v) => v.name === 'Whip Length')?.defaultValue;
+      const length = captionLength || fallbackLength || undefined;
+
+      /* Spec grid: Length first (per-build), then the shared design
+         specs. Length is what differentiates same-design cards
+         (e.g., 8 ft Belmont vs 10 ft Belmont) so it gets top billing. */
+      const specs: SpecPair[] = [
+        ...(length ? [{ label: 'Length', value: length }] : []),
+        ...sharedSpecs,
+      ];
+
+      cards.push({
+        id: g.prefix,
+        type: 'specialty',
+        specialtyTag: SLUG_BASENAME_TO_TAG[slugBasename(edge.node.fields.slug)],
+        variant: g.variant,
+        length,
+        eyebrow,
+        title: fm.title,
+        specs,
+        image: g.widePhoto!.url, // safe: groupSpecialtyPhotos filters out groups with no Wide
+        allPhotos: g.allPhotos,
+        href: edge.node.fields.slug, // e.g. /specialty/indy — same for all builds of a specialty
+        alt: `${fm.title}${variantShort ? ` — ${variantShort}` : ''}${length ? `, ${length}` : ''}`,
+      });
+    }
   }
 
   return cards;
