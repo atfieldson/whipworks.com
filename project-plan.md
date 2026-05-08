@@ -467,7 +467,9 @@ Phased so each step has a clear stopping point — pause between sessions withou
   - [x] Translated `galleryStockwhips.ts` → Stockwhips sheet (5 rows)
   - [x] Translated `gallerySnakewhips.ts` → Snakewhips sheet (3 rows)
   - [x] Heel-loop value normalization applied: `'No Heel Loop'` → `'Squared'`, `'Heel Loop Rounded'` → `'Rounded with Heel Loop'`, `'None'` (fantasy whips) → blank
-  - [x] Flagged in Notes: SnW29 uses concho `'Shield'` which is not in the current concho list — needs verification
+  - [x] Concho diameter modeling (post-spot-check enhancement): added a **Conchos** master sheet with `Name | Diameter (in) | Notes` columns pre-populated with all 19 conchos. Each whip sheet now has a `Concho Diameter (in)` column (right after `Concho`) using `=IFERROR(VLOOKUP(<concho>, Conchos!$A$2:$B$100, 2, FALSE), "")` — Adam fills diameter once on Conchos sheet, every whip row updates automatically. **TODO for Adam:** measure & populate the 19 diameters.
+  - [x] Added `'Shield'` to `Conchos_BW` and `Conchos_Other` lookups (used on SnW29, a 12-foot snakewhip with wider heel needing a 1.5" concho). Note for Phase 13.7: `src/components/organisms/BullwhipDesigner/constants/conchos.ts` will also need Shield added when we wire click-to-prefill.
+  - [x] All build logic consolidated into a single canonical `build.js` script (in `~/.tmp/xlsx-build/`) so any future schema change is one regeneration away.
   - [ ] Adam spot-checks rows against his records
 - [ ] **Phase 13.3: Auto-populate Specialty Whips** *(complex — variants and styles)*
   - [ ] Parse all 13 specialty markdown files
