@@ -452,16 +452,16 @@ Each commit is reviewed and approved before moving on.
 
 Phased so each step has a clear stopping point — pause between sessions without losing place. Each phase ends with Adam's review.
 
-- [ ] **Phase 13.0: Schema lock-in** *(no code; column-list document only)*
-  - [ ] Audit `BullwhipDesigner.tsx` / `StockwhipDesigner.tsx` / `SnakewhipDesigner.tsx` and their pickers/constants for every form field
-  - [ ] Cross-reference against `galleryWhips.ts` / `galleryStockwhips.ts` / `gallerySnakewhips.ts` schemas
-  - [ ] Confirm 13 specialty shorthand → folder mapping (Indy/Catwhip/ZWhip/Nightlord/Mando/Harlequin/Belmont/Blacksmith/Joking/OneWinged/Pride/StarSpangled/Ultra)
-  - [ ] Propose final column list for all 5 sheets (Specialty, Bullwhips, Stockwhips, Snakewhips, Floggers) — universal + type-specific + specialty-detail columns
-  - [ ] Adam signs off on the schema before any file is created
-- [ ] **Phase 13.1: Build the Excel scaffold** *(empty workbook)*
-  - [ ] Create `whip-catalog.xlsx` at repo root with 5 empty sheets and agreed column headers
-  - [ ] Dropdown validation on enum-like fields (colors, plait counts, lengths, conchos, etc.) so future hand-entry stays consistent
-  - [ ] Adam opens it in Excel and sanity-checks the structure
+- [x] **Phase 13.0: Schema lock-in** *(no code; column-list document only)*
+  - [x] Audited `BullwhipDesigner.tsx` / `StockwhipDesigner.tsx` / `SnakewhipDesigner.tsx` form fields + all option constants (colors=37, handles=10/8/5, conchos=18/16, collars=4, heel loops=4, plus length/finish constants)
+  - [x] Cross-referenced against `galleryWhips.ts` / `galleryStockwhips.ts` / `gallerySnakewhips.ts` schemas — noted heel-loop value mismatch ("No Heel Loop" / "Heel Loop Rounded" in gallery vs "Squared" / "Rounded with Heel Loop" in constants); will normalize during populate phases
+  - [x] Confirmed 13 specialty shorthand → folder 1:1 mapping (Indy/CW/ZW/NL/Mando/HQ/Belmont/BS/JB/OWB/Pride/SS/Ultra). Added a **Series** column to capture 40K (Nightlord + Ultra) and any future series groupings
+  - [x] Final column list signed off: 24 cols Specialty (incl. Series + per-shot photo cols), 20 cols Bullwhips, 17 cols Stockwhips, 12 cols Snakewhips, Floggers placeholder
+- [x] **Phase 13.1: Build the Excel scaffold** *(empty workbook)*
+  - [x] `whip-catalog.xlsx` at repo root with 6 sheets: Specialty Whips, Bullwhips, Stockwhips, Snakewhips, Floggers, _Lookups (visible reference sheet at end)
+  - [x] Bold cream-on-dark header row, 32px row height, frozen first row, auto-filter on every sheet
+  - [x] Dropdown validation on every enum-like column with `errorStyle: warning` (Adam can keep custom values like new colors with one click), source ranges live in `_Lookups` sheet so additions there propagate to dropdowns automatically
+  - [x] Validation spot-check confirmed: e.g. Specialty!B2 → `_Lookups!$O$2:$O$14` (13 specialty tags)
 - [ ] **Phase 13.2: Auto-populate Bullwhips, Stockwhips, Snakewhips** *(24 rows of real data)*
   - [ ] Translate `galleryWhips.ts` (16 rows) → Bullwhips sheet
   - [ ] Translate `galleryStockwhips.ts` (5 rows) → Stockwhips sheet
