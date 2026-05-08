@@ -484,12 +484,16 @@ Phased so each step has a clear stopping point — pause between sessions withou
 
 🟢 *End of "Excel doc" deliverable. Phases 13.4 onward are the gallery page itself.*
 
-- [ ] **Phase 13.4: Gallery page UI shell** *(no filtering yet)*
-  - [ ] Create `/gallery` route + page
-  - [ ] Filson-meets-Vorrath editorial layout: eyebrow + heritage line + heading + card grid
-  - [ ] Card per whip, image-first, name + length + colors as caption metadata
-  - [ ] Pull data from existing TS / MD files (Excel is reference-only — site reads canonical sources as today)
-  - [ ] Mobile-responsive
+- [x] **Phase 13.4: Gallery page UI shell** *(no filtering yet — feature/gallery-page branch)*
+  - [x] Created `src/pages/gallery.tsx` (`/gallery` route)
+  - [x] Filson-meets-Vorrath editorial layout: gold "The archive" eyebrow + Domine "Every whip, all in one place" heading + "1,200+ whips made by hand since 2015" counter + heritage subhead + hairline divider
+  - [x] 3-col / 2-col / 1-col responsive card grid (1080 / 900 / 560 breakpoints) with 20/16/14px gaps respectively
+  - [x] Card-per-whip, image-first 1:1 aspect with metadata strip below the photo (Filson "magazine card" style — NOT hover-overlay): gold eyebrow with type tag, Domine title, single metadata line (length · handle · primary color)
+  - [x] Subtle hover effect: photo scale + brightness lift, title shifts to gold (works as both desktop hover and keyboard focus-visible)
+  - [x] Data sources: imported `galleryWhips.ts` / `galleryStockwhips.ts` / `gallerySnakewhips.ts` directly + GraphQL query against specialty markdown collection. Custom whips skip `type: 'break'` entries (concho group shots — Adam wants finished whips only). Specialty cards use `images[0]` as lead photo (one card per specialty for now; per-physical-build expansion comes with the lightbox in 13.6).
+  - [x] Linking: specialty cards link to `/specialty/:slug` (Gatsby Link, prefetched). Custom whips render as static placeholder cards awaiting lightbox in 13.6 — Adam can preview the full visual treatment now.
+  - [x] Pure Emotion styled components — no Chakra — matching the homepage revamp's design-language convention.
+  - [x] TypeScript clean (zero new errors).
   - [ ] Adam reacts to look/feel before any interactivity
 - [ ] **Phase 13.5: Filtering** *(filter chips + URL state)*
   - [ ] Filter chips above the grid: Type (bullwhip/stockwhip/snakewhip/specialty), Length, Primary Color, Handle Pattern, Concho
