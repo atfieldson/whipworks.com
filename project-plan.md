@@ -538,10 +538,14 @@ Phased so each step has a clear stopping point — pause between sessions withou
   - [x] Card behavior on the gallery page itself: ALL cards (specialty + custom) are now `<button>`s that open the lightbox — specialty cards no longer link directly to `/specialty/:slug`, the lightbox CTA does that instead. One unified click affordance.
   - [x] TypeScript clean (zero new errors).
   - [ ] Adam goes through experience and reacts
-- [ ] **Phase 13.7: Click-to-prefill** *(the killer feature)*
-  - [ ] Custom whip CTA → navigates to `/design-bullwhip?primaryColor=Rust&secondaryColor=Black&length=7ft&handle=Box&...`
-  - [ ] BullwhipDesigner / StockwhipDesigner / SnakewhipDesigner parse incoming query params on mount and pre-select form options
-  - [ ] Specialty whip CTA → links to `/specialty/:slug` instead (those are pre-configured)
+- [x] **Phase 13.7: Click-to-prefill** *(the killer feature — feature/gallery-page branch)*
+  - [x] New `src/components/organisms/BullwhipDesigner/prefill.ts` — single shared module with serializers + parsers for all three whip types. Param keys stay in sync between gallery (which builds the URL) and designers (which parse it).
+  - [x] Custom-whip card hrefs now include the full prefill query string. e.g. clicking BW543 navigates to `/design-bullwhip?primary=Neon+Pink&secondary=Black&handle=Celtic&whipLength=5+Feet&handleLength=8+Inches&concho=Wave+Silver&collar=None&heelLoop=Squared&waxed=true`
+  - [x] BullwhipDesigner / StockwhipDesigner / SnakewhipDesigner parse `location.search` on mount and use validated values as the initial form state. Existing defaults (`waxed=true`, `collar=None`, `heelLoop=Squared`, snakewhip's `handleDesign='Herringbone'`) preserved via `?? <default>` fallbacks — direct visits with no query string still work unchanged.
+  - [x] Each parsed value validated against its option constants list (spools / handles / conchos / collars / heelLoops / lengths / finishes). Invalid values silently skipped — form falls back to default rather than breaking. SnW29's `concho=Shield` is one example: Shield isn't in conchos.ts yet, parser drops it, user lands on /design-snakewhip with all OTHER specs prefilled and concho left as default.
+  - [x] Heel-loop normalization handled at gallery's serializer boundary so `'No Heel Loop'` (older gallery TS naming) becomes `'Squared'` and prefills correctly. Fantasy whip FW33's `heelLoop='None'` (Wolf Pommel — no heel-loop concept) normalizes to empty string, serializer skips it, designer falls back to Squared default.
+  - [x] Specialty whip CTAs unchanged — still link to `/specialty/:slug` (pre-configured products, not customizers).
+  - [x] TypeScript clean across all 5 files touched.
   - [ ] Adam runs the full happy path: see whip in gallery → click → land on design page with everything preset → ready to add to cart
 - [ ] **Phase 13.8: Polish + mobile + a11y**
   - [ ] Mobile responsive pass on gallery + lightbox + filter chips

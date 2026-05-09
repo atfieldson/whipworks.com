@@ -19,6 +19,7 @@ import { heelLoops, heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
 import DesignerLayout from '../../templates/DesignerLayout';
 import WhipGallery from './WhipGallery';
+import { parseBullwhipPrefill } from './prefill';
 const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
 const handleDesignOptions = handles.map((h) => `${h.name}[+0]`).join('|');
 
@@ -44,16 +45,27 @@ const resolveWeight = (length?: string) => {
 };
 
 const BullwhipDesigner = ({ location }: { location: any }) => {
+  /* Phase 13.7 click-to-prefill — when this designer is reached from
+     the gallery's "Build this Bullwhip" CTA, the URL carries query
+     params encoding the source whip's full configuration. Parse on
+     mount and use the result as the initial state for every form
+     field. Each parsed value is validated against its option list,
+     so invalid params (URL-tampered, options removed, etc.) silently
+     fall back to the original default rather than breaking the form.
+     Direct visits with no query string return an empty object, so
+     all the `?? <default>` fallbacks restore the prior initial state. */
+  const initialPrefill = parseBullwhipPrefill(location?.search || '');
+
   const [index, setIndex] = useState<number>(0);
-  const [primary, setPrimary] = useState<string | undefined>(undefined);
-  const [secondary, setSecondary] = useState<string | undefined>(undefined);
-  const [handleDesign, setHandle] = useState<string | undefined>(undefined);
-  const [waxed, setWaxed] = useState(true);
-  const [whipLength, setWhipLength] = useState<string | undefined>(undefined);
-  const [handleLength, setHandleLength] = useState<string | undefined>(undefined);
-  const [concho, setConcho] = useState<string | undefined>(undefined);
-  const [collar, setCollar] = useState('None');
-  const [heelLoop, setHeelLoop] = useState('Squared');
+  const [primary, setPrimary] = useState<string | undefined>(initialPrefill.primary);
+  const [secondary, setSecondary] = useState<string | undefined>(initialPrefill.secondary);
+  const [handleDesign, setHandle] = useState<string | undefined>(initialPrefill.handleDesign);
+  const [waxed, setWaxed] = useState(initialPrefill.waxed ?? true);
+  const [whipLength, setWhipLength] = useState<string | undefined>(initialPrefill.whipLength);
+  const [handleLength, setHandleLength] = useState<string | undefined>(initialPrefill.handleLength);
+  const [concho, setConcho] = useState<string | undefined>(initialPrefill.concho);
+  const [collar, setCollar] = useState(initialPrefill.collar ?? 'None');
+  const [heelLoop, setHeelLoop] = useState(initialPrefill.heelLoop ?? 'Squared');
   const [modalOpen, setModalOpen] = useState(false);
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const TOTAL_STEPS = 8;

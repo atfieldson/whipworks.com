@@ -13,6 +13,11 @@ import { galleryItems as bullwhipGallery } from '../components/organisms/Bullwhi
 import { stockwhipGalleryItems } from '../components/organisms/BullwhipDesigner/constants/galleryStockwhips';
 import { snakewhipGalleryItems } from '../components/organisms/BullwhipDesigner/constants/gallerySnakewhips';
 import { handles as designerHandles } from '../components/organisms/BullwhipDesigner/constants/handleDesigns';
+import {
+  serializeBullwhipPrefill,
+  serializeStockwhipPrefill,
+  serializeSnakewhipPrefill,
+} from '../components/organisms/BullwhipDesigner/prefill';
 
 /**
  * Gallery — `/gallery`
@@ -466,6 +471,32 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
     for (const [shot, url] of Object.entries(w.images)) {
       if (url) allPhotos.push({ url, caption: `${w.id} ${shot}` });
     }
+    /* Phase 13.7 click-to-prefill — encode this whip's full spec set
+       into a query string appended to the design page URL. The
+       designer's `parseBullwhipPrefill` reads it on mount and pre-
+       selects every matching option. Heel loop is normalized to the
+       canonical option name so `'No Heel Loop'` (older gallery TS
+       wording) becomes `'Squared'`, which is a valid heelLoops entry
+       and prefills correctly. Fantasy whips with `heelLoop: 'None'`
+       (Wolf Pommel — no heel-loop concept) normalize to empty string,
+       which the serializer skips, so the designer falls back to its
+       Squared default when the user lands there. */
+    const heelLoopNormalized = normalizeHeelLoop(w.specs.heelLoop);
+    const bwPrefillQuery = serializeBullwhipPrefill({
+      primaryColor: w.specs.primaryColor,
+      secondaryColor: w.specs.secondaryColor,
+      handleDesign: w.specs.handleDesign,
+      whipLength: w.specs.whipLength,
+      handleLength: w.specs.handleLength,
+      concho: w.specs.concho,
+      collar: w.specs.collar,
+      heelLoop: heelLoopNormalized || null,
+      waxed: w.specs.waxed,
+    });
+    const bwHref = bwPrefillQuery
+      ? `/design-bullwhip?${bwPrefillQuery}`
+      : '/design-bullwhip';
+
     cards.push({
       id: w.id,
       type: isFantasy ? 'fantasy' : 'bullwhip',
@@ -486,7 +517,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
       ]),
       image: photo,
       allPhotos,
-      href: '/design-bullwhip',
+      href: bwHref,
       alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.whipLength} bullwhip`,
     });
   }
@@ -505,6 +536,22 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
     for (const [shot, url] of Object.entries(w.images)) {
       if (url) allPhotos.push({ url, caption: `${w.id} ${shot}` });
     }
+    /* Click-to-prefill query string for the stockwhip designer. */
+    const swPrefillQuery = serializeStockwhipPrefill({
+      primaryColor: w.specs.primaryColor,
+      secondaryColor: w.specs.secondaryColor,
+      handleDesign: w.specs.handleDesign,
+      thongLength: w.specs.thongLength,
+      handleLength: w.specs.handleLength,
+      handleFinish: w.specs.handleFinish,
+      concho: w.specs.concho,
+      heelLoop: normalizeHeelLoop(w.specs.heelLoop) || null,
+      waxed: w.specs.waxed,
+    });
+    const swHref = swPrefillQuery
+      ? `/design-stockwhip?${swPrefillQuery}`
+      : '/design-stockwhip';
+
     cards.push({
       id: w.id,
       type: 'stockwhip',
@@ -525,7 +572,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
       ]),
       image: photo,
       allPhotos,
-      href: '/design-stockwhip',
+      href: swHref,
       alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.thongLength} stockwhip`,
     });
   }
@@ -542,6 +589,24 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
     for (const [shot, url] of Object.entries(w.images)) {
       if (url) allPhotos.push({ url, caption: `${w.id} ${shot}` });
     }
+    /* Click-to-prefill query string for the snakewhip designer.
+       Note: SnW29 uses concho 'Shield' which isn't yet in conchos.ts —
+       the parser will validate against the canonical list and skip
+       it gracefully, so the user lands on the snakewhip designer with
+       all OTHER specs prefilled and concho left as the default. */
+    const snwPrefillQuery = serializeSnakewhipPrefill({
+      primaryColor: w.specs.primaryColor,
+      secondaryColor: w.specs.secondaryColor,
+      handleDesign: w.specs.handleDesign,
+      whipLength: w.specs.whipLength,
+      concho: w.specs.concho,
+      heelLoop: normalizeHeelLoop(w.specs.heelLoop) || null,
+      waxed: w.specs.waxed,
+    });
+    const snwHref = snwPrefillQuery
+      ? `/design-snakewhip?${snwPrefillQuery}`
+      : '/design-snakewhip';
+
     cards.push({
       id: w.id,
       type: 'snakewhip',
@@ -560,7 +625,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
       ]),
       image: photo,
       allPhotos,
-      href: '/design-snakewhip',
+      href: snwHref,
       alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.whipLength} snakewhip`,
     });
   }

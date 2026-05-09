@@ -28,6 +28,7 @@ import HeelLoopPicker from './HeelLoopPicker';
 import DesignerLayout from '../../templates/DesignerLayout';
 import SnakewhipGallery from './SnakewhipGallery';
 import TestimonialStrip from '../TestimonialStrip';
+import { parseSnakewhipPrefill } from './prefill';
 
 const colorOptions = spools.map((s) => `${s.name}[+0]`).join('|');
 
@@ -59,14 +60,21 @@ const snakewhipConchoOptions = conchos
   .join('|');
 
 const SnakewhipDesigner = ({ location }: { location: any }) => {
+  /* Phase 13.7 click-to-prefill — see BullwhipDesigner.tsx for the
+     full rationale. Same pattern: parse query string on mount,
+     validated values become initial state. The handle default
+     ('Herringbone') is applied via `?? 'Herringbone'` so direct
+     visits with no query string preserve the prior behavior. */
+  const initialPrefill = parseSnakewhipPrefill(location?.search || '');
+
   const [index, setIndex] = useState<number>(0);
-  const [primary, setPrimary] = useState<string | undefined>(undefined);
-  const [secondary, setSecondary] = useState<string | undefined>(undefined);
-  const [handleDesign, setHandle] = useState<string | undefined>('Herringbone');
-  const [waxed, setWaxed] = useState(true);
-  const [whipLength, setWhipLength] = useState<string | undefined>(undefined);
-  const [concho, setConcho] = useState<string | undefined>(undefined);
-  const [heelLoop, setHeelLoop] = useState('Squared');
+  const [primary, setPrimary] = useState<string | undefined>(initialPrefill.primary);
+  const [secondary, setSecondary] = useState<string | undefined>(initialPrefill.secondary);
+  const [handleDesign, setHandle] = useState<string | undefined>(initialPrefill.handleDesign ?? 'Herringbone');
+  const [waxed, setWaxed] = useState(initialPrefill.waxed ?? true);
+  const [whipLength, setWhipLength] = useState<string | undefined>(initialPrefill.whipLength);
+  const [concho, setConcho] = useState<string | undefined>(initialPrefill.concho);
+  const [heelLoop, setHeelLoop] = useState(initialPrefill.heelLoop ?? 'Squared');
   const [modalOpen, setModalOpen] = useState(false);
   const [detailsExpanded, setDetailsExpanded] = useState(false);
 

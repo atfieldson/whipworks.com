@@ -23,6 +23,7 @@ import { conchos, conchoOptions } from './constants/conchos';
 import FinishPicker from './FinishPicker';
 import { heelLoops, heelLoopOptions } from './constants/heelLoops';
 import HeelLoopPicker from './HeelLoopPicker';
+import { parseStockwhipPrefill } from './prefill';
 
 // Remove handle designs I don't want for Stockwhips, this needs to be done in tandem with props to HandleDesignPicker
 const updatedHandles = handles.filter(
@@ -51,16 +52,22 @@ const resolveWeight = (thongLength?: string) => {
 };
 
 const StockwhipDesigner = ({ location }: { location: any }) => {
+  /* Phase 13.7 click-to-prefill — see BullwhipDesigner.tsx for the
+     full rationale. Same pattern: parse query string on mount,
+     validated values become initial state, defaults preserved when
+     params are missing or invalid. */
+  const initialPrefill = parseStockwhipPrefill(location?.search || '');
+
   const [index, setIndex] = useState<number>(0);
-  const [primary, setPrimary] = useState<string | undefined>(undefined);
-  const [secondary, setSecondary] = useState<string | undefined>(undefined);
-  const [handleDesign, setHandle] = useState<string | undefined>(undefined);
-  const [waxed, setWaxed] = useState(true);
-  const [thongLength, setThongLength] = useState<string | undefined>(undefined);
-  const [stockwhipHandleLength, setStockwhipHandleLength] = useState<string | undefined>(undefined);
-  const [handleFinish, setHandleFinish] = useState<string | undefined>(undefined);
-  const [concho, setConcho] = useState<string | undefined>(undefined);
-  const [heelLoop, setHeelLoop] = useState('Squared');
+  const [primary, setPrimary] = useState<string | undefined>(initialPrefill.primary);
+  const [secondary, setSecondary] = useState<string | undefined>(initialPrefill.secondary);
+  const [handleDesign, setHandle] = useState<string | undefined>(initialPrefill.handleDesign);
+  const [waxed, setWaxed] = useState(initialPrefill.waxed ?? true);
+  const [thongLength, setThongLength] = useState<string | undefined>(initialPrefill.thongLength);
+  const [stockwhipHandleLength, setStockwhipHandleLength] = useState<string | undefined>(initialPrefill.handleLength);
+  const [handleFinish, setHandleFinish] = useState<string | undefined>(initialPrefill.handleFinish);
+  const [concho, setConcho] = useState<string | undefined>(initialPrefill.concho);
+  const [heelLoop, setHeelLoop] = useState(initialPrefill.heelLoop ?? 'Squared');
   const [modalOpen, setModalOpen] = useState(false);
   const [detailsExpanded, setDetailsExpanded] = useState(false);
 
