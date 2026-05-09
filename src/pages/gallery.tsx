@@ -1,9 +1,10 @@
-import React from 'react';
-import { graphql, useStaticQuery, Link } from 'gatsby';
+import React, { useState } from 'react';
+import { graphql, useStaticQuery } from 'gatsby';
 import styled from '@emotion/styled';
 
 import Layout from '../components/templates/Layout';
 import SEO from '../components/templates/SEO';
+import GalleryLightbox from '../components/organisms/GalleryLightbox';
 import { galleryItems as bullwhipGallery } from '../components/organisms/BullwhipDesigner/constants/galleryWhips';
 import { stockwhipGalleryItems } from '../components/organisms/BullwhipDesigner/constants/galleryStockwhips';
 import { snakewhipGalleryItems } from '../components/organisms/BullwhipDesigner/constants/gallerySnakewhips';
@@ -192,6 +193,7 @@ export const pageQuery = graphql`
           }
           frontmatter {
             title
+            description
             series
             isNew
             images {
@@ -224,7 +226,7 @@ export const pageQuery = graphql`
 
 type SpecPair = { label: string; value: string };
 
-type GalleryCard = {
+export type GalleryCard = {
   /** Stable React key. For custom whips this is the gallery TS id
       (BW543, SW7-8, FW33, etc.); for specialty whips it's the unique
       filename prefix (BW592Indy67Raider, BW101540K1Nightlord, etc.). */
@@ -256,13 +258,18 @@ type GalleryCard = {
   specs: SpecPair[];
   /** Lead photo for the card (rendered at native aspect ratio). */
   image: string;
-  /** All photos of this physical whip — fed to the 13.6 lightbox.
+  /** All photos of this physical whip — fed to the lightbox.
       For custom whips, this is the gallery TS images map flattened.
       For specialty whips, this is the per-prefix grouped photo set. */
   allPhotos: { url: string; caption: string }[];
-  /** Where the card links to. `null` = non-interactive placeholder
-      (custom cards in this phase; lightbox flow lands them in 13.6). */
-  href: string | null;
+  /** Marketing description for the lightbox info panel — only set on
+      specialty whips (pulled from frontmatter.description). Custom
+      whips use the spec grid alone. */
+  description?: string;
+  /** Where the lightbox CTA navigates. Specialty whips land on
+      `/specialty/:slug`; custom whips land on the relevant
+      `/design-{type}` page (Phase 13.7 wires the form prefill). */
+  href: string;
   /** Used as alt text and aria-label. */
   alt: string;
 };
@@ -303,6 +310,7 @@ type SpecialtyEdge = {
     fields: { slug: string };
     frontmatter: {
       title: string;
+      description: string | null;
       series: string | null;
       isNew: boolean | null;
       images: SpecialtyImage[] | null;
@@ -436,7 +444,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
       ]),
       image: photo,
       allPhotos,
-      href: null,
+      href: '/design-bullwhip',
       alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.whipLength} bullwhip`,
     });
   }
@@ -470,7 +478,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
       ]),
       image: photo,
       allPhotos,
-      href: null,
+      href: '/design-stockwhip',
       alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.thongLength} stockwhip`,
     });
   }
@@ -500,7 +508,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
       ]),
       image: photo,
       allPhotos,
-      href: null,
+      href: '/design-snakewhip',
       alt: `${composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor)} ${w.specs.whipLength} snakewhip`,
     });
   }
@@ -571,6 +579,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
         specs,
         image: g.widePhoto!.url, // safe: groupSpecialtyPhotos filters out groups with no Wide
         allPhotos: g.allPhotos,
+        description: fm.description || undefined,
         href: edge.node.fields.slug, // e.g. /specialty/indy — same for all builds of a specialty
         alt: `${fm.title}${variantShort ? ` — ${variantShort}` : ''}${length ? `, ${length}` : ''}`,
       });
@@ -687,14 +696,32 @@ const Grid = styled.div`
   }
 `;
 
-/* Shared CSS for both the Link-card variant (specialty, has href) and
-   the static-card variant (custom whips, no href until the lightbox in
-   13.6). Composed into both styled() definitions so they stay
-   visually identical regardless of the wrapping element. */
-const cardCSS = `
+/**
+ * All cards are now buttons that open the GalleryLightbox on click —
+ * Adam's workflow vision: clicking ANY whip image (specialty or custom)
+ * opens the in-page overlay with all photos + info + a CTA out to the
+ * relevant listing/design page. Specialty cards no longer link directly
+ * to /specialty/:slug (the lightbox CTA does that instead).
+ *
+ * Using <button> rather than <div role="button"> for built-in keyboard
+ * support (Enter / Space activate). Default browser button styling is
+ * stripped out (border, padding, font, background) and the rest of the
+ * cardCSS produces the editorial card visual.
+ */
+const Card = styled.button`
+  /* Browser button resets */
+  appearance: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+
+  /* Card visual — same look the previous LinkCard/StaticCard had */
   position: relative;
   display: block;
-  margin-bottom: 20px;
+  margin: 0 0 20px;
   /* break-inside on the Card itself keeps cards intact in CSS columns;
      a card never splits across two columns. */
   break-inside: avoid;
@@ -723,15 +750,6 @@ const cardCSS = `
   @media (max-width: 900px) {
     margin-bottom: 16px;
   }
-`;
-
-const StaticCard = styled.div`
-  ${cardCSS}
-`;
-
-const LinkCard = styled(Link)`
-  ${cardCSS}
-  cursor: pointer;
 `;
 
 const PhotoFrame = styled.div`
@@ -851,6 +869,12 @@ const GalleryPage = () => {
   const data = useStaticQuery(pageQuery);
   const cards = buildCards(data.allMarkdownRemark.edges);
 
+  /* Selected card drives the GalleryLightbox below. `null` = lightbox
+     closed; setting it to a card opens the lightbox with that card's
+     photos + info. The lightbox itself manages photo navigation,
+     scroll lock, and dismiss UX. */
+  const [selectedCard, setSelectedCard] = useState<GalleryCard | null>(null);
+
   /* Heritage counter mirrors reviews.json's `meta.whipsCrafted: 1200`.
      When that number bumps up, the reviews JSON gets re-scraped — keeping
      these in sync is a follow-up nice-to-have, but for now hand-aligning
@@ -869,14 +893,19 @@ const GalleryPage = () => {
           <Heading>{counter}</Heading>
           <Subhead>
             Browse the archive to see what&rsquo;s possible. Click any
-            specialty whip to see its full story, or design your own
-            custom build from the ground up.
+            whip to see its full photo set and details, or design your
+            own custom build from the ground up.
           </Subhead>
         </HeaderBlock>
         <Divider />
         <Grid>
-          {cards.map((card) => {
-            const inner = (
+          {cards.map((card) => (
+            <Card
+              key={card.id}
+              type="button"
+              onClick={() => setSelectedCard(card)}
+              aria-label={card.alt}
+            >
               <PhotoFrame>
                 <Photo
                   className="gallery-photo"
@@ -900,26 +929,14 @@ const GalleryPage = () => {
                   )}
                 </HoverOverlay>
               </PhotoFrame>
-            );
-
-            if (card.href) {
-              return (
-                <LinkCard key={card.id} to={card.href} aria-label={card.alt}>
-                  {inner}
-                </LinkCard>
-              );
-            }
-            // Custom whip: non-interactive placeholder until Phase 13.6
-            // wires the lightbox flow. Visual hover still works so the
-            // overlay can be reviewed on this branch.
-            return (
-              <StaticCard key={card.id} aria-label={card.alt}>
-                {inner}
-              </StaticCard>
-            );
-          })}
+            </Card>
+          ))}
         </Grid>
       </SectionContainer>
+      <GalleryLightbox
+        card={selectedCard}
+        onClose={() => setSelectedCard(null)}
+      />
     </Layout>
   );
 };

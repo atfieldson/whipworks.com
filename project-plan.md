@@ -507,17 +507,27 @@ Phased so each step has a clear stopping point — pause between sessions withou
   - [ ] Multi-select; smooth filter transitions
   - [ ] Filter state persists in URL query params (shareable filtered views)
   - [ ] Adam plays with filters on desktop + phone, reacts to UX
-- [ ] **Phase 13.6: Lightbox detail + narrative**
-  - [ ] Click card → in-page lightbox with all photos of THAT specific physical whip
-  - [ ] Photo presentation (Adam's call):
-    - Desktop: hero image + thumbnail strip below (Etsy-style)
-    - Mobile: vertical scroll of all photos at full width (magazine-feel)
-  - [ ] Info panel: specs only (no price — listing page sells, gallery inspires). Specialty whips also get marketing description from markdown body. Custom whips get spec grid only.
-  - [ ] CTA button copy:
-    - Specialty: "View The Indy →" / "View The Belmont →" etc. (uses marketing short name)
-    - Custom: "Build this Bullwhip →" / "Build this Stockwhip →" / "Build this Snakewhip →" (Phase 13.7 wires the prefill — until then, links to design page without prefill)
-  - [ ] Dismiss UX: Esc key + click backdrop + × button in upper right (all three for max accessibility)
-  - [ ] Keyboard nav across photos (arrows), full a11y
+- [x] **Phase 13.6: Lightbox detail + narrative** *(commit on feature/gallery-page)*
+  - [x] New `src/components/organisms/GalleryLightbox.tsx`. Click any card → in-page lightbox opens with all photos of that specific physical whip
+  - [x] Photo presentation:
+    - Desktop / tablet (≥561px): hero image + horizontal thumb strip below; click thumb to swap hero. Active thumb has gold border, inactive thumbs slightly faded.
+    - Mobile (≤560px): vertical photo stack at full width — all photos shown at native aspect, scroll through. No hero/thumb distinction at this width.
+  - [x] Info panel: eyebrow + Domine title + 2-col spec grid (Length first, then design specs) + description (specialty whips only — pulled from `frontmatter.description`) + solid-gold CTA button. **No price** — listing page sells, gallery inspires.
+  - [x] CTA copy:
+    - Specialty: "View the {short name} →" — derived from marketing title with leading "The " and trailing " Bullwhip" stripped (e.g., "The Indy Bullwhip" → "View the Indy →"; "The Belmont" → "View the Belmont →"; "The Z Whip" → "View the Z Whip →"; "The Ultra Whip" → "View the Ultra Whip →")
+    - Custom whips: "Build this Bullwhip →" (bullwhip + fantasy), "Build this Stockwhip →", "Build this Snakewhip →"
+  - [x] CTA destinations:
+    - Specialty: `/specialty/:slug`
+    - Custom bullwhip / fantasy: `/design-bullwhip` (no prefill yet — Phase 13.7 wires query-param prefill)
+    - Custom stockwhip: `/design-stockwhip`
+    - Custom snakewhip: `/design-snakewhip`
+  - [x] Dismiss UX (all three): Esc key + click backdrop + × button (top-right)
+  - [x] Keyboard nav: ← / → arrow keys cycle photos (window-level listener so works regardless of focus); Esc closes
+  - [x] Body scroll lock while open; restored on close (preserves any prior overflow value)
+  - [x] framer-motion fade + slide-up entrance (0.3s easeOut), fade-out exit. AnimatePresence handles mount/unmount cleanly
+  - [x] a11y: `role="dialog"` + `aria-modal="true"` + `aria-labelledby` pointing at title; thumbs are `role="tab"` with `aria-selected`; close button has `aria-label`
+  - [x] Card behavior on the gallery page itself: ALL cards (specialty + custom) are now `<button>`s that open the lightbox — specialty cards no longer link directly to `/specialty/:slug`, the lightbox CTA does that instead. One unified click affordance.
+  - [x] TypeScript clean (zero new errors).
   - [ ] Adam goes through experience and reacts
 - [ ] **Phase 13.7: Click-to-prefill** *(the killer feature)*
   - [ ] Custom whip CTA → navigates to `/design-bullwhip?primaryColor=Rust&secondaryColor=Black&length=7ft&handle=Box&...`
