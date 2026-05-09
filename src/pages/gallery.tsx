@@ -170,6 +170,27 @@ const dropLeadingThe = (s: string | null | undefined): string | null =>
   s ? s.replace(/^The /i, '') : null;
 
 /**
+ * Normalize heel-loop values to the canonical option names from the
+ * BullwhipDesigner. The gallery TS files use older naming (`'No Heel
+ * Loop'`, `'Heel Loop Rounded'`, `'None'`) and specialty markdowns use
+ * a slightly different variant (`'Rounded with Loop'`) — both get
+ * mapped here to the four canonical values that the design forms know:
+ * Squared / Squared with Heel Loop / Rounded / Rounded with Heel Loop.
+ *
+ * `'None'` (fantasy whips with pommels — no heel loop concept applies)
+ * normalizes to empty string, which `buildSpecs` then drops from the
+ * spec grid so the row doesn't show.
+ */
+const normalizeHeelLoop = (raw: string | null | undefined): string => {
+  if (!raw) return '';
+  if (raw === 'No Heel Loop') return 'Squared';
+  if (raw === 'Heel Loop Rounded') return 'Rounded with Heel Loop';
+  if (raw === 'Rounded with Loop') return 'Rounded with Heel Loop';
+  if (raw === 'None') return '';
+  return raw;
+};
+
+/**
  * Manual exclusion escape hatch. Add specific whip IDs here to remove
  * them from the gallery without touching the underlying data sources.
  * Default empty.
@@ -440,7 +461,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
         { label: 'Pattern', value: w.specs.handleDesign },
         { label: 'Concho', value: w.specs.concho },
         { label: 'Collar', value: w.specs.collar, skipIf: ['None'] },
-        { label: 'Heel Loop', value: w.specs.heelLoop, skipIf: ['Squared', 'None'] },
+        { label: 'Heel Loop', value: normalizeHeelLoop(w.specs.heelLoop) },
       ]),
       image: photo,
       allPhotos,
@@ -475,6 +496,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
         { label: 'Pattern', value: w.specs.handleDesign },
         { label: 'Finish', value: w.specs.handleFinish },
         { label: 'Concho', value: w.specs.concho },
+        { label: 'Heel Loop', value: normalizeHeelLoop(w.specs.heelLoop) },
       ]),
       image: photo,
       allPhotos,
@@ -505,6 +527,7 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
         { label: 'Length', value: w.specs.whipLength },
         { label: 'Pattern', value: w.specs.handleDesign },
         { label: 'Concho', value: w.specs.concho },
+        { label: 'Heel Loop', value: normalizeHeelLoop(w.specs.heelLoop) },
       ]),
       image: photo,
       allPhotos,
@@ -527,11 +550,18 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
        These are SHARED across all physical builds of the specialty
        (they describe the design, not any individual build). Cap to a
        handful of entries for overlay readability — drop "Finish" since
-       it's always Waxed and not informative on a per-card basis. */
+       it's always Waxed and not informative on a per-card basis.
+       Heel-loop values get normalized to the canonical option names
+       ("Rounded with Loop" → "Rounded with Heel Loop"); rows that
+       normalize to empty string (fantasy whip "None") are dropped. */
     const sharedSpecs = (fm.specs || [])
       .filter((s) => s.label !== 'Finish')
       .slice(0, 5)
-      .map((s) => ({ label: s.label, value: s.value }));
+      .map((s) => ({
+        label: s.label,
+        value: s.label === 'Heel Loop' ? normalizeHeelLoop(s.value) : s.value,
+      }))
+      .filter((s) => s.value);
 
     /* Series tag — e.g. "40K" for Nightlord/Ultra. Used in the eyebrow. */
     const seriesTag = fm.series
@@ -779,10 +809,11 @@ const Photo = styled.img`
  * gradient so the metadata reads cleanly against any photo background
  * while leaving most of the photo visible.
  *
- * On touch devices (`@media (hover: none)`) the overlay is shown
- * persistently in its settled state — touch users can't trigger
- * hover, so without this they'd never see the metadata. Same pattern
- * as FeaturedSpecialtyGrid's CTA on the homepage.
+ * Touch / mobile behavior: the overlay does NOT auto-show on hover-less
+ * devices (per Adam's spec). Phone users see only the photo on each
+ * card and tap to open the lightbox, where the descriptors live in
+ * the info panel below the photo stack. Cleaner than persistent
+ * overlays obscuring the cards on every grid scroll.
  */
 const HoverOverlay = styled.div`
   position: absolute;
@@ -799,14 +830,6 @@ const HoverOverlay = styled.div`
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
-
-  @media (hover: none) {
-    opacity: 1;
-  }
-
-  @media (max-width: 560px) {
-    padding: 48px 14px 14px;
-  }
 `;
 
 const OverlayEyebrow = styled.p`

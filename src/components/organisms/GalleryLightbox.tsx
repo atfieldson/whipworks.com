@@ -182,18 +182,24 @@ const PhotoArea = styled.div`
   }
 `;
 
-/** Container for the hero photo on desktop/tablet — uses a flexible
-    height that respects the photo's native aspect ratio while capping
-    at a max-height so portrait photos don't dominate. */
+/** Container for the hero photo on desktop/tablet — uses a FIXED 4:3
+    aspect ratio with a max-height safety cap so the modal doesn't
+    jump in size when the user clicks between a wide photo and a tall
+    photo. The photo inside is `object-fit: contain`, so the frame
+    stays a constant size and tall photos letterbox horizontally,
+    wide photos letterbox vertically. Predictable, not jarring. */
 const HeroFrame = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #0a0805;
   width: 100%;
-  /* No fixed aspect — the <img> inside drives height, capped by max. */
-  min-height: 260px;
-  max-height: 70vh;
+  aspect-ratio: 4 / 3;
+  /* Safety cap for very tall narrow viewports — at large widths the
+     calculated 4:3 height could exceed 60vh, in which case the cap
+     takes over and the frame becomes wider-than-4:3 (height stays
+     at 60vh). Photo inside still letterboxes correctly either way. */
+  max-height: 60vh;
   overflow: hidden;
 
   @media (max-width: 560px) {
@@ -206,7 +212,7 @@ const HeroFrame = styled.div`
 const HeroPhoto = styled.img`
   display: block;
   max-width: 100%;
-  max-height: 70vh;
+  max-height: 100%;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -214,8 +220,8 @@ const HeroPhoto = styled.img`
 
 const ThumbStrip = styled.div`
   display: flex;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 10px;
+  margin-top: 16px;
   overflow-x: auto;
   /* Subtle scrollbar styling — visible enough to signal scrollability
      when there are many thumbs, restrained enough not to draw the eye. */
@@ -240,9 +246,9 @@ const ThumbStrip = styled.div`
 `;
 
 const Thumb = styled.button<{ active: boolean }>`
-  flex: 0 0 80px;
-  width: 80px;
-  height: 80px;
+  flex: 0 0 110px;
+  width: 110px;
+  height: 110px;
   appearance: none;
   padding: 0;
   background-color: #0f0b08;
