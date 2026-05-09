@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'gatsby';
 import styled from '@emotion/styled';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import type { GalleryCard } from '../../pages/gallery';
+
+/* Magnifier-lens parameters matched to the Paracord listing's hover-zoom
+   behavior (src/components/templates/ParacordPage.tsx). LENS_SIZE is the
+   square cursor-following lens overlaid on the hero photo. The zoom
+   preview's background-size scales by (frameWidth / LENS_SIZE) — so a
+   720px frame with a 150px lens gives 480% (~5x) magnification, same
+   ratio as Paracord. */
+const LENS_SIZE = 150;
 
 /**
  * GalleryLightbox
@@ -187,8 +195,12 @@ const PhotoArea = styled.div`
     jump in size when the user clicks between a wide photo and a tall
     photo. The photo inside is `object-fit: contain`, so the frame
     stays a constant size and tall photos letterbox horizontally,
-    wide photos letterbox vertically. Predictable, not jarring. */
+    wide photos letterbox vertically. Predictable, not jarring.
+    `position: relative` so the cursor-following Lens (absolute child)
+    positions correctly. `cursor: crosshair` on hover-capable devices
+    signals that the photo is interactive (zoom on hover). */
 const HeroFrame = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -202,9 +214,62 @@ const HeroFrame = styled.div`
   max-height: 60vh;
   overflow: hidden;
 
+  @media (hover: hover) and (min-width: 901px) {
+    cursor: crosshair;
+  }
+
   @media (max-width: 560px) {
     /* Mobile uses the vertical photo stack, not the hero frame —
        hide the desktop hero entirely there. */
+    display: none;
+  }
+`;
+
+/**
+ * Cursor-following lens overlay shown on hover over the hero photo.
+ * Square indicator with a thin gold border + faint gold tint, matches
+ * the visual language of the rest of the site (Paracord uses a blue
+ * tint — that's their accent color; ours is gold #d6a85f). The lens
+ * shows the user which area of the photo is being magnified in the
+ * zoom preview panel.
+ *
+ * `pointer-events: none` so the lens doesn't intercept the mouse
+ * events that the parent HeroFrame is listening for.
+ */
+const Lens = styled.div`
+  position: absolute;
+  width: ${LENS_SIZE}px;
+  height: ${LENS_SIZE}px;
+  border: 2px solid rgba(214, 168, 95, 0.85);
+  background-color: rgba(214, 168, 95, 0.15);
+  pointer-events: none;
+  /* Smooth out the lens motion just slightly — without this it can
+     look twitchy on slower mouse movements. Quick enough to feel
+     responsive, slow enough to look polished. */
+  transition: top 0.05s linear, left 0.05s linear;
+`;
+
+/**
+ * Zoom preview panel — overlays the InfoPanel area when the user
+ * hovers the hero photo. Uses background-image of the source photo
+ * scaled to (frameWidth / LENS_SIZE) × 100% so a 150px lens area maps
+ * to the full preview area at ~5x magnification (matches Paracord's
+ * behavior).
+ *
+ * Hidden on tablet (<900px, where the modal is single-column and the
+ * InfoPanel is below the photo, not beside it) and on hover-less
+ * touch devices (where there's no cursor to drive the lens).
+ */
+const ZoomPreview = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background-color: #0a0805;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(214, 168, 95, 0.18);
+  pointer-events: none;
+
+  @media (max-width: 900px), (hover: none) {
     display: none;
   }
 `;
@@ -300,6 +365,7 @@ const MobilePhoto = styled.img`
 // ─── Info panel ─────────────────────────────────────────────────────────
 
 const InfoPanel = styled.div`
+  position: relative;
   flex: 0 0 40%;
   display: flex;
   flex-direction: column;
@@ -437,9 +503,62 @@ const GalleryLightbox = ({ card, onClose }: Props) => {
      the previous opening. */
   const [activeIndex, setActiveIndex] = useState(0);
 
+  /* Magnifier-lens hover-zoom state — same pattern as ParacordPage.
+     `isZooming` toggles the lens + zoom preview visibility on enter/
+     leave; `lensPos` is the lens's pixel position within the
+     HeroFrame; `zoomBgStyle` is the computed background-size and
+     background-position for the zoom preview overlay. */
+  const [isZooming, setIsZooming] = useState(false);
+  const [lensPos, setLensPos] = useState({ x: 0, y: 0 });
+  const [zoomBgStyle, setZoomBgStyle] = useState({
+    size: '500%',
+    posX: '0%',
+    posY: '0%',
+  });
+
   useEffect(() => {
-    if (card) setActiveIndex(0);
+    if (card) {
+      setActiveIndex(0);
+      setIsZooming(false); // reset zoom state when opening a different card
+    }
   }, [card?.id]);
+
+  /* Mouse-move handler ported from ParacordPage. Tracks cursor
+     position within the HeroFrame, clamps the lens so it stays inside
+     the frame edges, and computes a background-size + position pair
+     for the zoom preview such that:
+       - background-size scales the source image to (frameWidth /
+         LENS_SIZE)x its display width — so the lens area visually
+         maps to the full zoom preview at the same ratio
+       - background-position uses 0%–100% mapping based on the lens's
+         travel within its allowed range, which CSS interprets as
+         "align this % of the image with this % of the preview area"
+     The result: the area inside the lens appears magnified in the
+     zoom preview, and the zoom view tracks the cursor naturally. */
+  const handleHeroMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const halfLens = LENS_SIZE / 2;
+      const lensX = Math.max(0, Math.min(x - halfLens, rect.width - LENS_SIZE));
+      const lensY = Math.max(0, Math.min(y - halfLens, rect.height - LENS_SIZE));
+      setLensPos({ x: lensX, y: lensY });
+
+      const maxLensX = rect.width - LENS_SIZE;
+      const maxLensY = rect.height - LENS_SIZE;
+      const bgPosX = maxLensX > 0 ? (lensX / maxLensX) * 100 : 0;
+      const bgPosY = maxLensY > 0 ? (lensY / maxLensY) * 100 : 0;
+
+      setZoomBgStyle({
+        size: `${(rect.width / LENS_SIZE) * 100}%`,
+        posX: `${bgPosX}%`,
+        posY: `${bgPosY}%`,
+      });
+    },
+    [],
+  );
 
   /* Keyboard handlers: Esc closes, ← / → navigate photos. Window-level
      listener so arrow keys work regardless of which element inside the
@@ -511,13 +630,23 @@ const GalleryLightbox = ({ card, onClose }: Props) => {
 
             <PhotoArea>
               {/* Desktop / tablet: hero + horizontal thumb strip */}
-              <HeroFrame>
+              <HeroFrame
+                onMouseEnter={() => setIsZooming(true)}
+                onMouseLeave={() => setIsZooming(false)}
+                onMouseMove={handleHeroMouseMove}
+              >
                 <HeroPhoto
                   src={card.allPhotos[activeIndex].url}
                   alt={card.allPhotos[activeIndex].caption || card.alt}
                   /* Eager-load the hero so it's ready when the modal
                      animates in — no awkward placeholder flash. */
                 />
+                {isZooming && (
+                  <Lens
+                    style={{ left: lensPos.x, top: lensPos.y }}
+                    aria-hidden
+                  />
+                )}
               </HeroFrame>
               {card.allPhotos.length > 1 && (
                 <ThumbStrip role="tablist" aria-label="Photo navigation">
@@ -553,6 +682,19 @@ const GalleryLightbox = ({ card, onClose }: Props) => {
             </PhotoArea>
 
             <InfoPanel>
+              {/* Magnifier-zoom preview — overlays the info content
+                  when the user is hovering the hero photo. Hidden via
+                  CSS on tablet/mobile and on hover-less devices. */}
+              {isZooming && (
+                <ZoomPreview
+                  style={{
+                    backgroundImage: `url(${card.allPhotos[activeIndex].url})`,
+                    backgroundSize: zoomBgStyle.size,
+                    backgroundPosition: `${zoomBgStyle.posX} ${zoomBgStyle.posY}`,
+                  }}
+                  aria-hidden
+                />
+              )}
               <Eyebrow>{card.eyebrow}</Eyebrow>
               <Title id="gallery-lightbox-title">{card.title}</Title>
               {card.specs.length > 0 && (
