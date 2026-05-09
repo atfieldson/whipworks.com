@@ -261,6 +261,9 @@ const Header = ({ bg }: { bg?: string }) => {
               </HStack>
             </MenuButton>
             <MenuList>
+              <MenuItem as={Link} to="/gallery" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
+                Gallery
+              </MenuItem>
               <MenuItem as={Link} to="/about" fontWeight="bold" color="gray.900" fontSize="1rem" _hover={{ bg: '#e8e0d8' }}>
                 About the Whipmaker
               </MenuItem>
@@ -358,6 +361,9 @@ const Header = ({ bg }: { bg?: string }) => {
                 More
               </Heading>
               <Stack spacing="3" mt="3" ml="4">
+                <CLink as={Link} to="/gallery" onClick={onClose}>
+                  Gallery
+                </CLink>
                 <CLink as={Link} to="/about" onClick={onClose}>
                   About the Whipmaker
                 </CLink>
