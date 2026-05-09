@@ -12,6 +12,7 @@ import GalleryFilterBar, {
 import { galleryItems as bullwhipGallery } from '../components/organisms/BullwhipDesigner/constants/galleryWhips';
 import { stockwhipGalleryItems } from '../components/organisms/BullwhipDesigner/constants/galleryStockwhips';
 import { snakewhipGalleryItems } from '../components/organisms/BullwhipDesigner/constants/gallerySnakewhips';
+import { handles as designerHandles } from '../components/organisms/BullwhipDesigner/constants/handleDesigns';
 
 /**
  * Gallery — `/gallery`
@@ -1154,7 +1155,17 @@ const GalleryPage = () => {
       {
         key: 'handles' as const,
         label: 'Handle',
-        options: distinctValues(cards, (c) => c.handleDesign).sort(alphaSort),
+        /* Only the 10 buildable handle patterns from the Design-a-
+           Bullwhip page are filter options — the customer-facing
+           gallery filter exists to help shoppers find configurations
+           they can actually order. Specialty whips with custom handle
+           designs (Nostramo Skull, Space Armor, Ultima Gladius, Runic,
+           Stars, Z Vertical Strip, Rivet, Joking Bullwhip, Harlequin)
+           never match this filter, but those whips are still findable
+           via Type=Bullwhip + their length / specialty Tag. Sourced
+           from `handleDesigns.ts` so this list stays in sync if Adam
+           ever adds a new pattern to the designer. */
+        options: designerHandles.map((h) => h.name).sort(alphaSort),
       },
       {
         key: 'conchos' as const,
