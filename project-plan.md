@@ -502,10 +502,19 @@ Phased so each step has a clear stopping point — pause between sessions withou
 - **Per-whip grouping decision (RESOLVED post-13.4 review):** Adam chose **per-physical-whip cards** — each unique build (e.g., 7-foot Indy, 10-foot Indy) gets its own card in the gallery. Rationale: as the gallery grows and filtering lands in 13.5, filtering by length ("7-foot bullwhips") should naturally surface specialty whips of that length too — because specialty whips are *also* bullwhips. Specialty markdowns are walked at build time to extract per-physical-whip groups (variants[Style].options[].images grouped by filename prefix). Each group becomes one card.
 - **Scroll-triggered slide-in animations** — match the per-tile reveal from FeaturedSpecialtyGrid on the homepage: even-index slides from left (x: -40 → 0), odd-index from right (x: +40 → 0), each card with its own `whileInView` viewport trigger so they fire row-by-row as the user scrolls. Add in **Phase 13.8 (polish)** after the lightbox + filter work is in.
 - **Black-background curation** — current heuristic (`/gallery/` paths only) is a first-pass approximation. May need explicit per-whip curation later (Adam to provide list of any specific gallery photos that aren't black-bg, populate `EXCLUDED_WHIP_IDS`).
-- [ ] **Phase 13.5: Filtering** *(filter chips + URL state)*
-  - [ ] Filter chips above the grid: Type (bullwhip/stockwhip/snakewhip/specialty), Length, Primary Color, Handle Pattern, Concho
-  - [ ] Multi-select; smooth filter transitions
-  - [ ] Filter state persists in URL query params (shareable filtered views)
+- [x] **Phase 13.5: Filtering** *(filter chips + URL state — feature/gallery-page branch)*
+  - [x] New `src/components/organisms/GalleryFilterBar.tsx` — row of 5 dropdown triggers (Type / Length / Color / Handle / Concho), each opens a multi-select checkbox panel. Click-outside + Esc close.
+  - [x] **Type filter** = `Bullwhip / Stockwhip / Snakewhip` (3 hardcoded labels). "Bullwhip" matches `bullwhip`, `fantasy`, AND `specialty` cards per Phase 13.3 schema decision (all current specialties are bullwhips).
+  - [x] **Length** options derived from cards, sorted numerically (in inches) so "10 Feet" lands after "8 Feet" rather than dictionary-order between 1 and 8. Half-foot lengths ("3 Feet 6 Inches") slot in correctly.
+  - [x] **Color** matches against primary OR secondary across all card types. Specialty cards have blank colors for now (markdown describes colors in prose only, not as structured fields) — they don't appear in color filters until Adam populates.
+  - [x] **Handle / Concho** filter on exact value, including non-standard specialty names (Nostramo Skull, Space Armor, Ultima Gladius, Brass Skull and Snakes, etc.) — they surface as filter options because they exist in the data.
+  - [x] Multi-select within a dimension is OR; across dimensions is AND. Empty array on a dimension = "no filter" (everything matches).
+  - [x] Active filters render as removable gold chips below the dropdown row, with × glyph to remove individually. "Clear all" link resets every dimension. Match count ("38 whips" / "1 whip") shown right-aligned.
+  - [x] **URL state sync**: filter values encoded as comma-separated query params (`/gallery?types=Bullwhip&lengths=7+Feet&colors=Black`). Read on mount, written via `history.replaceState` on change so filter clicks don't pollute browser history.
+  - [x] **Empty state**: when filters match 0 whips, the grid is replaced with "No whips match these filters." + a "Clear all filters" button.
+  - [x] Mobile responsive: dropdown row wraps on narrow viewports; each trigger becomes ~50% width, panels right-align so they don't overflow the viewport.
+  - [x] Pure Emotion + a11y baseline: `aria-expanded` on triggers, `role="listbox" aria-multiselectable="true"` on panels, native `<input type="checkbox">` semantics with custom-styled visible square.
+  - [x] TypeScript clean.
   - [ ] Adam plays with filters on desktop + phone, reacts to UX
 - [x] **Phase 13.6: Lightbox detail + narrative** *(commit on feature/gallery-page)*
   - [x] New `src/components/organisms/GalleryLightbox.tsx`. Click any card → in-page lightbox opens with all photos of that specific physical whip

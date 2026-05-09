@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
 import styled from '@emotion/styled';
 
 import Layout from '../components/templates/Layout';
 import SEO from '../components/templates/SEO';
 import GalleryLightbox from '../components/organisms/GalleryLightbox';
+import GalleryFilterBar, {
+  EMPTY_FILTER_STATE,
+  type FilterState,
+} from '../components/organisms/GalleryFilterBar';
 import { galleryItems as bullwhipGallery } from '../components/organisms/BullwhipDesigner/constants/galleryWhips';
 import { stockwhipGalleryItems } from '../components/organisms/BullwhipDesigner/constants/galleryStockwhips';
 import { snakewhipGalleryItems } from '../components/organisms/BullwhipDesigner/constants/gallerySnakewhips';
@@ -268,6 +272,18 @@ export type GalleryCard = {
       custom whips, parsed from photo caption for specialty whips.
       Used by 13.5 filtering ("7-foot bullwhips"). */
   length?: string;
+  /** Filter-relevant fields. Primary/secondary color come from the
+      gallery TS specs for custom whips; specialty whips have these
+      blank for now (markdown describes colors in prose but not as
+      structured fields — Adam fills in over time, so specialty cards
+      currently won't show up in color filters). Handle design + concho
+      filter on exact spec value, including non-standard specialty
+      names (e.g. "Nostramo Skull", "Space Armor") which surface as
+      filter options because they exist in the data. */
+  primaryColor?: string;
+  secondaryColor?: string;
+  handleDesign?: string;
+  concho?: string;
   /** Eyebrow text shown in the hover overlay (small caps gold). */
   eyebrow: string;
   /** Main display name shown in the hover overlay. For custom whips
@@ -453,6 +469,10 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
       id: w.id,
       type: isFantasy ? 'fantasy' : 'bullwhip',
       length: w.specs.whipLength,
+      primaryColor: w.specs.primaryColor,
+      secondaryColor: w.specs.secondaryColor || undefined,
+      handleDesign: w.specs.handleDesign,
+      concho: w.specs.concho,
       eyebrow: isFantasy ? 'Fantasy Whip' : 'Bullwhip',
       title: composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor),
       specs: buildSpecs([
@@ -488,6 +508,10 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
       id: w.id,
       type: 'stockwhip',
       length: w.specs.thongLength,
+      primaryColor: w.specs.primaryColor,
+      secondaryColor: w.specs.secondaryColor || undefined,
+      handleDesign: w.specs.handleDesign,
+      concho: w.specs.concho,
       eyebrow: 'Stockwhip',
       title: composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor),
       specs: buildSpecs([
@@ -521,6 +545,10 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
       id: w.id,
       type: 'snakewhip',
       length: w.specs.whipLength,
+      primaryColor: w.specs.primaryColor,
+      secondaryColor: w.specs.secondaryColor || undefined,
+      handleDesign: w.specs.handleDesign,
+      concho: w.specs.concho,
       eyebrow: 'Snakewhip',
       title: composeColorTitle(w.specs.primaryColor, w.specs.secondaryColor),
       specs: buildSpecs([
@@ -598,12 +626,28 @@ const buildCards = (specialtyEdges: SpecialtyEdge[]): GalleryCard[] => {
         ...sharedSpecs,
       ];
 
+      /* Pull handle + concho values from the markdown specs[] block
+         for filter dimensions. The "Handle" spec sometimes embeds
+         handle length too (Indy: "8\", Box Pattern") — split on comma
+         and take the design name. Concho is a single value already. */
+      const rawHandle = (fm.specs || []).find((s) => s.label === 'Handle')?.value;
+      const handleDesign = rawHandle
+        ? rawHandle.split(',').pop()?.replace(/\s*Pattern\s*$/i, '').trim()
+        : undefined;
+      const concho = (fm.specs || []).find((s) => s.label === 'Concho')?.value;
+
       cards.push({
         id: g.prefix,
         type: 'specialty',
         specialtyTag: SLUG_BASENAME_TO_TAG[slugBasename(edge.node.fields.slug)],
         variant: g.variant,
         length,
+        /* primary/secondary colors intentionally blank for specialty
+           cards — markdown describes colors in prose only. Adam can
+           populate over time; until then specialty whips won't appear
+           in color filters. */
+        handleDesign,
+        concho,
         eyebrow,
         title: fm.title,
         specs,
@@ -886,17 +930,263 @@ const SpecValue = styled.span`
   line-height: 1.25;
 `;
 
+// ─── Filter helpers ─────────────────────────────────────────────────────
+
+/** Convert "8 Feet 6 Inches" / "8 Feet" / "8 Foot" → total inches for
+    sorting Length filter options numerically (so "10 Feet" lands after
+    "8 Feet" instead of dictionary-order between "1" and "8"). */
+const lengthToInches = (raw: string): number => {
+  const m = raw.match(/(\d+)\s*(?:feet|foot|ft)?(?:\s+(\d+)\s*(?:inches|inch|in))?/i);
+  if (!m) return 0;
+  return parseInt(m[1], 10) * 12 + (m[2] ? parseInt(m[2], 10) : 0);
+};
+
+/** Stable case-insensitive sort for color / handle / concho options. */
+const alphaSort = (a: string, b: string) =>
+  a.localeCompare(b, undefined, { sensitivity: 'base' });
+
+/** Extract distinct, sorted values from a card field across all cards.
+    Skips null / undefined / empty strings. */
+const distinctValues = <T,>(
+  cards: GalleryCard[],
+  pick: (c: GalleryCard) => T | null | undefined | (T | null | undefined)[],
+): T[] => {
+  const set = new Set<T>();
+  for (const card of cards) {
+    const v = pick(card);
+    if (Array.isArray(v)) {
+      for (const x of v) if (x) set.add(x as T);
+    } else if (v) {
+      set.add(v as T);
+    }
+  }
+  return [...set];
+};
+
+/** Does a card pass the current filter state? An empty array on a
+    given dimension means "no filter on this dimension" (everything
+    matches). Multi-select within a dimension is OR; across dimensions
+    is AND. */
+const matchesFilters = (card: GalleryCard, filters: FilterState): boolean => {
+  if (filters.types.length > 0) {
+    /* The Type filter operates on whip type with one quirk: selecting
+       "Bullwhip" matches `bullwhip`, `fantasy`, AND `specialty`
+       cards — because all current specialties are bullwhips, per
+       Adam's Phase 13.3 schema decision. When specialty stockwhips /
+       snakewhips eventually exist, this matrix will need extending. */
+    const matchesType = filters.types.some((selected) => {
+      if (selected === 'Bullwhip') {
+        return (
+          card.type === 'bullwhip' ||
+          card.type === 'fantasy' ||
+          card.type === 'specialty'
+        );
+      }
+      if (selected === 'Stockwhip') return card.type === 'stockwhip';
+      if (selected === 'Snakewhip') return card.type === 'snakewhip';
+      return false;
+    });
+    if (!matchesType) return false;
+  }
+  if (filters.lengths.length > 0) {
+    if (!card.length || !filters.lengths.includes(card.length)) return false;
+  }
+  if (filters.colors.length > 0) {
+    /* Color matches if the filter list intersects the card's primary
+       OR secondary color. Cards with both blank (specialty whips
+       awaiting Adam's hand-fill) never match a color filter. */
+    const cardColors = [card.primaryColor, card.secondaryColor].filter(
+      Boolean,
+    ) as string[];
+    if (!filters.colors.some((c) => cardColors.includes(c))) return false;
+  }
+  if (filters.handles.length > 0) {
+    if (!card.handleDesign || !filters.handles.includes(card.handleDesign))
+      return false;
+  }
+  if (filters.conchos.length > 0) {
+    if (!card.concho || !filters.conchos.includes(card.concho)) return false;
+  }
+  return true;
+};
+
+/** Read filter state from a query string. Each dimension is a
+    comma-separated list of values under its plural-noun key. */
+const filtersFromQuery = (search: string): FilterState => {
+  const params = new URLSearchParams(search);
+  const get = (k: string) =>
+    (params.get(k) || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+  return {
+    types: get('types'),
+    lengths: get('lengths'),
+    colors: get('colors'),
+    handles: get('handles'),
+    conchos: get('conchos'),
+  };
+};
+
+/** Encode filter state into a query string (without leading "?").
+    Empty dimensions are omitted entirely so a clean state produces
+    a clean URL. */
+const filtersToQuery = (filters: FilterState): string => {
+  const params = new URLSearchParams();
+  if (filters.types.length) params.set('types', filters.types.join(','));
+  if (filters.lengths.length) params.set('lengths', filters.lengths.join(','));
+  if (filters.colors.length) params.set('colors', filters.colors.join(','));
+  if (filters.handles.length) params.set('handles', filters.handles.join(','));
+  if (filters.conchos.length) params.set('conchos', filters.conchos.join(','));
+  return params.toString();
+};
+
+const FILTER_HAS_VALUES = (f: FilterState): boolean =>
+  f.types.length + f.lengths.length + f.colors.length + f.handles.length + f.conchos.length > 0;
+
+// ─── Empty state (when filters match 0 whips) ───────────────────────────
+
+const EmptyState = styled.div`
+  text-align: center;
+  padding: 64px 24px;
+  color: #f5ebe0;
+  opacity: 0.85;
+
+  p {
+    font-family: 'Domine Variable', Domine, serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    margin: 0 0 18px;
+  }
+`;
+
+const EmptyClearButton = styled.button`
+  appearance: none;
+  background-color: transparent;
+  border: 1px solid #d6a85f;
+  color: #d6a85f;
+  font-family: 'Josefin Sans Variable', 'Josefin Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: #d6a85f;
+    color: #1a140f;
+  }
+`;
+
 // ─── Component ──────────────────────────────────────────────────────────
 
 const GalleryPage = () => {
   const data = useStaticQuery(pageQuery);
-  const cards = buildCards(data.allMarkdownRemark.edges);
+  const cards = useMemo(
+    () => buildCards(data.allMarkdownRemark.edges),
+    [data.allMarkdownRemark.edges],
+  );
 
   /* Selected card drives the GalleryLightbox below. `null` = lightbox
      closed; setting it to a card opens the lightbox with that card's
      photos + info. The lightbox itself manages photo navigation,
      scroll lock, and dismiss UX. */
   const [selectedCard, setSelectedCard] = useState<GalleryCard | null>(null);
+
+  /* Filter state — toggled by GalleryFilterBar. Initial value is
+     populated from the URL query string in the useEffect below so that
+     filtered links to /gallery?types=... arrive at the right view. */
+  const [filters, setFilters] = useState<FilterState>(EMPTY_FILTER_STATE);
+
+  /* Read filter state from the URL on mount (and only on mount — we
+     don't want to overwrite the user's selections if the URL changes
+     for unrelated reasons). Wrapped in a window-defined check so the
+     initial SSR build pass doesn't fail. */
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    setFilters(filtersFromQuery(window.location.search));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* Sync filters → URL. `replaceState` (not pushState) keeps the
+     browser history clean — toggling a checkbox shouldn't add a
+     history entry per click. The user's "back" button still works
+     intuitively because they're not back-stepping through filter
+     micro-changes. */
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const query = filtersToQuery(filters);
+    const newUrl =
+      window.location.pathname + (query ? `?${query}` : '') + window.location.hash;
+    window.history.replaceState(null, '', newUrl);
+  }, [filters]);
+
+  /* Filter dimension definitions — derived from the catalog at build
+     time. Type values are hardcoded (Bullwhip / Stockwhip / Snakewhip)
+     rather than scraped from card.type because we want a stable label
+     set that doesn't expose the internal `fantasy` and `specialty`
+     buckets to the user. Length is sorted numerically (in inches) so
+     "10 Feet" comes after "8 Feet"; everything else alpha-sorts. */
+  const dimensions = useMemo(
+    () => [
+      {
+        key: 'types' as const,
+        label: 'Type',
+        options: ['Bullwhip', 'Stockwhip', 'Snakewhip'],
+      },
+      {
+        key: 'lengths' as const,
+        label: 'Length',
+        options: distinctValues(cards, (c) => c.length).sort(
+          (a, b) => lengthToInches(a) - lengthToInches(b),
+        ),
+      },
+      {
+        key: 'colors' as const,
+        label: 'Color',
+        options: distinctValues(cards, (c) => [c.primaryColor, c.secondaryColor]).sort(
+          alphaSort,
+        ),
+      },
+      {
+        key: 'handles' as const,
+        label: 'Handle',
+        options: distinctValues(cards, (c) => c.handleDesign).sort(alphaSort),
+      },
+      {
+        key: 'conchos' as const,
+        label: 'Concho',
+        options: distinctValues(cards, (c) => c.concho).sort(alphaSort),
+      },
+    ],
+    [cards],
+  );
+
+  /* Apply current filters to produce the rendered card set. Memoized
+     so unrelated re-renders (e.g. opening the lightbox) don't redo
+     the filter pass. */
+  const filteredCards = useMemo(
+    () => cards.filter((c) => matchesFilters(c, filters)),
+    [cards, filters],
+  );
+
+  /* Toggle a single value in a single filter dimension. Adding/
+     removing from the array is enough; React state immutability is
+     handled by returning a new object. */
+  const handleToggleFilter = (key: keyof FilterState, value: string) => {
+    setFilters((prev) => {
+      const current = prev[key];
+      const next = current.includes(value)
+        ? current.filter((v) => v !== value)
+        : [...current, value];
+      return { ...prev, [key]: next };
+    });
+  };
+
+  const handleClearAll = () => setFilters(EMPTY_FILTER_STATE);
 
   /* Heritage counter mirrors reviews.json's `meta.whipsCrafted: 1200`.
      When that number bumps up, the reviews JSON gets re-scraped — keeping
@@ -921,8 +1211,23 @@ const GalleryPage = () => {
           </Subhead>
         </HeaderBlock>
         <Divider />
+        <GalleryFilterBar
+          dimensions={dimensions}
+          filters={filters}
+          onToggle={handleToggleFilter}
+          onClearAll={handleClearAll}
+          matchCount={filteredCards.length}
+        />
+        {filteredCards.length === 0 && FILTER_HAS_VALUES(filters) ? (
+          <EmptyState>
+            <p>No whips match these filters.</p>
+            <EmptyClearButton type="button" onClick={handleClearAll}>
+              Clear all filters
+            </EmptyClearButton>
+          </EmptyState>
+        ) : (
         <Grid>
-          {cards.map((card) => (
+          {filteredCards.map((card) => (
             <Card
               key={card.id}
               type="button"
@@ -955,6 +1260,7 @@ const GalleryPage = () => {
             </Card>
           ))}
         </Grid>
+        )}
       </SectionContainer>
       <GalleryLightbox
         card={selectedCard}
