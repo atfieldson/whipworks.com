@@ -335,6 +335,21 @@ BW[number][WhipCode][Shot].jpg
 
 Shot types: `Wide`, `Wide2`, `Transition`, `Thong`, `Handle`, `Handle2`, `Concho`, `Heel`
 
+### High-Resolution Variants (`/hires/` subdirectory)
+
+For the gallery page's hover-zoom feature (`GalleryLightbox`), each gallery photo can have a high-resolution counterpart in a `hires/` subdirectory next to the regular image:
+
+```
+gallery/specialty/BW592Indy67RaiderWide.jpg          ← regular (~1200px)
+gallery/specialty/hires/BW592Indy67RaiderWide.jpg    ← hires (~2400px+)
+```
+
+**Rollout is graceful** — the lightbox tries the hires URL first; if the file doesn't exist, the hero image's `onError` falls back to the regular URL and the zoom magnification drops from ~5× to 3× for that photo. The fallback is cached per session so repeated thumbnail clicks don't re-attempt the failed hires URL. Adam can upload hires versions whip-by-whip over time without breaking anything.
+
+**Sizing target:** 2400–2700px on the longest side, JPEG quality 80–85. Files end up ~350–800 KB each. This is 4.8× the lightbox preview width (~480px × 4.8 ≈ 2300), enough that the zoom shows actual photo pixels rather than upscaled mush.
+
+**Code location:** the `toHiresUrl()` helper in `src/components/organisms/GalleryLightbox.tsx` derives the hires URL via regex insertion of `/hires/` before the filename — works for any path under any S3/CloudFront domain that follows the convention.
+
 ## Working Reference Documents
 
 ### `whip-catalog.xlsx` (Adam's planning/reference workbook)

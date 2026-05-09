@@ -10,8 +10,31 @@ import type { GalleryCard } from '../../pages/gallery';
    square cursor-following lens overlaid on the hero photo. The zoom
    preview's background-size scales by (frameWidth / LENS_SIZE) — so a
    720px frame with a 150px lens gives 480% (~5x) magnification, same
-   ratio as Paracord. */
+   ratio as Paracord, when the hires source is loaded. */
 const LENS_SIZE = 150;
+
+/* Reduced-magnification fallback for whips that don't have a hires
+   version uploaded yet. 3x is sharp enough on typical ~1200px source
+   images (1.2x upscale at most) — useful zoom without obvious blur. As
+   Adam uploads hires versions to /gallery/<type>/hires/, those whips
+   automatically promote to the full ~5x zoom. */
+const FALLBACK_ZOOM_PERCENT = 300;
+
+/**
+ * Insert `/hires/` before the filename in a gallery photo URL.
+ * `gallery/specialty/BW592...Wide.jpg` → `gallery/specialty/hires/BW592...Wide.jpg`
+ *
+ * Convention: high-resolution versions of every gallery photo live in
+ * a `hires/` subdirectory next to the regular image, with the same
+ * filename. The lightbox tries the hires URL first; if it 404s, the
+ * onError handler on the hero <img> swaps in the regular URL and the
+ * zoom magnification drops to FALLBACK_ZOOM_PERCENT for that photo.
+ *
+ * Match is anchored on the final filename segment to avoid double-
+ * inserting `hires` if a URL is already pointed at the hires version.
+ */
+const toHiresUrl = (url: string): string =>
+  url.replace(/\/([^/]+\.(?:jpg|jpeg|png|gif|webp))$/i, '/hires/$1');
 
 /**
  * GalleryLightbox
@@ -516,6 +539,14 @@ const GalleryLightbox = ({ card, onClose }: Props) => {
     posY: '0%',
   });
 
+  /* Set of regular photo URLs whose `/hires/` variant 404'd. Caches
+     failures across photo navigation within a single mount of the
+     lightbox so we don't re-attempt the hires URL on every thumbnail
+     click for a photo we already know doesn't have one. Resets when
+     the user closes and reopens the lightbox (new component mount).
+     New whip photos NOT in this set will be optimistically tried. */
+  const [knownNoHires, setKnownNoHires] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     if (card) {
       setActiveIndex(0);
@@ -523,18 +554,33 @@ const GalleryLightbox = ({ card, onClose }: Props) => {
     }
   }, [card?.id]);
 
+  /* Pre-compute whether the active hero photo can use hires. If the
+     regular URL is already in `knownNoHires`, we know the hires
+     variant 404'd previously and we should skip the optimistic
+     attempt. If `card` is null (lightbox closed), the default doesn't
+     matter — guarded below. */
+  const heroPhotoUrl = card?.allPhotos[activeIndex]?.url ?? '';
+  const tryHires = !!card && !knownNoHires.has(heroPhotoUrl);
+  const heroSrc = tryHires ? toHiresUrl(heroPhotoUrl) : heroPhotoUrl;
+
   /* Mouse-move handler ported from ParacordPage. Tracks cursor
      position within the HeroFrame, clamps the lens so it stays inside
      the frame edges, and computes a background-size + position pair
      for the zoom preview such that:
-       - background-size scales the source image to (frameWidth /
-         LENS_SIZE)x its display width — so the lens area visually
-         maps to the full zoom preview at the same ratio
+       - background-size scales the source image. When the hires
+         version loaded successfully we use the natural Paracord ratio
+         (frameWidth / LENS_SIZE) ≈ 4.8x where the lens area visually
+         maps to the full zoom preview. When we're on the regular URL
+         (hires 404'd or hasn't been uploaded yet), drop to
+         FALLBACK_ZOOM_PERCENT (3x) so the regular ~1200px source
+         doesn't get upscaled into mush.
        - background-position uses 0%–100% mapping based on the lens's
          travel within its allowed range, which CSS interprets as
          "align this % of the image with this % of the preview area"
-     The result: the area inside the lens appears magnified in the
-     zoom preview, and the zoom view tracks the cursor naturally. */
+     At reduced magnification the lens-content-equals-preview-content
+     relationship loosens (preview shows more than just what's under
+     the lens), but the lens still serves as a position indicator —
+     better UX than disabling zoom entirely on non-hires whips. */
   const handleHeroMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const rect = e.currentTarget.getBoundingClientRect();
@@ -551,14 +597,32 @@ const GalleryLightbox = ({ card, onClose }: Props) => {
       const bgPosX = maxLensX > 0 ? (lensX / maxLensX) * 100 : 0;
       const bgPosY = maxLensY > 0 ? (lensY / maxLensY) * 100 : 0;
 
+      const magPercent = tryHires
+        ? (rect.width / LENS_SIZE) * 100
+        : FALLBACK_ZOOM_PERCENT;
       setZoomBgStyle({
-        size: `${(rect.width / LENS_SIZE) * 100}%`,
+        size: `${magPercent}%`,
         posX: `${bgPosX}%`,
         posY: `${bgPosY}%`,
       });
     },
-    [],
+    [tryHires],
   );
+
+  /* On a hires <img> 404, mark the regular URL as known-no-hires. The
+     component re-renders with `tryHires === false`, the hero <img>
+     swaps to the regular URL (browser cache makes that immediate),
+     and the next zoom interaction uses FALLBACK_ZOOM_PERCENT. */
+  const handleHeroError = useCallback(() => {
+    if (tryHires && heroPhotoUrl) {
+      setKnownNoHires((prev) => {
+        if (prev.has(heroPhotoUrl)) return prev;
+        const next = new Set(prev);
+        next.add(heroPhotoUrl);
+        return next;
+      });
+    }
+  }, [tryHires, heroPhotoUrl]);
 
   /* Keyboard handlers: Esc closes, ← / → navigate photos. Window-level
      listener so arrow keys work regardless of which element inside the
@@ -636,10 +700,15 @@ const GalleryLightbox = ({ card, onClose }: Props) => {
                 onMouseMove={handleHeroMouseMove}
               >
                 <HeroPhoto
-                  src={card.allPhotos[activeIndex].url}
+                  /* Optimistically tries the /hires/ variant first;
+                     onError flips this to the regular URL on 404. */
+                  src={heroSrc}
                   alt={card.allPhotos[activeIndex].caption || card.alt}
-                  /* Eager-load the hero so it's ready when the modal
-                     animates in — no awkward placeholder flash. */
+                  onError={handleHeroError}
+                  /* `key` on src so React re-mounts the img when the
+                     URL changes (otherwise an errored img wouldn't
+                     re-attempt loading after we change knownNoHires). */
+                  key={heroSrc}
                 />
                 {isZooming && (
                   <Lens
@@ -683,12 +752,16 @@ const GalleryLightbox = ({ card, onClose }: Props) => {
 
             <InfoPanel>
               {/* Magnifier-zoom preview — overlays the info content
-                  when the user is hovering the hero photo. Hidden via
-                  CSS on tablet/mobile and on hover-less devices. */}
+                  when the user is hovering the hero photo. Uses the
+                  same heroSrc as the hero <img> so when the hires URL
+                  is available the zoom is sharp at ~5x; when fallback
+                  is in effect the regular URL is used at 3x (set by
+                  handleHeroMouseMove). Hidden via CSS on tablet /
+                  mobile and on hover-less devices. */}
               {isZooming && (
                 <ZoomPreview
                   style={{
-                    backgroundImage: `url(${card.allPhotos[activeIndex].url})`,
+                    backgroundImage: `url(${heroSrc})`,
                     backgroundSize: zoomBgStyle.size,
                     backgroundPosition: `${zoomBgStyle.posX} ${zoomBgStyle.posY}`,
                   }}
