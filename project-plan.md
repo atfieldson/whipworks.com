@@ -546,6 +546,8 @@ Phased so each step has a clear stopping point — pause between sessions withou
   - [x] Heel-loop normalization handled at gallery's serializer boundary so `'No Heel Loop'` (older gallery TS naming) becomes `'Squared'` and prefills correctly. Fantasy whip FW33's `heelLoop='None'` (Wolf Pommel — no heel-loop concept) normalizes to empty string, serializer skips it, designer falls back to Squared default.
   - [x] Specialty whip CTAs unchanged — still link to `/specialty/:slug` (pre-configured products, not customizers).
   - [x] TypeScript clean across all 5 files touched.
+  - [x] **Post-launch fix:** `galleryWhips.ts` had `handleLength: '8 inches'` (lowercase) while `handleLengths.ts` constants use `'8 Inches'` (capital I) — the mismatch caused the prefill parser's case-sensitive validation to silently drop handle length on every custom bullwhip. Fixed by bulk normalizing all 15 lowercase values in `galleryWhips.ts` to match the canonical option name.
+  - [x] **Gallery added to nav:** new `Gallery` link at the top of the "More" dropdown (desktop) and "More" section in the mobile drawer — most prominent slot in that bucket so visitors discover the gallery before About / Reviews / Contact.
   - [ ] Adam runs the full happy path: see whip in gallery → click → land on design page with everything preset → ready to add to cart
 - [ ] **Phase 13.8: Polish + mobile + a11y**
   - [ ] Mobile responsive pass on gallery + lightbox + filter chips

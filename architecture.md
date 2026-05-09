@@ -1,6 +1,6 @@
 # WhipWorks.com - Architecture Reference
 
-> **Last updated:** Phase 13.3 (Gallery Page — whip-catalog.xlsx populated) - May 2026
+> **Last updated:** Phase 13.7 (Gallery Page — click-to-prefill + nav link) - May 2026
 > This is a living document. Update after each phase of development.
 
 ## Site Map
@@ -11,6 +11,7 @@ graph TD
     HOME --> DESIGN_SW["/design-stockwhip"]
     HOME --> DESIGN_SN["/design-snakewhip"]
     HOME --> SPECIALTY["/specialty-whips"]
+    HOME --> GALLERY["/gallery"]
     HOME --> ACCESSORIES["/accessories"]
     HOME --> MATERIALS["/whipmaking-materials"]
     HOME --> BLUEPRINTS["/whip-making-blueprints"]
@@ -23,11 +24,17 @@ graph TD
     ACCESSORIES --> ACC_DETAIL["/accessories/:slug  x2"]
     MATERIALS --> MAT_DETAIL["/materials/:slug  x8"]
 
+    GALLERY -. click-to-prefill .-> DESIGN_BW
+    GALLERY -. click-to-prefill .-> DESIGN_SW
+    GALLERY -. click-to-prefill .-> DESIGN_SN
+    GALLERY -. specialty link .-> SPEC_DETAIL
+
     style DESIGN_BW fill:#2d5a3d
     style DESIGN_SW fill:#2d5a3d
     style DESIGN_SN fill:#2d5a3d
     style SPECIALTY fill:#5a3d2d
     style SPEC_DETAIL fill:#5a3d2d
+    style GALLERY fill:#3d4a5a
 ```
 
 ### All Routes
@@ -40,6 +47,7 @@ graph TD
 | `/design-snakewhip` | `src/pages/design-snakewhip.tsx` | DesignerLayout | 3D snakewhip customizer |
 | `/specialty-whips` | `src/pages/specialty-whips.tsx` | Layout | Specialty whips grid with hover crossfade |
 | `/specialty/:slug` | gatsby-node.js | SpecialtyWhipPage | Individual specialty whip (x13) |
+| `/gallery` | `src/pages/gallery.tsx` | Layout | Editorial archive of every photographed whip — filter chips (Type/Length/Color/Handle/Concho) + click-into-lightbox detail view + click-to-prefill custom-whip CTAs that navigate to the relevant designer with the whip's full configuration encoded as URL query params |
 | `/accessories` | `src/pages/accessories.tsx` | Layout | Accessories listing |
 | `/accessories/:slug` | gatsby-node.js | ProductPage | Individual accessory (x2) |
 | `/whipmaking-materials` | `src/pages/whipmaking-materials.tsx` | Layout | Tools & materials listing |
@@ -73,6 +81,8 @@ graph TD
         CONTACT_FORM[ContactForm]
         REVIEW_CARD[ReviewCard]
         TESTIMONIAL[TestimonialStrip]
+        GALLERY_LB[GalleryLightbox]
+        GALLERY_FB[GalleryFilterBar]
 
         subgraph BullwhipDesigner Suite
             BW[BullwhipDesigner]
@@ -350,6 +360,36 @@ gallery/specialty/hires/BW592Indy67RaiderWide.jpg    ← hires (~2400px+)
 
 **Code location:** the `toHiresUrl()` helper in `src/components/organisms/GalleryLightbox.tsx` derives the hires URL via regex insertion of `/hires/` before the filename — works for any path under any S3/CloudFront domain that follows the convention.
 
+### Gallery → Designer Click-to-Prefill Protocol
+
+Phase 13.7. The gallery's lightbox CTA for custom whips ("Build this Bullwhip →" / "Build this Stockwhip →" / "Build this Snakewhip →") navigates to the relevant designer page with the whip's configuration encoded as URL query params. The designer parses on mount and pre-selects matching options, so the user goes from "saw this in the gallery" to "ready to add to cart with that exact configuration" in a single click.
+
+**Module:** `src/components/organisms/BullwhipDesigner/prefill.ts` — single shared file with serializers (`serialize{Bullwhip,Stockwhip,Snakewhip}Prefill`) and parsers (`parse{Bullwhip,Stockwhip,Snakewhip}Prefill`) for all three whip types in one place, so URL keys stay in sync between gallery (builds URL) and designers (parse URL).
+
+**URL keys** (all dropped from the URL when the value is empty / absent):
+
+| Key | Whip types | Validated against |
+|---|---|---|
+| `primary` | bullwhip / stockwhip / snakewhip | `spools` (37 colors) |
+| `secondary` | bullwhip / stockwhip / snakewhip | `spools` |
+| `handle` | bullwhip / stockwhip / snakewhip | `handles` (10 patterns) |
+| `whipLength` | bullwhip / snakewhip | `whipLengths` / `snakewhipLengths` |
+| `thongLength` | stockwhip | `thongLengths` |
+| `handleLength` | bullwhip / stockwhip | `handleLengths` / `stockwhipHandleLengths` |
+| `finish` | stockwhip | `stockwhipFinishes` |
+| `concho` | bullwhip / stockwhip / snakewhip | `conchos` |
+| `collar` | bullwhip | `collars` |
+| `heelLoop` | bullwhip / stockwhip / snakewhip | `heelLoops` |
+| `waxed` | bullwhip / stockwhip / snakewhip | boolean `'true'` / `'false'` |
+
+**Validation contract:** every parsed value is checked against its canonical option constants list. Invalid values (URL-tampered, removed options, source data inconsistencies) are silently skipped — the form falls back to its existing default rather than breaking. Examples currently in the dataset:
+- Fantasy whip FW33's `heelLoop: 'None'` (Wolf Pommel — no heel-loop concept) normalizes to empty and skips, so the bullwhip designer falls back to its `'Squared'` default
+- SnW29's `concho: 'Shield'` isn't in `conchos.ts` yet, so the snakewhip designer's concho stays unset; everything else (color/handle/length/heelLoop) prefills
+
+**Backwards-compatible:** direct visits to `/design-bullwhip` etc. with no query string return empty parser objects, so all the `?? <default>` fallbacks restore the prior initial state. Existing direct nav links, Snipcart wiring, and the pre-existing form behavior are all unchanged.
+
+**Specialty whip CTAs bypass the protocol entirely** — they link directly to `/specialty/:slug` (pre-configured products, not customizers).
+
 ## Working Reference Documents
 
 ### `whip-catalog.xlsx` (Adam's planning/reference workbook)
@@ -394,7 +434,7 @@ A working spreadsheet at the repo root that catalogs every whip Adam has photogr
 - `'Rounded with Loop'` → `'Rounded with Heel Loop'`
 - `'None'` (fantasy whips with pommels) → blank
 
-This will need to be applied in the inverse direction when wiring click-to-prefill in Phase 13.7 (the gallery TS files themselves still have the older names).
+The same normalization is applied in the gallery's prefill serializer (Phase 13.7) so old heel-loop names round-trip cleanly to the design forms — `'No Heel Loop'` becomes `'Squared'` in the URL, the parser validates it against the canonical option list, and `BullwhipDesigner` arrives with the correct selection. The gallery TS files themselves still carry the older names; refactoring those is deferred until there's a reason to touch the designer's internal code.
 
 **Generator script:** Located at `~/.tmp/xlsx-build/build.js` (outside the repo). Single canonical source — re-running it regenerates the entire workbook deterministically from the inline data. Schema changes (new columns, new lookup options, new specialty rows) go in this script. Uses Node + ExcelJS 4.4.0 installed in that scratch directory.
 
@@ -532,6 +572,10 @@ Theme file: `src/@chakra-ui/gatsby-plugin/theme.ts`
 | `src/components/molecules/ProductImages.tsx` | Image gallery with lightbox |
 | `src/data/reviews.json` | 433 Etsy reviews with meta stats (4.94 avg, productType, specialtySlug) |
 | `whip-catalog.xlsx` | Adam's planning/reference workbook — 7 sheets cataloging every photographed whip (Specialty / Bullwhips / Stockwhips / Snakewhips / Floggers + Conchos master + _Lookups). Reference-only; site reads from gallery TS and specialty MD. Generator script at `~/.tmp/xlsx-build/build.js`. |
+| `src/pages/gallery.tsx` | `/gallery` page — editorial archive of every photographed whip. Builds unified card list from gallery TS + specialty markdown (per-physical-whip groups), filter chips (Type/Length/Color/Handle/Concho), URL state sync, click-into-lightbox |
+| `src/components/organisms/GalleryLightbox.tsx` | In-page modal for a clicked whip — desktop hero+thumb-strip with magnifier-lens hover-zoom (mirrors Paracord pattern), mobile vertical photo stack, info panel with specs + description + primary CTA. Esc + click-backdrop + × button dismiss |
+| `src/components/organisms/GalleryFilterBar.tsx` | Filter UI above the gallery grid — 5 multi-select dropdowns + active filter chips + clear-all + match count |
+| `src/components/organisms/BullwhipDesigner/prefill.ts` | Click-to-prefill protocol — serializers (gallery → URL) + parsers (URL → designer state) for all three whip types. Single source of truth for URL key names and value validation |
 | `src/components/organisms/TestimonialStrip.tsx` | Horizontal review strip with photos, click-to-expand modal |
 | `src/components/organisms/ReviewCard.tsx` | Review card with stars, photo lightbox, Adam's response |
 | `src/components/atoms/SpecialtyWhipGridCard.tsx` | Grid cards with hover crossfade |
