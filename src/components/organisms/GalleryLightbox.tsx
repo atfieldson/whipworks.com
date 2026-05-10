@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'gatsby';
 import styled from '@emotion/styled';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
 import type { GalleryCard } from '../../pages/gallery';
 
@@ -520,6 +520,24 @@ type Props = {
 };
 
 const GalleryLightbox = ({ card, onClose }: Props) => {
+  /* Reduced-motion preference — when set, skip the slide-up + scale
+     transitions on enter/exit and use a simple opacity fade instead.
+     Opacity fades are gentle enough that they don't trigger
+     vestibular-disorder symptoms; scale and translation are the
+     transforms WCAG flags. */
+  const shouldReduceMotion = useReducedMotion();
+
+  /* Refs for focus management. `closeButtonRef` is focused
+     programmatically on open so keyboard / screen-reader users land
+     inside the modal rather than continuing on the underlying card.
+     `previousActiveElementRef` captures whatever was focused before
+     the modal opened (typically the gallery card the user clicked)
+     so focus can be restored to it on close — without that, closing
+     the modal would dump focus onto the document body and the user
+     would lose their place in the grid. */
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
+
   /* Index of the photo currently shown as the hero on desktop/tablet.
      Reset to 0 whenever a new card is opened so each opening starts
      from the lead Wide shot regardless of where the user left off in
@@ -659,6 +677,60 @@ const GalleryLightbox = ({ card, onClose }: Props) => {
     };
   }, [card]);
 
+  /* Focus management — Phase 13.8 a11y polish. On open: capture
+     whatever was focused (the clicked gallery card, typically), then
+     move focus to the close button so keyboard users are inside the
+     modal. On close: return focus to the captured element so the
+     user lands back exactly where they were in the gallery grid.
+     Tab cycling stays within the modal at the user's discretion;
+     full focus trap (preventing Tab from leaving via the very last
+     tabbable element) is intentionally omitted — Esc + click-outside
+     + × button cover dismissal, and the cost of a true focus trap
+     (focus-trap library or custom Tab-cycling logic) isn't justified
+     for the polish budget here. */
+  useEffect(() => {
+    if (!card) return;
+    previousActiveElementRef.current = document.activeElement as HTMLElement | null;
+    /* Defer the focus shift until after framer-motion's enter
+       animation settles (~300ms) — focusing during the transform
+       triggers an immediate browser scroll-into-view that can
+       interfere with the visual entrance. With reduced-motion the
+       enter is a quick opacity fade so we shorten the wait. */
+    const delay = shouldReduceMotion ? 50 : 350;
+    const t = window.setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, delay);
+    return () => {
+      window.clearTimeout(t);
+      /* Restore focus to the previously-active element on close.
+         Wrapped in a try/catch because the previous element could
+         have been removed from the DOM (e.g. filter narrowed before
+         close) — we just no-op in that case. */
+      try {
+        previousActiveElementRef.current?.focus();
+      } catch {
+        /* element no longer focusable, ignore */
+      }
+    };
+  }, [card, shouldReduceMotion]);
+
+  /* Modal motion props — full slide-up + scale entrance on default,
+     simple opacity fade when reduced-motion is preferred. Either way
+     AnimatePresence handles mount/unmount cleanly. */
+  const modalMotionProps = shouldReduceMotion
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+        transition: { duration: 0.18 },
+      }
+    : {
+        initial: { opacity: 0, y: 20, scale: 0.98 },
+        animate: { opacity: 1, y: 0, scale: 1 },
+        exit: { opacity: 0, y: 20, scale: 0.98 },
+        transition: { duration: 0.3, ease: 'easeOut' as const },
+      };
+
   return (
     <AnimatePresence>
       {card && card.allPhotos.length > 0 && (
@@ -676,15 +748,13 @@ const GalleryLightbox = ({ card, onClose }: Props) => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="gallery-lightbox-title"
-            initial={{ opacity: 0, y: 20, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.98 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
+            {...modalMotionProps}
             /* Stop propagation so clicks inside the modal don't reach
                the backdrop's onClose handler. */
             onClick={(e) => e.stopPropagation()}
           >
             <CloseButton
+              ref={closeButtonRef}
               type="button"
               onClick={onClose}
               aria-label="Close gallery view"

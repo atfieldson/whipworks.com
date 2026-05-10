@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
 import styled from '@emotion/styled';
+import { motion, useReducedMotion } from 'framer-motion';
 
 import Layout from '../components/templates/Layout';
 import SEO from '../components/templates/SEO';
@@ -847,6 +848,11 @@ const Grid = styled.div`
  * support (Enter / Space activate). Default browser button styling is
  * stripped out (border, padding, font, background) and the rest of the
  * cardCSS produces the editorial card visual.
+ *
+ * Wrapped via motion(Card) below for the Phase 13.8 scroll-triggered
+ * fade-up animation. Emotion styled() forwards refs, native <button>
+ * forwards refs — framer-motion's `motion()` wrapper attaches its own
+ * ref for the `whileInView` viewport observer without needing a shim.
  */
 const Card = styled.button`
   /* Browser button resets */
@@ -891,6 +897,12 @@ const Card = styled.button`
     margin-bottom: 16px;
   }
 `;
+
+/* Motion-wrapped card for the Phase 13.8 scroll-in animation. The
+   actual motion props (initial / whileInView / viewport / transition)
+   are computed in the GalleryPage component so they can be gated on
+   `useReducedMotion`. */
+const MotionCard = motion(Card);
 
 const PhotoFrame = styled.div`
   position: relative;
@@ -1264,17 +1276,83 @@ const GalleryPage = () => {
 
   const handleClearAll = () => setFilters(EMPTY_FILTER_STATE);
 
+  /* Reduced-motion support — when the OS-level preference is set,
+     skip the y-translate on cards and the lightbox's scale + slide
+     transitions. Opacity fades are kept (they don't trigger
+     vestibular-disorder symptoms the way translation/scale can).
+     The lightbox component handles its own gating internally. */
+  const shouldReduceMotion = useReducedMotion();
+
+  /* Card motion props — applied via `motion(Card)`. `whileInView`
+     fires once when the card crosses 15% into the viewport; subsequent
+     re-renders (e.g. filter changes) don't re-animate cards that have
+     already played, which keeps interaction crisp.
+
+     Filter-change behavior: when filters narrow, removed cards
+     unmount immediately (no exit animation — keeping it simple).
+     When filters expand, newly-visible cards are React-fresh
+     instances and fire whileInView again on first scroll-into-view,
+     same as initial load. */
+  const cardMotionProps = shouldReduceMotion
+    ? {
+        initial: { opacity: 0 },
+        whileInView: { opacity: 1 },
+        viewport: { once: true, amount: 0.1 },
+        transition: { duration: 0.3 },
+      }
+    : {
+        initial: { opacity: 0, y: 24 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.15 },
+        transition: { duration: 0.5, ease: 'easeOut' },
+      };
+
   /* Heritage counter mirrors reviews.json's `meta.whipsCrafted: 1200`.
      When that number bumps up, the reviews JSON gets re-scraped — keeping
      these in sync is a follow-up nice-to-have, but for now hand-aligning
      to the same 1,200+ figure is fine since both are public-facing. */
   const counter = '1,200+ whips made by hand since 2015';
 
+  /* ItemList JSON-LD — exposes the gallery's full whip inventory to
+     search engines and structured-data consumers (Google, Bing,
+     Pinterest etc.) as a list of Product items with images and
+     destination URLs. Built from the FULL card set (not the filtered
+     view) — the canonical gallery content is everything Adam has
+     photographed; the filtered view is just a UX affordance for
+     visitors. card.href is used as the per-item URL: for specialty
+     whips that's `/specialty/:slug`, for custom whips it's
+     `/design-bullwhip?...prefill...` (the prefilled designer page
+     IS the canonical "this exact configuration" landing point). */
+  const SITE_URL = 'https://www.whipworks.com';
+  const itemListStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'WhipWorks Gallery',
+    description:
+      'Every photographed bullwhip, stockwhip, snakewhip, and specialty whip handcrafted by WhipWorks since 2015.',
+    numberOfItems: cards.length,
+    itemListElement: cards.map((card, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Product',
+        name: card.title,
+        image: card.image,
+        url: `${SITE_URL}${card.href}`,
+        brand: {
+          '@type': 'Brand',
+          name: 'WhipWorks',
+        },
+      },
+    })),
+  };
+
   return (
     <Layout>
       <SEO
         title="Gallery"
         description="Every WhipWorks bullwhip, stockwhip, snakewhip, and specialty whip — handcrafted custom whips from Adam since 2015. Browse the archive to see what's possible for your custom build."
+        structuredData={itemListStructuredData}
       />
       <SectionContainer aria-label="Whip gallery">
         <HeaderBlock>
@@ -1304,11 +1382,12 @@ const GalleryPage = () => {
         ) : (
         <Grid>
           {filteredCards.map((card) => (
-            <Card
+            <MotionCard
               key={card.id}
               type="button"
               onClick={() => setSelectedCard(card)}
               aria-label={card.alt}
+              {...cardMotionProps}
             >
               <PhotoFrame>
                 <Photo
@@ -1333,7 +1412,7 @@ const GalleryPage = () => {
                   )}
                 </HoverOverlay>
               </PhotoFrame>
-            </Card>
+            </MotionCard>
           ))}
         </Grid>
         )}
