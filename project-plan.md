@@ -563,5 +563,6 @@ Phased so each step has a clear stopping point — pause between sessions withou
 **Cross-cutting notes:**
 - Each phase = one commit, reviewed before proceeding (per Adam's standing review rule).
 - Phases 13.0–13.3 are independent of 13.4–13.8 — Excel could ship and gallery work could pause.
+- **Click-to-prefill invalid-value policy (locked Phase 13.8):** when a prefilled value isn't in the designer's canonical option list (e.g. SnW29's `'Shield'` concho not yet in `conchos.ts`), the field is left blank rather than silently substituted with a "default backup" value. The form's existing "you must pick this before checkout" UX guides the user. Rationale: avoids the substitution-the-user-doesn't-notice failure mode, and keeps catalog-drift signals visible (a value that keeps showing up as missing is a prompt to update the option list, not paper it over). Documented in `architecture.md` → Click-to-Prefill Protocol → Validation contract.
 - No worktrees — all edits in main repo.
 - Follow homepage revamp design language: Domine + Josefin Sans, gold (#d6a85f) accents, cream (#f5ebe0) on dark (#1a140f), full-bleed for "event" sections only, Gallery itself is constrained.

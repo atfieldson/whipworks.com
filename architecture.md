@@ -1,6 +1,6 @@
 # WhipWorks.com - Architecture Reference
 
-> **Last updated:** Phase 13.7 (Gallery Page — click-to-prefill + nav link) - May 2026
+> **Last updated:** Phase 13.8 (Gallery Page — polish + a11y + SEO) - May 2026
 > This is a living document. Update after each phase of development.
 
 ## Site Map
@@ -382,9 +382,14 @@ Phase 13.7. The gallery's lightbox CTA for custom whips ("Build this Bullwhip �
 | `heelLoop` | bullwhip / stockwhip / snakewhip | `heelLoops` |
 | `waxed` | bullwhip / stockwhip / snakewhip | boolean `'true'` / `'false'` |
 
-**Validation contract:** every parsed value is checked against its canonical option constants list. Invalid values (URL-tampered, removed options, source data inconsistencies) are silently skipped — the form falls back to its existing default rather than breaking. Examples currently in the dataset:
-- Fantasy whip FW33's `heelLoop: 'None'` (Wolf Pommel — no heel-loop concept) normalizes to empty and skips, so the bullwhip designer falls back to its `'Squared'` default
-- SnW29's `concho: 'Shield'` isn't in `conchos.ts` yet, so the snakewhip designer's concho stays unset; everything else (color/handle/length/heelLoop) prefills
+**Validation contract:** every parsed value is checked against its canonical option constants list. Invalid values (URL-tampered, removed options, source data inconsistencies) are silently skipped at the parser. What happens next depends on whether the corresponding designer state field has a static default:
+
+- **Fields with a default** (`waxed=true`, `collar='None'`, `heelLoop='Squared'`, snakewhip's `handleDesign='Herringbone'`) — invalid prefill values fall back to the default via `?? <default>` in the designer's `useState` initializer.
+- **Fields without a default** (color, length, handle pattern, handle length, concho) — **the field is left blank**, and the designer's existing "you must pick this before checkout" UX guides the user. Adam's locked-in policy (Phase 13.8): never silently substitute a "default backup" value into a blank-by-design field. The friction cost (one extra click) is small; the alternative — a substitution the user doesn't notice and discovers when their order arrives — is corrosive to trust over time. When a value keeps coming back as missing, that's a signal the option list needs updating, not that the prefill should paper over it.
+
+Examples currently in the dataset:
+- Fantasy whip FW33's `heelLoop: 'None'` (Wolf Pommel — no heel-loop concept) normalizes to empty and skips → bullwhip designer falls back to its `'Squared'` default (default-bearing field).
+- SnW29's `concho: 'Shield'` isn't in `conchos.ts` yet → snakewhip designer's concho stays blank; everything else (color/handle/length/heelLoop) prefills (no-default field — user picks before checkout). Resolving this case long-term means adding `Shield` to `conchos.ts`, not falling back to "Celtic Silver" or similar.
 
 **Backwards-compatible:** direct visits to `/design-bullwhip` etc. with no query string return empty parser objects, so all the `?? <default>` fallbacks restore the prior initial state. Existing direct nav links, Snipcart wiring, and the pre-existing form behavior are all unchanged.
 
