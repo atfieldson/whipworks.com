@@ -72,6 +72,7 @@ const PRODUCT_OPTIONS = [
   { label: 'The Joking Bullwhip', value: 'The Joking Bullwhip' },
   { label: 'The Nightlord (40K Series)', value: 'The Nightlord' },
   { label: 'The Ultra Whip (40K Series)', value: 'The Ultra Whip' },
+  { label: "The Emperor's Bullwhip (40K Series)", value: "The Emperor's Bullwhip" },
   { label: 'The Star Spangled Bullwhip', value: 'The Star Spangled Bullwhip' },
   { label: 'The Pride Whip', value: 'The Pride Whip' },
   { label: 'Whip Blueprints', value: 'Whip Blueprints' },

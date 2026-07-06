@@ -42,6 +42,7 @@ const SPECIALTY_SLUG_MAP: Record<string, string[]> = {
   'jokingbullwhip': [],
   'pride': [],
   'ultrawhip': ['40k-bullwhip'],
+  'emperorsbullwhip': ['40k-bullwhip'],
 };
 
 // Map series name -> all specialtySlug values for whips in that series

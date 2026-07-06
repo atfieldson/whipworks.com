@@ -293,16 +293,16 @@ const WHIPS: SpecialtyWhip[] = [
       'https://d3ruufruf2uqog.cloudfront.net/specialty/mando/mandoHeader2.png',
   },
   {
-    slug: '/specialty/harlequin',
-    title: 'The Harlequin',
-    shortName: 'Harlequin',
-    blurb: 'A three-color showstopper for a little mayhem with your craft.',
+    slug: '/specialty/emperorsBullwhip',
+    title: "The Emperor's Bullwhip",
+    shortName: "Emperor's",
+    blurb: 'Acid purple and gold — beauty and function in the same tool.',
     primaryImage:
-      'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW600HQ1Wide.jpg',
+      'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW108040K6EB2Wide.jpg',
     secondaryImage:
-      'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW600HQ1Transition.jpg',
+      'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW108040K6EB2Transition.jpg',
     headerImage:
-      'https://d3ruufruf2uqog.cloudfront.net/specialty/harlequin/harlequin2.png',
+      'https://d3ruufruf2uqog.cloudfront.net/specialty/40K/emperorsHeader.png',
   },
 ];
 

@@ -212,6 +212,13 @@
     - [x] Expandable rune selection chart (reuses ProductImages lightbox)
     - [x] Optional `chart` field added to variant schema
     - [x] Markdown body HTML rendered as description (supports inline links like Saul Forged Instagram)
+  - [x] The Emperor's Bullwhip (NEW listing — 3rd whip in the 40K Bullwhip Series, after Nightlord and Ultra)
+    - [x] `content/specialty/emperorsBullwhip/index.md` — acid purple + gold, Third Legion handle (Roman Numeral III), Brass Cone Pommel, Herringbone thong; price $349 with length + handle-length variants identical to Nightlord/Ultra; 8 photos
+    - [x] `sortOrder: 14` — slots right after Ultra Whip (13) in the Specialty Whips nav dropdown; bumped Star Spangled 14→15 and Pride 15→16
+    - [x] Gallery `EB` tag mapping added to `src/pages/gallery.tsx`
+    - [x] 40K series reviews surface on the page via `TestimonialStrip.tsx` (added `emperorsbullwhip` id mapping)
+    - [x] Homepage featured specialty grid: replaced The Harlequin with The Emperor's (`FeaturedSpecialtyGrid.tsx`)
+    - [x] Added to the `/leave-a-review` product dropdown (`ReviewForm.tsx`)
 - [x] Fix two latent Snipcart bugs affecting all products with variants:
   - [x] `defaultValue` was missing from `createPages` query → cart defaulted to first-listed option
   - [x] `+` sign stripped from positive `priceDiff` values (schema was `Float`) → Snipcart rejected positive modifiers
