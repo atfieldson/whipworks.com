@@ -10,13 +10,15 @@ type ImageData = {
 type Props = {
   images?: (ImageData | string)[];
   alt?: string;
+  /** Optional content rendered directly beneath the hero image. */
+  underHero?: React.ReactNode;
 };
 
 // Normalize images to always be ImageData objects
 const normalizeImages = (images: (ImageData | string)[]): ImageData[] =>
   images.map((img) => (typeof img === 'string' ? { url: img } : img));
 
-const ProductImages = ({ images: rawImages, alt }: Props) => {
+const ProductImages = ({ images: rawImages, alt, underHero }: Props) => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
 
@@ -59,6 +61,9 @@ const ProductImages = ({ images: rawImages, alt }: Props) => {
           loading="eager"
           onClick={() => openLightbox(0)}
         />
+
+        {/* Optional content directly beneath the hero */}
+        {underHero}
 
         {/* Remaining images in masonry layout */}
         {gridImages.length > 0 && (

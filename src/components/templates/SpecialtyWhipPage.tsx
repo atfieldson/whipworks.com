@@ -22,6 +22,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import ProductImages from '../molecules/ProductImages';
 import BullwhipAddedModal from '../molecules/BullwhipAddedModal';
 import TestimonialStrip from '../organisms/TestimonialStrip';
+import GlowColorChart from '../organisms/GlowColorChart';
 
 type ImageData = {
   url: string;
@@ -225,6 +226,7 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
             loading="eager"
           />
         )}
+        {whip.colorChart === 'glow' && <GlowColorChart />}
       </Box>
 
       {/* Two-column layout (desktop) / product info (mobile) */}
@@ -235,7 +237,11 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
       >
         {/* Left column — full image gallery (desktop only) */}
         <Box flex="3" minW="0" display={{ base: 'none', md: 'block' }}>
-          <ProductImages images={images} alt={whip.title} />
+          <ProductImages
+            images={images}
+            alt={whip.title}
+            underHero={whip.colorChart === 'glow' ? <GlowColorChart /> : undefined}
+          />
         </Box>
 
         {/* Right column — sticky product info */}
@@ -317,7 +323,12 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
           )}
 
           {/* Other variant selectors */}
-          {variants?.map((v) => (
+          {variants?.map((v) => {
+            const imageOptions = v.options.filter(
+              (o: Option) => o.images && o.images.length > 0
+            );
+            const stacked = v.imageLayout === 'stacked';
+            return (
             <Box key={v.name} mb="5">
               {v.chart && (
                 <Box mb="3">
@@ -330,6 +341,48 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
               <Text fontWeight="bold" mb="2" fontSize="sm" textTransform="uppercase" letterSpacing="wider">
                 {v.name}
               </Text>
+              {imageOptions.length > 0 && (
+                <Flex
+                  direction={stacked ? 'column' : 'row'}
+                  wrap={stacked ? 'nowrap' : 'wrap'}
+                  gap="3"
+                  mb="3"
+                >
+                  {imageOptions.map((o: Option) =>
+                    stacked ? (
+                      <Flex key={o.name} align="center" gap="3">
+                        <Image
+                          src={o.images![0].url}
+                          alt={o.images![0].caption || o.name}
+                          w="160px"
+                          h="40px"
+                          objectFit="cover"
+                          borderRadius="md"
+                          border="1px solid rgba(255,255,255,0.16)"
+                          loading="lazy"
+                        />
+                        <Text fontSize="sm">{o.name}</Text>
+                      </Flex>
+                    ) : (
+                      <Box key={o.name} textAlign="center" w="72px">
+                        <Image
+                          src={o.images![0].url}
+                          alt={o.images![0].caption || o.name}
+                          w="72px"
+                          h="72px"
+                          objectFit="cover"
+                          borderRadius="md"
+                          border="1px solid rgba(255,255,255,0.16)"
+                          loading="lazy"
+                        />
+                        <Text mt="1" fontSize="10px" opacity={0.85} lineHeight="1.15">
+                          {o.name}
+                        </Text>
+                      </Box>
+                    )
+                  )}
+                </Flex>
+              )}
               <Select
                 defaultValue={v.defaultValue}
                 onChange={(e) => handleVariantChange(e, v)}
@@ -341,11 +394,16 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
                 fontWeight="bold"
                 size="lg"
               >
-                {v.options.map((vo: Option) => (
-                  <option value={vo.name} key={vo.name}>
-                    {vo.name}
-                  </option>
-                ))}
+                {v.options.map((vo: Option) => {
+                  const diff = Number(vo.priceDiff);
+                  const suffix = v.showPriceDiff && diff > 0 ? ` (+$${diff})` : '';
+                  return (
+                    <option value={vo.name} key={vo.name}>
+                      {vo.name}
+                      {suffix}
+                    </option>
+                  );
+                })}
               </Select>
               {v.note && (
                 <Text mt="1" fontSize="xs" fontStyle="italic" opacity={0.7}>
@@ -353,7 +411,8 @@ const SpecialtyWhipPage = ({ data, pageContext, location }: Props) => {
                 </Text>
               )}
             </Box>
-          ))}
+            );
+          })}
 
           {/* Add to Cart */}
           <Button
@@ -500,6 +559,7 @@ interface Props {
         images?: ImageData[];
         weight?: number;
         specs?: Spec[];
+        colorChart?: string;
       };
     };
   };
@@ -524,6 +584,7 @@ export const pageQuery = graphql`
           caption
         }
         weight
+        colorChart
         specs {
           label
           value
@@ -533,6 +594,8 @@ export const pageQuery = graphql`
           defaultValue
           note
           chart
+          imageLayout
+          showPriceDiff
           options {
             name
             priceDiff

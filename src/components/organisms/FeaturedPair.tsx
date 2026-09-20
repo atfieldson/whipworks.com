@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
  *
  * 2-column section below the CategoryTileRow. Two editorial cards:
  *   1. About the Whipmaker — personal intro from Adam, links to /about
- *   2. The Blacksmith's Bullwhip — featured specialty whip, links to /specialty/blacksmith
+ *   2. The Circus Whip — featured specialty whip, links to /specialty/circusWhip
  *
  * Unlike the Hero and CategoryTileRow (which are full-bleed 100vw), this
  * section flows inside the 1080px Content container — creating negative
@@ -267,26 +267,27 @@ const FEATURES: Feature[] = [
   },
   {
     eyebrow: 'Featured Whip',
-    title: "The Blacksmith's Bullwhip",
+    title: 'The Circus Whip',
     blurb:
-      'A collaboration with Cornish blacksmith Reece Foster. Choose three custom Elder Futhark runes for me to plait into the thong and handle.',
-    cta: "See the Blacksmith's Bullwhip",
-    /* Custom 1600×1600 crop composed specifically for this card: whip sits
-       in the lower ~80% of the frame with 20% of true black at top reserved
-       for the header PNG overlay. No CSS positioning tricks needed — plain
-       'cover' + 'center' just works. */
+      'An all glow-in-the-dark bullwhip built for stage performers — it lights up under UV light and glows in the dark long after the house lights drop.',
+    cta: 'See the Circus Whip',
+    /* Glowing shot (whip charged and glowing on true black) — the most
+       striking representation of a glow whip. It's a gallery Wide crop, not
+       a custom 1x1, so it's center-cover-cropped to the square frame; the
+       coil sits centered with black above, letting the header PNG overlay
+       nestle into that space. */
     image:
-      'https://whipworks.s3.us-east-2.amazonaws.com/specialty/blacksmith/BlacksmithWide1x1.jpg',
+      'https://whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/BW1106GW12Circus1WideGlowing.jpg',
     overlayImage:
-      'https://d3ruufruf2uqog.cloudfront.net/specialty/blacksmith/blacksmithHeader.png',
-    overlayAlt: "The Blacksmith's Bullwhip",
-    href: '/specialty/blacksmith',
+      'https://d3ruufruf2uqog.cloudfront.net/specialty/glow/circus/circusHeader.png',
+    overlayAlt: 'The Circus Whip',
+    href: '/specialty/circusWhip',
   },
 ];
 
 const FeaturedPair = () => {
   return (
-    <SectionContainer aria-label="Featured: the whipmaker and the Blacksmith's Bullwhip">
+    <SectionContainer aria-label="Featured: the whipmaker and the Circus Whip">
       <Grid>
         {FEATURES.map((f) => (
           <Card key={f.href} to={f.href} aria-label={`${f.title}: ${f.blurb}`}>

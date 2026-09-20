@@ -442,6 +442,7 @@ const SLUG_BASENAME_TO_TAG: Record<string, string> = {
   nightlord: 'NL',
   ultrawhip: 'Ultra',
   emperorsbullwhip: 'EB',
+  circuswhip: 'Circus',
   pride: 'Pride',
 };
 
