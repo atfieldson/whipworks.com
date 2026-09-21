@@ -1,6 +1,6 @@
 # WhipWorks.com - Architecture Reference
 
-> **Last updated:** Phase 13.8 (Gallery Page — polish + a11y + SEO) - May 2026
+> **Last updated:** Sept 2026 — Glow in the Dark series (The Circus Whip, a customizable made-to-order listing) + The Emperor's Bullwhip (40K series). Prior: Phase 13.8 (Gallery Page — polish + a11y + SEO).
 > This is a living document. Update after each phase of development.
 
 ## Site Map
@@ -20,7 +20,7 @@ graph TD
     HOME --> REVIEWS["/reviews"]
     HOME --> LINKS["/links"]
 
-    SPECIALTY --> SPEC_DETAIL["/specialty/:slug  x13"]
+    SPECIALTY --> SPEC_DETAIL["/specialty/:slug  x15"]
     ACCESSORIES --> ACC_DETAIL["/accessories/:slug  x2"]
     MATERIALS --> MAT_DETAIL["/materials/:slug  x8"]
 
@@ -46,7 +46,7 @@ graph TD
 | `/design-stockwhip` | `src/pages/design-stockwhip.tsx` | DesignerLayout | 3D stockwhip customizer |
 | `/design-snakewhip` | `src/pages/design-snakewhip.tsx` | DesignerLayout | 3D snakewhip customizer |
 | `/specialty-whips` | `src/pages/specialty-whips.tsx` | Layout | Specialty whips grid with hover crossfade |
-| `/specialty/:slug` | gatsby-node.js | SpecialtyWhipPage | Individual specialty whip (x13) |
+| `/specialty/:slug` | gatsby-node.js | SpecialtyWhipPage | Individual specialty whip (x15; incl. grouped series: 40K Bullwhip + Glow in the Dark) |
 | `/gallery` | `src/pages/gallery.tsx` | Layout | Editorial archive of every photographed whip — filter chips (Type/Length/Color/Handle/Concho) + click-into-lightbox detail view + click-to-prefill custom-whip CTAs that navigate to the relevant designer with the whip's full configuration encoded as URL query params |
 | `/accessories` | `src/pages/accessories.tsx` | Layout | Accessories listing |
 | `/accessories/:slug` | gatsby-node.js | ProductPage | Individual accessory (x2) |
@@ -166,7 +166,7 @@ graph TD
 |-------|-------|----------|
 | Atoms | 10 | `src/components/atoms/` |
 | Molecules | 4 | `src/components/molecules/` |
-| Organisms | 6 top-level + 16 designer | `src/components/organisms/` |
+| Organisms | 7 top-level + 16 designer | `src/components/organisms/` (incl. `GlowColorChart` — glow paracord chart) |
 | Templates | 8 | `src/components/templates/` |
 | Constants | 15 | `src/components/organisms/BullwhipDesigner/constants/` |
 | Hooks | 1 | `src/hooks/useStockLevel.ts` |
@@ -251,7 +251,7 @@ https://d3ruufruf2uqog.cloudfront.net/paracordImages/{waxed|unwaxed}/{color}{Lef
 
 ```mermaid
 graph TD
-    CONTENT["content/"] --> SPEC["specialty/ (13 whips)"]
+    CONTENT["content/"] --> SPEC["specialty/ (15 whips)"]
     CONTENT --> ACC["accessories/ (2 products)"]
     CONTENT --> MAT["materials/ (8 products)"]
     CONTENT --> BP["blueprints/ (17 products)"]
@@ -310,6 +310,7 @@ series: String
 hasStyles: Boolean
 isNew: Boolean
 weight: Number
+colorChart: String    # Optional: 'glow' renders GlowColorChart under the hero (glow paracord swatches with Regular/UV/Glowing tabs) — used by the Glow in the Dark series
 specs:
   - label: String
     value: String
@@ -318,21 +319,37 @@ variants:
     defaultValue: String
     note: String          # Optional helper text shown below the dropdown
     chart: String         # Optional reference chart image URL (opens in ProductImages lightbox)
+    imageLayout: String   # Optional: 'stacked' renders this variant's per-option images as vertical 4:1 strips (default = square thumbnail row)
+    showPriceDiff: Boolean # Optional: when true, each option shows its "(+$X)" upcharge in the on-page dropdown label (Snipcart value stays clean)
     options:
       - name: String
         priceDiff: Number
-        images: [{ url, caption }]  # Per-variant images
+        images: [{ url, caption }]  # Per-option reference images — shown in the selector when present (e.g. Concho finishes, Handle Design patterns)
 ```
 
 **Description rendering:** `SpecialtyWhipPage` renders the markdown body HTML as the on-page description when present (allowing inline `<a>` tags, multiple paragraphs, etc.), and falls back to the plain-text `frontmatter.description` otherwise. The frontmatter `description` is still used for SEO/meta tags and Snipcart's `data-item-description`.
+
+### Customizable Specialty Listings & Series
+
+Most specialty whips are fixed-configuration products. Two patterns extend `SpecialtyWhipPage` for richer listings — both driven entirely by frontmatter, and gated so existing pages are unaffected:
+
+**Series grouping** — whips sharing a `series` value are grouped on `/specialty-whips` under a shared `seriesImage` banner. `groupWhips()` (in `specialty-whips.tsx`) anchors each series group at the position of its first member's `sortOrder`, so the whole group renders together there. Current series: **40K Bullwhip Series** (Nightlord, Ultra, Emperor's) and **Glow in the Dark Whips** (Circus). To slot a series in a given spot, give its first member the right `sortOrder` (e.g. Circus at 15 places Glow directly under 40K).
+
+**Customizable made-to-order listing (The Circus Whip)** — a specialty page can act as a full configurator with no bespoke page code:
+- Multiple variant dropdowns → Snipcart custom fields. Circus has **7**: Whip Length, Handle Length, Waxing, Color 1, Color 2, Handle Design, Concho.
+- **Pricing model:** stored `price` = the *default* configuration's price; each option's `priceDiff` is **relative to that default** (so the headline price, the default selection, and the cart all agree — the on-page price is `whip.price + sum(changed option diffs)`). `resolveSnipcartFields` emits `name[+/-N]` strings; `+0` is omitted.
+- **Reference images in the selector:** any variant with `options[].images` renders reference thumbnails above its dropdown — a square row by default, or vertical **4:1 strips** when `imageLayout: 'stacked'` (Circus: Handle Design uses stacked strips, Concho uses the square row).
+- **Per-option price hint:** `showPriceDiff: true` appends `"(+$X)"` to positive options in the dropdown label; the Snipcart `value` stays clean (Circus uses it on Waxing only).
+- **Glow color chart:** `colorChart: 'glow'` renders `GlowColorChart` directly under the hero (via `ProductImages`' optional `underHero` slot) — a 2×3 grid of glow paracord swatches with **Regular / UV / Glowing** tabs.
 
 ### Image Storage
 
 | Location | Content | Example |
 |----------|---------|---------|
-| `whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/` | Product photos | `BW602JB1Wide.jpg` |
+| `whipworks.s3.us-east-2.amazonaws.com/gallery/specialty/` | Product photos (incl. glow UV/glowing shots: `…WideUV.jpg`, `…WideGlowing.jpg`) | `BW602JB1Wide.jpg`, `BW1106GW12Circus1WideGlowing.jpg` |
 | `d3ruufruf2uqog.cloudfront.net/paracordImages/` | Paracord color textures | `unwaxed/redLeft.jpg` |
-| `d3ruufruf2uqog.cloudfront.net/specialty/` | Header/series logos | `40K/40KHeader.png` |
+| `…/paracordImages/glowParacord/` | Glow paracord swatches for the color chart — `Glow{Color}.jpg` / `…UV.jpg` / `…Glowing.jpg` (White/Cyan/Blue/Green/Yellow/Pink) | `GlowGreenUV.jpg` |
+| `d3ruufruf2uqog.cloudfront.net/specialty/` | Header/series logos (incl. `glow/glowHeader.png`, `glow/circus/circusHeader.png`) | `40K/40KHeader.png` |
 | `d3ruufruf2uqog.cloudfront.net/bannerImages/` | Hero/banner images | `heroImages/comoSunset800.jpg` |
 | `whipworks.s3.us-east-2.amazonaws.com/reviews/` | Customer review photos | `review433.jpg` |
 | `whipworks.s3.us-east-2.amazonaws.com/bannerImages/` | Social banners | `FB+Banner.jpg` |
@@ -569,12 +586,14 @@ Theme file: `src/@chakra-ui/gatsby-plugin/theme.ts`
 | `src/components/templates/Header.tsx` | Navigation (desktop dropdowns + mobile drawer) |
 | `src/components/templates/SEO.tsx` | Meta tags, OG tags, structured data (JSON-LD) |
 | `src/components/templates/DesignerLayout.tsx` | Split-panel layout for designer pages |
-| `src/components/templates/SpecialtyWhipPage.tsx` | Specialty whip detail template + structured data |
+| `src/components/templates/SpecialtyWhipPage.tsx` | Specialty whip detail template + structured data. Renders variant dropdowns → Snipcart custom fields; supports per-option reference thumbnails (`imageLayout: 'stacked'`), per-option "(+$X)" dropdown hints (`showPriceDiff`), and the glow color chart (`colorChart: 'glow'`) |
 | `src/components/templates/ProductPage.tsx` | Generic product page (accessories, materials) |
 | `src/components/organisms/BullwhipDesigner/WhipPreview.tsx` | Three.js 3D handle preview |
 | `src/components/organisms/BullwhipDesigner/constants/drawBullwhipPreviews.ts` | Canvas 2D pattern rendering |
 | `src/components/organisms/BullwhipDesigner/constants/spoolColors.ts` | Paracord color definitions |
-| `src/components/molecules/ProductImages.tsx` | Image gallery with lightbox |
+| `src/components/molecules/ProductImages.tsx` | Image gallery with lightbox; optional `underHero` slot renders content directly beneath the hero image (used for the glow color chart) |
+| `src/components/organisms/GlowColorChart.tsx` | Glow paracord color chart — Regular/UV/Glowing tabs over a 2×3 swatch grid; rendered under the hero on Glow-series listings (`colorChart: 'glow'`) |
+| `src/components/organisms/FeaturedPair.tsx` | Homepage "About the Whipmaker" + Featured Whip pair (featured whip = The Circus Whip) |
 | `src/data/reviews.json` | 433 Etsy reviews with meta stats (4.94 avg, productType, specialtySlug) |
 | `whip-catalog.xlsx` | Adam's planning/reference workbook — 7 sheets cataloging every photographed whip (Specialty / Bullwhips / Stockwhips / Snakewhips / Floggers + Conchos master + _Lookups). Reference-only; site reads from gallery TS and specialty MD. Generator script at `~/.tmp/xlsx-build/build.js`. |
 | `src/pages/gallery.tsx` | `/gallery` page — editorial archive of every photographed whip. Builds unified card list from gallery TS + specialty markdown (per-physical-whip groups), filter chips (Type/Length/Color/Handle/Concho), URL state sync, click-into-lightbox |

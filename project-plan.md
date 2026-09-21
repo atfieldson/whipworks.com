@@ -219,6 +219,20 @@
     - [x] 40K series reviews surface on the page via `TestimonialStrip.tsx` (added `emperorsbullwhip` id mapping)
     - [x] Homepage featured specialty grid: replaced The Harlequin with The Emperor's (`FeaturedSpecialtyGrid.tsx`)
     - [x] Added to the `/leave-a-review` product dropdown (`ReviewForm.tsx`)
+  - [x] The Circus Whip (NEW listing — first whip in the new **Glow in the Dark Whips** series; an all glow-in-the-dark, made-to-order bullwhip for stage performers) — **built + deployed live**
+    - [x] `content/specialty/circusWhip/index.md` — new "Glow in the Dark Whips" series, grouped on `/specialty-whips` directly under 40K (`sortOrder: 15`; bumped Star Spangled → 16, Pride → 17)
+    - [x] Customizable listing: 7 variant dropdowns → Snipcart custom fields (Whip Length, Handle Length, Waxing, Color 1, Color 2, Handle Design, Concho)
+    - [x] Pricing: base **$354** (default 6′/10″/unwaxed) with all `priceDiff`s relative to the default so headline/default/cart agree; **Waxing +$20** (the price chart had assumed wax); range $279–$734
+    - [x] Handle Design has a "Custom" option with an email-me note; per-colour glow swatch photos still pending
+    - [x] UV / glowing / normal-light product photos with descriptive captions
+    - [x] **New reusable `SpecialtyWhipPage` capabilities** (all frontmatter-gated — existing pages unaffected):
+      - [x] Per-option reference thumbnails in the selector — square row, or vertical 4:1 strips via `imageLayout: 'stacked'` (Handle Design stacked; Concho square)
+      - [x] Per-option "(+$X)" dropdown hint via `showPriceDiff` (Waxing only; Snipcart value stays clean)
+      - [x] Glow paracord colour chart under the hero via `colorChart: 'glow'` — new `GlowColorChart` organism, Regular/UV/Glowing tabs over a 2×3 swatch grid (`paracordImages/glowParacord/`)
+      - [x] `ProductImages` gained an optional `underHero` slot
+    - [x] Gallery `Circus` tag mapping (`gallery.tsx`); UV/glowing shots excluded from the grid (normal-light Wide only)
+    - [x] Added to the `/leave-a-review` dropdown; homepage **Featured Whip** (`FeaturedPair.tsx`) — Circus replaces the Blacksmith's Bullwhip
+    - [x] `whip-catalog.xlsx` reference row (BW1106); built, deployed to S3, CloudFront-invalidated
 - [x] Fix two latent Snipcart bugs affecting all products with variants:
   - [x] `defaultValue` was missing from `createPages` query → cart defaulted to first-listed option
   - [x] `+` sign stripped from positive `priceDiff` values (schema was `Float`) → Snipcart rejected positive modifiers
